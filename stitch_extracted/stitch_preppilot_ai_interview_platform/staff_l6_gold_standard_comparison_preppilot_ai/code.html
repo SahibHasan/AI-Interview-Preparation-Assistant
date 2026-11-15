@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Plus+Jakarta+Sans:wght@600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { colors: { "secondary": "#565e74", "outline-variant": "#c7c4d8", "secondary-fixed": "#dae2fd", "on-secondary-container": "#5c647a", "secondary-container": "#dae2fd", "on-tertiary-fixed": "#001d31", "on-tertiary-fixed-variant": "#004b73", "on-tertiary": "#ffffff", "on-secondary": "#ffffff", "on-primary-fixed-variant": "#3323cc", "primary-fixed": "#e2dfff", "on-error": "#ffffff", "on-primary": "#ffffff", "inverse-surface": "#213145", "surface-tint": "#4d44e3", "tertiary-container": "#00659a", "on-surface-variant": "#464555", "primary": "#3525cd", "tertiary-fixed": "#cce5ff", "primary-fixed-dim": "#c3c0ff", "background": "#f8f9ff", "secondary-fixed-dim": "#bec6e0", "surface-container-low": "#eff4ff", "surface-bright": "#f8f9ff", "on-background": "#0b1c30", "outline": "#777587", "error-container": "#ffdad6", "surface-container-lowest": "#ffffff", "surface-container-highest": "#d3e4fe", "on-tertiary-container": "#bedfff", "surface-variant": "#d3e4fe", "inverse-primary": "#c3c0ff", "inverse-on-surface": "#eaf1ff", "tertiary-fixed-dim": "#93ccff", "tertiary": "#004c76", "error": "#ba1a1a", "on-secondary-fixed": "#131b2e", "surface-container-high": "#dce9ff", "surface-dim": "#cbdbf5", "surface": "#f8f9ff", "on-surface": "#0b1c30", "primary-container": "#4f46e5", "on-error-container": "#93000a", "on-primary-fixed": "#0f0069", "on-secondary-fixed-variant": "#3f465c", "surface-container": "#e5eeff", "on-primary-container": "#dad7ff" }, borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, spacing: { "margin-mobile": "1rem", "space-md": "1rem", "space-sm": "0.5rem", "space-xl": "2.5rem", "space-xs": "0.25rem", "margin": "2rem", "gutter": "1.5rem", "gutter-mobile": "1rem", "space-lg": "1.5rem" }, fontFamily: { "body-lg": ["Inter"], "display-lg": ["Plus Jakarta Sans"], "headline-xl-mobile": ["Plus Jakarta Sans"], "headline-lg": ["Plus Jakarta Sans"], "label-lg": ["Inter"], "headline-md": ["Plus Jakarta Sans"], "body-md": ["Inter"], "label-md": ["Inter"], "display-lg-mobile": ["Plus Jakarta Sans"], "body-sm": ["Inter"], "headline-xl": ["Plus Jakarta Sans"], "label-sm": ["Inter"], "headline-sm": ["Plus Jakarta Sans"] }, fontSize: { "body-lg": ["16px", { lineHeight: "26px", fontWeight: "400" }], "display-lg": ["48px", { lineHeight: "56px", letterSpacing: "-0.025em", fontWeight: "700" }], "headline-xl-mobile": ["28px", { lineHeight: "36px", letterSpacing: "-0.02em", fontWeight: "700" }], "headline-lg": ["30px", { lineHeight: "38px", letterSpacing: "-0.015em", fontWeight: "600" }], "label-lg": ["14px", { lineHeight: "20px", letterSpacing: "-0.005em", fontWeight: "600" }], "headline-md": ["24px", { lineHeight: "32px", letterSpacing: "-0.01em", fontWeight: "600" }], "body-md": ["14px", { lineHeight: "22px", fontWeight: "400" }], "label-md": ["12px", { lineHeight: "16px", letterSpacing: "0.01em", fontWeight: "600" }], "display-lg-mobile": ["32px", { lineHeight: "40px", letterSpacing: "-0.02em", fontWeight: "700" }], "body-sm": ["13px", { lineHeight: "18px", fontWeight: "400" }], "headline-xl": ["36px", { lineHeight: "44px", letterSpacing: "-0.02em", fontWeight: "700" }], "label-sm": ["11px", { lineHeight: "14px", letterSpacing: "0.02em", fontWeight: "600" }], "headline-sm": ["20px", { lineHeight: "28px", letterSpacing: "-0.01em", fontWeight: "600" }] } } } };</script></head><body class="bg-surface font-body-md text-on-surface antialiased"><aside class="fixed left-0 top-0 h-full w-72 bg-on-secondary-fixed z-50 flex flex-col justify-between shadow-[0_1px_8px_rgba(0,0,0,0.06)]"><div class="flex flex-col"><div class="h-16 px-space-lg flex items-center gap-space-sm"><img alt="PrepPilot AI Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1U1Abx2XAC2v8wJ0w0QtuPK3K4Lof_aLCoXptUcJ4wlwJrm0ftTGATfWLLzV8CKcWroUY-X_9xSSD8EEwduxRdbpzlEkv7mj0KGgFbupSSSu1TgwwtfXkncowjH4_KBE8gcvdP1LTq-uM7JKQ9IVBV0lBdjwKNHB1Eh_Oj38HswRK6A--TZYcS37BIfNT7Z6RG8HdIQNiJ9Io1oT70IH39oWU0ZaRjx37NHszVYzvO6OfxGeW9XlhJ0"/><span class="font-headline-sm text-headline-sm text-on-primary tracking-tight font-bold">PrepPilot<span class="text-primary-fixed"> AI</span></span></div><div class="px-space-md py-space-sm"><span class="font-label-sm text-label-sm text-secondary-fixed-dim uppercase tracking-wider px-space-sm">Intelligence Suite</span></div><nav class="flex flex-col gap-space-xs px-space-md" data-active-classes="bg-primary-container text-on-primary font-label-lg rounded-lg"><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-secondary-fixed-dim hover:bg-inverse-surface hover:text-on-primary transition-colors font-label-lg text-label-lg" data-path="dashboard" href="#"><span class="material-symbols-outlined text-[20px]">grid_view</span><span>Dashboard</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-secondary-fixed-dim hover:bg-inverse-surface hover:text-on-primary transition-colors font-label-lg text-label-lg" data-path="resume-job-match" href="#"><span class="material-symbols-outlined text-[20px]">document_scanner</span><span>Resume &amp; Job Match</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-secondary-fixed-dim hover:bg-inverse-surface hover:text-on-primary transition-colors font-label-lg text-label-lg" data-path="interview-setup" href="#"><span class="material-symbols-outlined text-[20px]">tune</span><span>Interview Setup</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-secondary-fixed-dim hover:bg-inverse-surface hover:text-on-primary transition-colors font-label-lg text-label-lg" data-path="live-session" href="#"><span class="material-symbols-outlined text-[20px]">videocam</span><span>Live Session</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-secondary-fixed-dim hover:bg-inverse-surface hover:text-on-primary transition-colors font-label-lg text-label-lg" data-path="evaluation-reports" href="#"><span class="material-symbols-outlined text-[20px]">assessment</span><span>Evaluation Reports</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-secondary-fixed-dim hover:bg-inverse-surface hover:text-on-primary transition-colors font-label-lg text-label-lg" data-path="learning-plan" href="#"><span class="material-symbols-outlined text-[20px]">psychology</span><span>Learning Plan</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-secondary-fixed-dim hover:bg-inverse-surface hover:text-on-primary transition-colors font-label-lg text-label-lg" data-path="analytics-history" href="#"><span class="material-symbols-outlined text-[20px]">trending_up</span><span>Analytics &amp; History</span></a></nav></div><div class="px-space-md pb-space-lg flex flex-col gap-space-sm"><div class="bg-inverse-surface rounded-xl p-space-md"><div class="flex items-center justify-between mb-space-xs"><span class="font-label-md text-label-md text-on-primary">Readiness Score</span><span class="font-label-md text-label-md text-primary-fixed">84%</span></div><div class="w-full bg-on-secondary-fixed-variant rounded-full h-1.5 overflow-hidden"><div class="bg-primary-container h-1.5 rounded-full w-[84%]"></div></div><p class="font-label-sm text-label-sm text-secondary-fixed-dim mt-space-xs">Target: Senior Staff Role</p></div><nav class="flex flex-col" data-active-classes="bg-primary-container text-on-primary font-label-lg rounded-lg"><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-secondary-fixed-dim hover:bg-inverse-surface hover:text-on-primary transition-colors font-label-lg text-label-lg" data-path="profile-settings" href="#"><span class="material-symbols-outlined text-[20px]">settings</span><span>Profile &amp; Settings</span></a></nav></div></aside><div class="pl-72"><header class="fixed top-0 left-72 right-0 h-16 bg-surface/85 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.03)] z-40 flex items-center justify-between px-space-lg"><div class="flex items-center gap-space-sm text-on-surface-variant font-label-md text-label-md"><span class="hover:text-on-surface transition-colors cursor-pointer">Platform</span><span class="material-symbols-outlined text-[16px]">chevron_right</span><span class="text-on-surface font-label-md text-label-md font-semibold">Console</span></div><div class="flex items-center gap-space-md"><button class="flex items-center gap-space-xs bg-primary-container text-on-primary px-space-md py-space-xs rounded-lg font-label-md text-label-md hover:bg-primary transition-colors shadow-[0_1px_3px_rgba(15,23,42,0.04)]"><span class="material-symbols-outlined text-[18px]">play_arrow</span><span>Start Mock Interview</span></button><div class="h-5 w-px bg-outline-variant"></div><button class="relative p-space-xs text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high rounded-full transition-colors"><span class="material-symbols-outlined text-[20px]">notifications</span><span class="absolute top-1.5 right-1.5 w-2 h-2 bg-primary rounded-full ring-2 ring-surface"></span></button><div class="flex items-center gap-space-sm pl-space-xs"><div class="relative flex items-center"><img alt="Profile" class="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDHEChGHJFzQz2SN-UvlyHy_P0ZhzQJqP9Fbsud3_uobq0r2YCSZZs3bGoe1EKldbqmjOuiWXKngYsaWRiKhB-e7SuRxTj_tewCKruXzAAz2FKerFDA3TVUbbFxVug7XNHPRhj7VIqL89k6XgjM43cjstlIbfdzfVfa0iqIlgOytjfXmXXqfpPFq5Io3XHpcZl9oraLQh06F-yknA6QssJ5QRS0VrzeG5fOFLAqdsZQBZpQTVyrssM"/><span class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-primary-container rounded-full ring-2 ring-surface"></span></div></div></div></header><main class="relative pt-16 bg-surface min-h-screen px-space-lg py-space-lg w-full"><div class="flex flex-col w-full">
+<!-- Sub-Header Breadcrumb & Actions Strip -->
+<div class="flex flex-col xl:flex-row xl:items-center justify-between gap-space-md mb-space-lg">
+<div class="flex flex-col gap-space-xs">
+<div class="flex flex-wrap items-center gap-space-xs font-label-md text-label-md text-on-surface-variant">
+<span class="hover:text-on-surface transition-colors cursor-pointer">Platform</span>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+<span class="hover:text-on-surface transition-colors cursor-pointer">Console</span>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+<span class="hover:text-on-surface transition-colors cursor-pointer">Live Coding Sandbox</span>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+<span class="text-on-surface font-semibold">Gold Standard Diff (Problem #2: Monotonic Event Sink Buffer)</span>
+</div>
+<div class="flex items-center gap-space-sm mt-space-xs">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm uppercase tracking-wider font-semibold">
+<span class="w-2 h-2 rounded-full bg-primary-container"></span>
+          Architectural Code Comparison • Staff L6 Benchmark
+        </span>
+<span class="text-on-surface-variant font-label-sm text-label-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px] text-primary">verified</span>
+          Calibrated against Datadog / Stripe Production Ingestion Engines
+        </span>
+</div>
+</div>
+<!-- Action Toolbar -->
+<div class="flex flex-wrap items-center gap-space-sm">
+<button class="inline-flex items-center gap-space-xs bg-surface-container-lowest text-on-surface px-space-md py-space-sm rounded-lg font-label-md text-label-md hover:bg-surface-container-low transition-colors shadow-sm">
+<span class="material-symbols-outlined text-[18px] text-secondary">sync</span>
+<span>Re-run Benchmark</span>
+</button>
+<button class="inline-flex items-center gap-space-xs bg-surface-container-lowest text-on-surface px-space-md py-space-sm rounded-lg font-label-md text-label-md hover:bg-surface-container-low transition-colors shadow-sm">
+<span class="material-symbols-outlined text-[18px] text-secondary">file_download</span>
+<span>Export Dossier</span>
+</button>
+<button class="inline-flex items-center gap-space-xs bg-secondary-fixed text-on-secondary-fixed px-space-md py-space-sm rounded-lg font-label-md text-label-md hover:bg-secondary-fixed-dim transition-colors shadow-sm">
+<span class="material-symbols-outlined text-[18px]">difference</span>
+<span>Apply Invariants</span>
+</button>
+<button class="inline-flex items-center gap-space-xs bg-primary-container text-on-primary px-space-md py-space-sm rounded-lg font-label-md text-label-md hover:bg-primary transition-colors shadow-sm font-semibold">
+<span class="material-symbols-outlined text-[18px]">terminal</span>
+<span>Resume Live Sandbox</span>
+</button>
+</div>
+</div>
+<!-- Top Architectural Summary Banner -->
+<div class="w-full bg-surface-container-lowest rounded-xl p-space-lg mb-space-lg shadow-sm">
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-space-lg pb-space-lg mb-space-lg border-b border-surface-container">
+<!-- Candidate vs Benchmark Profiles -->
+<div class="flex flex-wrap items-center gap-space-xl">
+<div class="flex items-center gap-space-md">
+<div class="relative">
+<img class="w-12 h-12 rounded-full object-cover" data-alt="Candidate profile portrait of Alex Morgan, senior software engineer with focused analytical expression, neutral modern studio lighting, high resolution tech candidate portrait" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBf16Ao0liJuut7Nytp2AtE3uvS2T1C1lNagFK9jh6dDkc-Fs966gh1qBmkEwvMPoetOLO7MfQ_rANZ5BAdcg_QTaQaWjiZYReoiD5eIpoq-AiyN_PnImMxB2Re8SZysnTsvoFFQFZvOIThmobz49itTOtqF7B5R4pjXeoqV5WcLUlp9F8WJj2Ra52stl9rO2V4ZQYhKaMYm5BgMiOJMrTzpbLBWoWRJcT9foDQdasvPEQDd_jwOP0"/>
+<span class="absolute -bottom-1 -right-1 bg-surface-container-high text-on-surface font-label-sm text-label-sm px-1.5 py-0.5 rounded-full font-bold">L5+</span>
+</div>
+<div>
+<div class="flex items-center gap-space-xs">
+<span class="font-headline-sm text-headline-sm text-on-surface font-bold">Alex Morgan</span>
+<span class="bg-surface-container text-on-surface-variant px-2 py-0.5 rounded font-label-sm text-label-sm">Candidate Run</span>
+</div>
+<p class="font-body-sm text-body-sm text-secondary">91/100 Algorithmic Rigor • Strong Senior Assessment</p>
+</div>
+</div>
+<div class="hidden sm:flex items-center text-secondary">
+<span class="material-symbols-outlined text-[28px]">arrow_forward</span>
+</div>
+<div class="flex items-center gap-space-md">
+<div class="w-12 h-12 rounded-full bg-surface-container-highest flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[28px]" style="font-variation-settings: 'FILL' 1;">workspace_premium</span>
+</div>
+<div>
+<div class="flex items-center gap-space-xs">
+<span class="font-headline-sm text-headline-sm text-on-surface font-bold">Staff L6 Reference Model</span>
+<span class="bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm px-2 py-0.5 rounded font-bold">Gold Standard</span>
+</div>
+<p class="font-body-sm text-body-sm text-secondary">Stripe / Datadog Tier Engine • 99.4% Calibrated Score</p>
+</div>
+</div>
+</div>
+<!-- Score Gap Card -->
+<div class="bg-surface-container-low px-space-lg py-space-md rounded-xl flex items-center gap-space-lg">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-secondary">L6 Rubric Gap</span>
+<span class="font-headline-md text-headline-md text-primary font-bold">+9.0 Pts</span>
+</div>
+<div class="h-10 w-px bg-surface-container"></div>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-secondary">Key Barrier</span>
+<span class="font-label-md text-label-md text-on-surface font-semibold">Teardown Spinlock &amp; GC Spikes</span>
+</div>
+</div>
+</div>
+<!-- Executive Rubric Delta Grid -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-space-md">
+<!-- Time Complexity Delta -->
+<div class="bg-surface-container-low p-space-md rounded-lg flex flex-col justify-between">
+<div class="flex items-center justify-between mb-space-xs">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-secondary">Asymptotic Latency</span>
+<span class="material-symbols-outlined text-primary text-[18px]">timer</span>
+</div>
+<div class="space-y-1.5 my-space-xs">
+<div class="flex items-baseline justify-between text-body-sm font-body-sm">
+<span class="text-secondary">Candidate:</span>
+<span class="font-label-sm text-label-sm text-on-surface font-mono font-medium">O(log N) amortized / O(K*N) stall</span>
+</div>
+<div class="flex items-baseline justify-between text-body-sm font-body-sm">
+<span class="text-primary font-semibold">Gold Standard:</span>
+<span class="font-label-sm text-label-sm text-primary font-mono font-bold">O(log N) strict / Lock-Free O(1)</span>
+</div>
+</div>
+<div class="w-full bg-surface-container h-1 rounded-full overflow-hidden mt-space-xs">
+<div class="bg-primary h-full w-[82%]"></div>
+</div>
+</div>
+<!-- Memory Footprint Delta -->
+<div class="bg-surface-container-low p-space-md rounded-lg flex flex-col justify-between">
+<div class="flex items-center justify-between mb-space-xs">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-secondary">Peak Memory Footprint</span>
+<span class="material-symbols-outlined text-tertiary text-[18px]">memory</span>
+</div>
+<div class="space-y-1.5 my-space-xs">
+<div class="flex items-baseline justify-between text-body-sm font-body-sm">
+<span class="text-secondary">Candidate:</span>
+<span class="font-label-sm text-label-sm text-error font-mono font-semibold">22.8 MB (uncollected heap)</span>
+</div>
+<div class="flex items-baseline justify-between text-body-sm font-body-sm">
+<span class="text-primary font-semibold">Gold Standard:</span>
+<span class="font-label-sm text-label-sm text-primary font-mono font-bold">6.4 MB (bounded ring buffer)</span>
+</div>
+</div>
+<div class="w-full bg-surface-container h-1 rounded-full overflow-hidden mt-space-xs">
+<div class="bg-tertiary h-full w-[72%]"></div>
+</div>
+</div>
+<!-- Concurrency / Thread-Safety Delta -->
+<div class="bg-surface-container-low p-space-md rounded-lg flex flex-col justify-between">
+<div class="flex items-center justify-between mb-space-xs">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-secondary">Concurrency &amp; Lifecycle</span>
+<span class="material-symbols-outlined text-secondary text-[18px]">sync_saved_locally</span>
+</div>
+<div class="space-y-1.5 my-space-xs">
+<div class="flex items-baseline justify-between text-body-sm font-body-sm">
+<span class="text-secondary">Candidate:</span>
+<span class="font-label-sm text-label-sm text-on-surface">Unbounded while-loop spin lock</span>
+</div>
+<div class="flex items-baseline justify-between text-body-sm font-body-sm">
+<span class="text-primary font-semibold">Gold Standard:</span>
+<span class="font-label-sm text-label-sm text-primary font-semibold">AbortSignal.any() + EventLoop cooperative</span>
+</div>
+</div>
+<div class="w-full bg-surface-container h-1 rounded-full overflow-hidden mt-space-xs">
+<div class="bg-primary-container h-full w-[95%]"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Side-by-Side Monaco Code Diff Section with Central Invariant Bridge -->
+<div class="w-full bg-surface-container-lowest rounded-xl p-space-lg mb-space-lg shadow-sm">
+<div class="flex items-center justify-between pb-space-md mb-space-md border-b border-surface-container">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-primary text-[22px]">code</span>
+<h2 class="font-headline-sm text-headline-sm text-on-surface font-bold">AST Structural &amp; Memory Allocation Inspector</h2>
+</div>
+<div class="flex items-center gap-space-md text-on-surface-variant font-label-sm text-label-sm">
+<span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-sm bg-error"></span> Candidate Risk Hotspot</span>
+<span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-sm bg-primary-container"></span> Staff L6 Invariant</span>
+</div>
+</div>
+<!-- Triple Panel Container -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-md items-stretch">
+<!-- LEFT COLUMN: Candidate Implementation -->
+<div class="lg:col-span-5 flex flex-col bg-inverse-surface rounded-xl overflow-hidden shadow-md">
+<!-- Editor Tab Header -->
+<div class="bg-on-secondary-fixed px-space-md py-space-sm flex items-center justify-between border-b border-inverse-surface">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-error text-[18px]">warning</span>
+<span class="font-mono text-label-sm text-on-primary font-semibold">EventSinkBuffer.ts</span>
+<span class="bg-error-container text-on-error-container px-1.5 py-0.5 rounded text-[10px] font-mono font-bold uppercase">Candidate</span>
+</div>
+<span class="font-label-sm text-label-sm text-secondary-fixed-dim">V8 De-opt Detected</span>
+</div>
+<!-- Code Block -->
+<div class="p-space-md font-mono text-[12px] leading-[20px] text-surface-container-high overflow-x-auto flex-1 bg-inverse-surface">
+<div class="flex">
+<span class="text-secondary select-none w-8 text-right pr-3">01</span>
+<span class="text-secondary-fixed-dim">export class <span class="text-primary-fixed">EventSinkBuffer</span>&lt;T&gt; {</span>
+</div>
+<div class="flex">
+<span class="text-secondary select-none w-8 text-right pr-3">02</span>
+<span class="text-secondary-fixed-dim">  private heapBuffer = new Map&lt;number, T&gt;();</span>
+</div>
+<div class="flex bg-error/15 -mx-space-md px-space-md py-0.5">
+<span class="text-error select-none w-8 text-right pr-3">03</span>
+<span class="text-on-primary">  private watermark: number = 0;</span>
+</div>
+<div class="flex">
+<span class="text-secondary select-none w-8 text-right pr-3">04</span>
+<span class="text-secondary-fixed-dim">  private isFlushing: boolean = false;</span>
+</div>
+<div class="flex">
+<span class="text-secondary select-none w-8 text-right pr-3">05</span>
+<span class="text-secondary-fixed-dim">  </span>
+</div>
+<div class="flex">
+<span class="text-secondary select-none w-8 text-right pr-3">06</span>
+<span class="text-secondary-fixed-dim">  public push(seq: number, payload: T): void {</span>
+</div>
+<div class="flex bg-error/15 -mx-space-md px-space-md py-0.5">
+<span class="text-error select-none w-8 text-right pr-3">07</span>
+<span class="text-on-primary">    if (this.heapBuffer.size &gt; 100000) {</span>
+</div>
+<div class="flex bg-error/15 -mx-space-md px-space-md py-0.5">
+<span class="text-error select-none w-8 text-right pr-3">08</span>
+<span class="text-on-error">      throw new Error("Buffer overflow"); <span class="text-error-container text-[11px] font-sans font-semibold">// × Brutal fail</span></span>
+</div>
+<div class="flex">
+<span class="text-secondary select-none w-8 text-right pr-3">09</span>
+<span class="text-secondary-fixed-dim">    }</span>
+</div>
+<div class="flex">
+<span class="text-secondary select-none w-8 text-right pr-3">10</span>
+<span class="text-secondary-fixed-dim">    this.heapBuffer.set(seq, payload);</span>
+</div>
+<div class="flex">
+<span class="text-secondary select-none w-8 text-right pr-3">11</span>
+<span class="text-secondary-fixed-dim">  }</span>
+</div>
+<div class="flex">
+<span class="text-secondary select-none w-8 text-right pr-3">12</span>
+<span class="text-secondary-fixed-dim">  </span>
+</div>
+<div class="flex">
+<span class="text-secondary select-none w-8 text-right pr-3">13</span>
+<span class="text-secondary-fixed-dim">  public *drainMonotonic(): Generator&lt;T&gt; {</span>
+</div>
+<div class="flex bg-error/20 -mx-space-md px-space-md py-0.5 border-l-2 border-error">
+<span class="text-error select-none w-8 text-right pr-3 font-bold">14</span>
+<span class="text-on-primary">    while (this.heapBuffer.has(this.watermark)) {</span>
+</div>
+<div class="flex">
+<span class="text-secondary select-none w-8 text-right pr-3">15</span>
+<span class="text-secondary-fixed-dim">      const item = this.heapBuffer.get(this.watermark)!;</span>
+</div>
+<div class="flex bg-error/15 -mx-space-md px-space-md py-0.5">
+<span class="text-error select-none w-8 text-right pr-3">16</span>
+<span class="text-on-primary">      this.heapBuffer.delete(this.watermark); <span class="text-outline-variant text-[11px] font-sans font-normal">// Hash rebalance</span></span>
+</div>
+<div class="flex">
+<span class="text-secondary select-none w-8 text-right pr-3">17</span>
+<span class="text-secondary-fixed-dim">      this.watermark++;</span>
+</div>
+<div class="flex">
+<span class="text-secondary select-none w-8 text-right pr-3">18</span>
+<span class="text-secondary-fixed-dim">      yield item;</span>
+</div>
+<div class="flex">
+<span class="text-secondary select-none w-8 text-right pr-3">19</span>
+<span class="text-secondary-fixed-dim">    }</span>
+</div>
+<div class="flex">
+<span class="text-secondary select-none w-8 text-right pr-3">20</span>
+<span class="text-secondary-fixed-dim">  }</span>
+</div>
+<div class="flex">
+<span class="text-secondary select-none w-8 text-right pr-3">21</span>
+<span class="text-secondary-fixed-dim">  </span>
+</div>
+<div class="flex bg-error/25 -mx-space-md px-space-md py-0.5 border-l-2 border-error">
+<span class="text-error select-none w-8 text-right pr-3 font-bold">22</span>
+<span class="text-error-container">  public async shutdown(): Promise&lt;void&gt; {</span>
+</div>
+<div class="flex bg-error/25 -mx-space-md px-space-md py-0.5 border-l-2 border-error">
+<span class="text-error select-none w-8 text-right pr-3 font-bold">23</span>
+<span class="text-error-container">    while (this.heapBuffer.size &gt; 0) {</span>
+</div>
+<div class="flex bg-error/25 -mx-space-md px-space-md py-0.5 border-l-2 border-error">
+<span class="text-error select-none w-8 text-right pr-3 font-bold">24</span>
+<span class="text-error-container">      // Hot synchronous CPU spin lock! Event loop starve</span>
+</div>
+<div class="flex">
+<span class="text-secondary select-none w-8 text-right pr-3">25</span>
+<span class="text-secondary-fixed-dim">      this.drainMonotonic().next();</span>
+</div>
+<div class="flex">
+<span class="text-secondary select-none w-8 text-right pr-3">26</span>
+<span class="text-secondary-fixed-dim">    }</span>
+</div>
+<div class="flex">
+<span class="text-secondary select-none w-8 text-right pr-3">27</span>
+<span class="text-secondary-fixed-dim">  }</span>
+</div>
+<div class="flex">
+<span class="text-secondary select-none w-8 text-right pr-3">28</span>
+<span class="text-secondary-fixed-dim">}</span>
+</div>
+</div>
+<!-- Candidate Diagnostics Pillbox Footer -->
+<div class="bg-on-secondary-fixed p-space-md flex flex-wrap items-center justify-between gap-space-xs text-label-sm font-label-sm border-t border-inverse-surface">
+<div class="flex items-center gap-space-sm">
+<span class="px-2 py-0.5 rounded bg-surface-container text-on-surface font-semibold">4/5 Tests Passed</span>
+<span class="text-error font-semibold flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">cancel</span>
+              250ms Teardown Timeout
+            </span>
+</div>
+<span class="text-secondary-fixed-dim font-mono">10,042 Heap Allocations</span>
+</div>
+</div>
+<!-- CENTER BRIDGE: Visual AST & Invariant Inspector -->
+<div class="lg:col-span-2 flex flex-col justify-center items-center gap-space-md py-space-sm">
+<div class="w-full bg-surface-container-low rounded-xl p-space-md flex flex-col gap-space-md shadow-sm">
+<div class="text-center">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-secondary font-bold">AST Invariants Delta</span>
+</div>
+<!-- Structural Shift 1 -->
+<div class="bg-surface-container-lowest p-space-sm rounded-lg flex flex-col gap-1 text-center shadow-xs">
+<span class="font-label-sm text-label-sm text-secondary">Data Structure</span>
+<span class="font-label-sm text-label-sm text-error font-semibold line-through">Map&lt;number, T&gt;</span>
+<div class="flex justify-center text-primary my-0.5">
+<span class="material-symbols-outlined text-[18px]">south</span>
+</div>
+<span class="font-label-sm text-label-sm text-primary font-bold">Typed Ring Buffer</span>
+<span class="text-[10px] text-on-surface-variant font-medium">Zero-GC preallocation</span>
+</div>
+<!-- Structural Shift 2 -->
+<div class="bg-surface-container-lowest p-space-sm rounded-lg flex flex-col gap-1 text-center shadow-xs">
+<span class="font-label-sm text-label-sm text-secondary">Backpressure Policy</span>
+<span class="font-label-sm text-label-sm text-error font-semibold line-through">Throw Buffer Overflow</span>
+<div class="flex justify-center text-primary my-0.5">
+<span class="material-symbols-outlined text-[18px]">south</span>
+</div>
+<span class="font-label-sm text-label-sm text-primary font-bold">Micro-Yield High-Water</span>
+<span class="text-[10px] text-on-surface-variant font-medium">Non-blocking backpressure</span>
+</div>
+<!-- Structural Shift 3 -->
+<div class="bg-surface-container-lowest p-space-sm rounded-lg flex flex-col gap-1 text-center shadow-xs">
+<span class="font-label-sm text-label-sm text-secondary">Shutdown Worker</span>
+<span class="font-label-sm text-label-sm text-error font-semibold line-through">Sync CPU Spinlock</span>
+<div class="flex justify-center text-primary my-0.5">
+<span class="material-symbols-outlined text-[18px]">south</span>
+</div>
+<span class="font-label-sm text-label-sm text-primary font-bold">AbortSignal.any()</span>
+<span class="text-[10px] text-on-surface-variant font-medium">Cooperative teardown</span>
+</div>
+<div class="pt-space-xs text-center">
+<span class="inline-flex items-center gap-1 font-label-sm text-label-sm text-primary font-semibold">
+<span class="material-symbols-outlined text-[16px]">sync_alt</span>
+              Full L6 Parity
+            </span>
+</div>
+</div>
+</div>
+<!-- RIGHT COLUMN: Staff L6 Gold Standard -->
+<div class="lg:col-span-5 flex flex-col bg-inverse-surface rounded-xl overflow-hidden shadow-md">
+<!-- Editor Tab Header -->
+<div class="bg-on-secondary-fixed px-space-md py-space-sm flex items-center justify-between border-b border-inverse-surface">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary text-[18px]">verified</span>
+<span class="font-mono text-label-sm text-on-primary font-semibold">EventSinkBuffer.l6-gold.ts</span>
+<span class="bg-primary-container text-on-primary px-1.5 py-0.5 rounded text-[10px] font-mono font-bold uppercase">Staff Reference</span>
+</div>
+<span class="font-label-sm text-label-sm text-primary-fixed">Deterministic O(1)</span>
+</div>
+<!-- Code Block -->
+<div class="p-space-md font-mono text-[12px] leading-[20px] text-surface-container-high overflow-x-auto flex-1 bg-inverse-surface">
+<div class="flex">
+<span class="text-secondary select-none w-8 text-right pr-3">01</span>
+<span class="text-secondary-fixed-dim">export class <span class="text-primary-fixed">MonotonicRingSink</span>&lt;T&gt; {</span>
+</div>
+<div class="flex bg-primary/20 -mx-space-md px-space-md py-0.5 border-l-2 border-primary-container">
+<span class="text-primary select-none w-8 text-right pr-3 font-bold">02</span>
+<span class="text-on-primary">  private readonly ring: (T | null)[];</span>
+</div>
+<div class="flex bg-primary/20 -mx-space-md px-space-md py-0.5 border-l-2 border-primary-container">
+<span class="text-primary select-none w-8 text-right pr-3 font-bold">03</span>
+<span class="text-on-primary">  private readonly bitmask: number; // 2^N - 1 masking</span>
+</div>
+<div class="flex">
+<span class="text-secondary select-none w-8 text-right pr-3">04</span>
+<span class="text-secondary-fixed-dim">  private headSeq: number = 0;</span>
+</div>
+<div class="flex">
+<span class="text-secondary select-none w-8 text-right pr-3">05</span>
+<span class="text-secondary-fixed-dim">  private tailSeq: number = 0;</span>
+</div>
+<div class="flex">
+<span class="text-secondary select-none w-8 text-right pr-3">06</span>
+<span class="text-secondary-fixed-dim">  </span>
+</div>
+<div class="flex">
+<span class="text-secondary select-none w-8 text-right pr-3">07</span>
+<span class="text-secondary-fixed-dim">  constructor(powerOfTwoCapacity: number = 65536) {</span>
+</div>
+<div class="flex">
+<span class="text-secondary select-none w-8 text-right pr-3">08</span>
+<span class="text-secondary-fixed-dim">    this.ring = new Array(powerOfTwoCapacity).fill(null);</span>
+</div>
+<div class="flex">
+<span class="text-secondary select-none w-8 text-right pr-3">09</span>
+<span class="text-secondary-fixed-dim">    this.bitmask = powerOfTwoCapacity - 1;</span>
+</div>
+<div class="flex">
+<span class="text-secondary select-none w-8 text-right pr-3">10</span>
+<span class="text-secondary-fixed-dim">  }</span>
+</div>
+<div class="flex">
+<span class="text-secondary select-none w-8 text-right pr-3">11</span>
+<span class="text-secondary-fixed-dim">  </span>
+</div>
+<div class="flex bg-primary/20 -mx-space-md px-space-md py-0.5 border-l-2 border-primary-container">
+<span class="text-primary select-none w-8 text-right pr-3 font-bold">12</span>
+<span class="text-primary-fixed">  public tryEnqueue(seq: number, val: T): boolean {</span>
+</div>
+<div class="flex">
+<span class="text-secondary select-none w-8 text-right pr-3">13</span>
+<span class="text-secondary-fixed-dim">    if (seq - this.tailSeq &gt; this.bitmask) return false;</span>
+</div>
+<div class="flex">
+<span class="text-secondary select-none w-8 text-right pr-3">14</span>
+<span class="text-secondary-fixed-dim">    this.ring[seq &amp; this.bitmask] = val; // Fast O(1) bitwise</span>
+</div>
+<div class="flex">
+<span class="text-secondary select-none w-8 text-right pr-3">15</span>
+<span class="text-secondary-fixed-dim">    return true;</span>
+</div>
+<div class="flex">
+<span class="text-secondary select-none w-8 text-right pr-3">16</span>
+<span class="text-secondary-fixed-dim">  }</span>
+</div>
+<div class="flex">
+<span class="text-secondary select-none w-8 text-right pr-3">17</span>
+<span class="text-secondary-fixed-dim">  </span>
+</div>
+<div class="flex bg-primary/20 -mx-space-md px-space-md py-0.5 border-l-2 border-primary-container">
+<span class="text-primary select-none w-8 text-right pr-3 font-bold">18</span>
+<span class="text-primary-fixed">  public async drain(signal: AbortSignal, onBatch: (b: T[]) =&gt; void) {</span>
+</div>
+<div class="flex">
+<span class="text-secondary select-none w-8 text-right pr-3">19</span>
+<span class="text-secondary-fixed-dim">    while (!signal.aborted) {</span>
+</div>
+<div class="flex">
+<span class="text-secondary select-none w-8 text-right pr-3">20</span>
+<span class="text-secondary-fixed-dim">      const idx = this.tailSeq &amp; this.bitmask;</span>
+</div>
+<div class="flex">
+<span class="text-secondary select-none w-8 text-right pr-3">21</span>
+<span class="text-secondary-fixed-dim">      const item = this.ring[idx];</span>
+</div>
+<div class="flex">
+<span class="text-secondary select-none w-8 text-right pr-3">22</span>
+<span class="text-secondary-fixed-dim">      if (!item) { await scheduler.yield(); continue; }</span>
+</div>
+<div class="flex">
+<span class="text-secondary select-none w-8 text-right pr-3">23</span>
+<span class="text-secondary-fixed-dim">      this.ring[idx] = null; // Immediate GC release</span>
+</div>
+<div class="flex">
+<span class="text-secondary select-none w-8 text-right pr-3">24</span>
+<span class="text-secondary-fixed-dim">      this.tailSeq++;</span>
+</div>
+<div class="flex">
+<span class="text-secondary select-none w-8 text-right pr-3">25</span>
+<span class="text-secondary-fixed-dim">    }</span>
+</div>
+<div class="flex">
+<span class="text-secondary select-none w-8 text-right pr-3">26</span>
+<span class="text-secondary-fixed-dim">    await this.flushGracefulRemaining();</span>
+</div>
+<div class="flex">
+<span class="text-secondary select-none w-8 text-right pr-3">27</span>
+<span class="text-secondary-fixed-dim">  }</span>
+</div>
+<div class="flex">
+<span class="text-secondary select-none w-8 text-right pr-3">28</span>
+<span class="text-secondary-fixed-dim">}</span>
+</div>
+</div>
+<!-- Gold Diagnostics Pillbox Footer -->
+<div class="bg-on-secondary-fixed p-space-md flex flex-wrap items-center justify-between gap-space-xs text-label-sm font-label-sm border-t border-inverse-surface">
+<div class="flex items-center gap-space-sm">
+<span class="px-2 py-0.5 rounded bg-primary-container text-on-primary font-semibold">5/5 Tests Passed (11.4ms)</span>
+<span class="text-primary-fixed font-semibold flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">check_circle</span>
+              Zero Spin Stalls
+            </span>
+</div>
+<span class="text-secondary-fixed-dim font-mono">6.4 MB Heap Peak (72% Lower)</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Deep-Dive Dimension Comparison Grid (4 Matrix Cards) -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-space-md mb-space-lg">
+<!-- Card 1: Asymptotics & Latency -->
+<div class="bg-surface-container-lowest p-space-lg rounded-xl shadow-sm flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-space-sm">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-secondary font-semibold">Dimension 01</span>
+<span class="p-1 rounded bg-surface-container text-primary material-symbols-outlined text-[18px]">speed</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold mb-space-xs">Algorithmic Asymptotics &amp; Latency</h3>
+<p class="font-body-sm text-body-sm text-secondary mb-space-md">P50 &amp; P99.9 ingestion latency variance under burst pressure.</p>
+<div class="space-y-space-sm">
+<div class="bg-surface-container-low p-space-sm rounded-lg">
+<span class="font-label-sm text-label-sm text-secondary block">Candidate (P99.9):</span>
+<span class="font-label-md text-label-md text-error font-mono font-bold">142.6 ms</span>
+<span class="text-[11px] text-on-surface-variant block mt-0.5">Hash collisions &amp; V8 bucket resizing delays</span>
+</div>
+<div class="bg-secondary-fixed/50 p-space-sm rounded-lg">
+<span class="font-label-sm text-label-sm text-secondary block">Staff L6 (P99.9):</span>
+<span class="font-label-md text-label-md text-primary font-mono font-bold">1.8 ms</span>
+<span class="text-[11px] text-on-secondary-fixed block mt-0.5">Deterministic memory slot direct indexing</span>
+</div>
+</div>
+</div>
+<div class="mt-space-md pt-space-sm border-t border-surface-container flex items-center justify-between text-label-sm font-label-sm">
+<span class="text-secondary">Latency Speedup</span>
+<span class="text-primary font-bold">79.2× Faster</span>
+</div>
+</div>
+<!-- Card 2: Memory Allocations & V8 GC Pressure -->
+<div class="bg-surface-container-lowest p-space-lg rounded-xl shadow-sm flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-space-sm">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-secondary font-semibold">Dimension 02</span>
+<span class="p-1 rounded bg-surface-container text-tertiary material-symbols-outlined text-[18px]">cleaning_services</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold mb-space-xs">Memory &amp; V8 GC Pressure</h3>
+<p class="font-body-sm text-body-sm text-secondary mb-space-md">Allocations per 10k messages and Scavenge GC duration.</p>
+<div class="space-y-space-sm">
+<div class="bg-surface-container-low p-space-sm rounded-lg">
+<span class="font-label-sm text-label-sm text-secondary block">Candidate GC Pauses:</span>
+<span class="font-label-md text-label-md text-error font-mono font-bold">34 Minor / 2 Full GC</span>
+<span class="text-[11px] text-on-surface-variant block mt-0.5">Map Entry object wrappers trigger V8 Heap bloat</span>
+</div>
+<div class="bg-secondary-fixed/50 p-space-sm rounded-lg">
+<span class="font-label-sm text-label-sm text-secondary block">Staff L6 GC Pauses:</span>
+<span class="font-label-md text-label-md text-primary font-mono font-bold">0 Major GC (Flat Heap)</span>
+<span class="text-[11px] text-on-secondary-fixed block mt-0.5">Pre-allocated static circular ring slots</span>
+</div>
+</div>
+</div>
+<div class="mt-space-md pt-space-sm border-t border-surface-container flex items-center justify-between text-label-sm font-label-sm">
+<span class="text-secondary">GC Overhead Reduction</span>
+<span class="text-primary font-bold">96% Saved</span>
+</div>
+</div>
+<!-- Card 3: Fault Tolerance & Poison Pills -->
+<div class="bg-surface-container-lowest p-space-lg rounded-xl shadow-sm flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-space-sm">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-secondary font-semibold">Dimension 03</span>
+<span class="p-1 rounded bg-surface-container text-primary material-symbols-outlined text-[18px]">security</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold mb-space-xs">Fault Tolerance &amp; Gaps</h3>
+<p class="font-body-sm text-body-sm text-secondary mb-space-md">Handling missing sequences, poison packets, and restarts.</p>
+<div class="space-y-space-sm">
+<div class="bg-surface-container-low p-space-sm rounded-lg">
+<span class="font-label-sm text-label-sm text-secondary block">Candidate Vulnerability:</span>
+<span class="font-label-md text-label-md text-error font-medium">Infinite Generator Stall</span>
+<span class="text-[11px] text-on-surface-variant block mt-0.5">Sequence gap stops monotonic progress permanently</span>
+</div>
+<div class="bg-secondary-fixed/50 p-space-sm rounded-lg">
+<span class="font-label-sm text-label-sm text-secondary block">Staff L6 Strategy:</span>
+<span class="font-label-md text-label-md text-primary font-semibold">Tolerant Dead-Letter Sink</span>
+<span class="text-[11px] text-on-secondary-fixed block mt-0.5">Automatic quarantine leap with watermark advancing</span>
+</div>
+</div>
+</div>
+<div class="mt-space-md pt-space-sm border-t border-surface-container flex items-center justify-between text-label-sm font-label-sm">
+<span class="text-secondary">System Availability</span>
+<span class="text-primary font-bold">99.999% SLA</span>
+</div>
+</div>
+<!-- Card 4: Observability & Telemetry -->
+<div class="bg-surface-container-lowest p-space-lg rounded-xl shadow-sm flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-space-sm">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-secondary font-semibold">Dimension 04</span>
+<span class="p-1 rounded bg-surface-container text-tertiary material-symbols-outlined text-[18px]">query_stats</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold mb-space-xs">Production Telemetry Hooks</h3>
+<p class="font-body-sm text-body-sm text-secondary mb-space-md">Instrumentation for queue lag, drain rate, and buffer depth.</p>
+<div class="space-y-space-sm">
+<div class="bg-surface-container-low p-space-sm rounded-lg">
+<span class="font-label-sm text-label-sm text-secondary block">Candidate Coverage:</span>
+<span class="font-label-md text-label-md text-on-surface font-medium">None (Silent Ingestion)</span>
+<span class="text-[11px] text-on-surface-variant block mt-0.5">No metrics exposed for Prometheus or OpenTelemetry</span>
+</div>
+<div class="bg-secondary-fixed/50 p-space-sm rounded-lg">
+<span class="font-label-sm text-label-sm text-secondary block">Staff L6 Coverage:</span>
+<span class="font-label-md text-label-md text-primary font-semibold">Zero-Cost Counter Ring</span>
+<span class="text-[11px] text-on-secondary-fixed block mt-0.5">Exposes highWatermark, lagTicks, and dropCounters</span>
+</div>
+</div>
+</div>
+<div class="mt-space-md pt-space-sm border-t border-surface-container flex items-center justify-between text-label-sm font-label-sm">
+<span class="text-secondary">Observability Grade</span>
+<span class="text-primary font-bold">Tier-1 Production</span>
+</div>
+</div>
+</div>
+<!-- Sarah Chen's Principal AI Architectural Review & Interactive Coaching -->
+<div class="w-full bg-surface-container-low rounded-xl p-space-lg shadow-sm">
+<div class="flex flex-col lg:flex-row items-start gap-space-lg">
+<!-- Reviewer Avatar & Meta -->
+<div class="flex items-center lg:items-start gap-space-md min-w-[240px]">
+<div class="relative">
+<img class="w-14 h-14 rounded-full object-cover" data-alt="Principal AI interviewer Sarah Chen portrait, professional Asian tech executive, confident leadership demeanor, wearing clean minimalist attire, soft natural office studio background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDVVTxDIk7wR8Rl2799QbvDhMimeIIaqOB2JP0yYecMDY83noIC0U4oo-ybPZ-Jew7ozGst99i1bLLNyLwmpGlBnynN2QSLVS9nGbvMP67iMd9joAh3U1vipFLFh6rwDCkvT2a3UppxQYlFm6oZ4AOLe6mJFc4qxFKpGstDut9hxGVHcy7mVaSRz7MPf77dkprlW9LFLDXfnuEUqAV-5219h2bJNVwYqIWIqknTY-vW4z-9PzxF3Wc"/>
+<span class="absolute bottom-0 right-0 w-3.5 h-3.5 rounded-full bg-primary-container ring-2 ring-surface"></span>
+</div>
+<div>
+<span class="font-headline-sm text-headline-sm text-on-surface font-bold block">Sarah Chen</span>
+<span class="font-label-sm text-label-sm text-primary font-semibold block">Principal Staff AI Coach</span>
+<span class="font-label-sm text-label-sm text-secondary block">Ex-Stripe Core Infra • Datadog</span>
+</div>
+</div>
+<!-- Reviewer Deep-Dive Commentary -->
+<div class="flex-1 space-y-space-md">
+<div class="bg-surface-container-lowest p-space-md rounded-lg shadow-xs">
+<div class="flex items-center gap-space-xs text-primary font-label-md text-label-md font-semibold mb-space-xs">
+<span class="material-symbols-outlined text-[18px]">psychology</span>
+<span>Why Stripe Staff Systems Engineers Reject the Naive Map Approach</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface leading-relaxed">
+            "Alex, your algorithmic logic in <code class="px-1.5 py-0.5 rounded bg-surface-container font-mono text-[13px] text-primary">EventSinkBuffer</code> is clean for an L5 interview, but in high-throughput tier-1 ingestion (50,000+ events/sec), V8 handles <code class="px-1.5 py-0.5 rounded bg-surface-container font-mono text-[13px] text-primary">Map&lt;number, T&gt;</code> by dynamically rehashing entry tables. Notice the 68ms pause during teardown: because the shutdown loop synchronously polls <code class="px-1.5 py-0.5 rounded bg-surface-container font-mono text-[13px] text-primary">has()</code> without yielding to the Node.js event loop, incoming cluster heartbeats get starved, triggering spurious pod kill signals. By transitioning to a power-of-two circular ring buffer masked with <code class="px-1.5 py-0.5 rounded bg-surface-container font-mono text-[13px] text-primary">seq &amp; bitmask</code>, we eliminate V8 hidden class rebalancing entirely and lock down zero-allocation throughput."
+          </p>
+</div>
+<!-- Interactive Coach CTA Row -->
+<div class="flex flex-wrap items-center gap-space-sm">
+<button class="inline-flex items-center gap-space-xs bg-surface-container-lowest text-on-surface px-space-md py-space-sm rounded-lg font-label-md text-label-md hover:bg-surface-container transition-colors shadow-xs">
+<span class="material-symbols-outlined text-[18px] text-primary">lightbulb</span>
+<span>Explain Bitwise Masking (seq &amp; bitmask)</span>
+</button>
+<button class="inline-flex items-center gap-space-xs bg-surface-container-lowest text-on-surface px-space-md py-space-sm rounded-lg font-label-md text-label-md hover:bg-surface-container transition-colors shadow-xs">
+<span class="material-symbols-outlined text-[18px] text-tertiary">tune</span>
+<span>Simulate GC Pause Under 50k Events/s</span>
+</button>
+<button class="inline-flex items-center gap-space-xs bg-primary-container text-on-primary px-space-md py-space-sm rounded-lg font-label-md text-label-md hover:bg-primary transition-colors shadow-sm font-semibold">
+<span class="material-symbols-outlined text-[18px]">record_voice_over</span>
+<span>Practice Staff Oral Defense with Sarah</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div></main></div></body></html>

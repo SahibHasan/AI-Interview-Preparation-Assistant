@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Plus+Jakarta+Sans:wght@600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { colors: { "secondary": "#565e74", "outline-variant": "#c7c4d8", "secondary-fixed": "#dae2fd", "on-secondary-container": "#5c647a", "secondary-container": "#dae2fd", "on-tertiary-fixed": "#001d31", "on-tertiary-fixed-variant": "#004b73", "on-tertiary": "#ffffff", "on-secondary": "#ffffff", "on-primary-fixed-variant": "#3323cc", "primary-fixed": "#e2dfff", "on-error": "#ffffff", "on-primary": "#ffffff", "inverse-surface": "#213145", "surface-tint": "#4d44e3", "tertiary-container": "#00659a", "on-surface-variant": "#464555", "primary": "#3525cd", "tertiary-fixed": "#cce5ff", "primary-fixed-dim": "#c3c0ff", "background": "#f8f9ff", "secondary-fixed-dim": "#bec6e0", "surface-container-low": "#eff4ff", "surface-bright": "#f8f9ff", "on-background": "#0b1c30", "outline": "#777587", "error-container": "#ffdad6", "surface-container-lowest": "#ffffff", "surface-container-highest": "#d3e4fe", "on-tertiary-container": "#bedfff", "surface-variant": "#d3e4fe", "inverse-primary": "#c3c0ff", "inverse-on-surface": "#eaf1ff", "tertiary-fixed-dim": "#93ccff", "tertiary": "#004c76", "error": "#ba1a1a", "on-secondary-fixed": "#131b2e", "surface-container-high": "#dce9ff", "surface-dim": "#cbdbf5", "surface": "#f8f9ff", "on-surface": "#0b1c30", "primary-container": "#4f46e5", "on-error-container": "#93000a", "on-primary-fixed": "#0f0069", "on-secondary-fixed-variant": "#3f465c", "surface-container": "#e5eeff", "on-primary-container": "#dad7ff" }, borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, spacing: { "margin-mobile": "1rem", "space-md": "1rem", "space-sm": "0.5rem", "space-xl": "2.5rem", "space-xs": "0.25rem", "margin": "2rem", "gutter": "1.5rem", "gutter-mobile": "1rem", "space-lg": "1.5rem" }, fontFamily: { "body-lg": ["Inter"], "display-lg": ["Plus Jakarta Sans"], "headline-xl-mobile": ["Plus Jakarta Sans"], "headline-lg": ["Plus Jakarta Sans"], "label-lg": ["Inter"], "headline-md": ["Plus Jakarta Sans"], "body-md": ["Inter"], "label-md": ["Inter"], "display-lg-mobile": ["Plus Jakarta Sans"], "body-sm": ["Inter"], "headline-xl": ["Plus Jakarta Sans"], "label-sm": ["Inter"], "headline-sm": ["Plus Jakarta Sans"] }, fontSize: { "body-lg": ["16px", { lineHeight: "26px", fontWeight: "400" }], "display-lg": ["48px", { lineHeight: "56px", letterSpacing: "-0.025em", fontWeight: "700" }], "headline-xl-mobile": ["28px", { lineHeight: "36px", letterSpacing: "-0.02em", fontWeight: "700" }], "headline-lg": ["30px", { lineHeight: "38px", letterSpacing: "-0.015em", fontWeight: "600" }], "label-lg": ["14px", { lineHeight: "20px", letterSpacing: "-0.005em", fontWeight: "600" }], "headline-md": ["24px", { lineHeight: "32px", letterSpacing: "-0.01em", fontWeight: "600" }], "body-md": ["14px", { lineHeight: "22px", fontWeight: "400" }], "label-md": ["12px", { lineHeight: "16px", letterSpacing: "0.01em", fontWeight: "600" }], "display-lg-mobile": ["32px", { lineHeight: "40px", letterSpacing: "-0.02em", fontWeight: "700" }], "body-sm": ["13px", { lineHeight: "18px", fontWeight: "400" }], "headline-xl": ["36px", { lineHeight: "44px", letterSpacing: "-0.02em", fontWeight: "700" }], "label-sm": ["11px", { lineHeight: "14px", letterSpacing: "0.02em", fontWeight: "600" }], "headline-sm": ["20px", { lineHeight: "28px", letterSpacing: "-0.01em", fontWeight: "600" }] } } } };</script></head><body class="bg-surface font-body-md text-on-surface antialiased"><aside class="fixed left-0 top-0 h-full w-72 bg-on-secondary-fixed z-50 flex flex-col justify-between shadow-[0_1px_8px_rgba(0,0,0,0.06)]"><div class="flex flex-col"><div class="h-16 px-space-lg flex items-center gap-space-sm"><img alt="PrepPilot AI Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1U1Abx2XAC2v8wJ0w0QtuPK3K4Lof_aLCoXptUcJ4wlwJrm0ftTGATfWLLzV8CKcWroUY-X_9xSSD8EEwduxRdbpzlEkv7mj0KGgFbupSSSu1TgwwtfXkncowjH4_KBE8gcvdP1LTq-uM7JKQ9IVBV0lBdjwKNHB1Eh_Oj38HswRK6A--TZYcS37BIfNT7Z6RG8HdIQNiJ9Io1oT70IH39oWU0ZaRjx37NHszVYzvO6OfxGeW9XlhJ0"/><span class="font-headline-sm text-headline-sm text-on-primary tracking-tight font-bold">PrepPilot<span class="text-primary-fixed"> AI</span></span></div><div class="px-space-md py-space-sm"><span class="font-label-sm text-label-sm text-secondary-fixed-dim uppercase tracking-wider px-space-sm">Intelligence Suite</span></div><nav class="flex flex-col gap-space-xs px-space-md" data-active-classes="bg-primary-container text-on-primary font-label-lg rounded-lg"><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-secondary-fixed-dim hover:bg-inverse-surface hover:text-on-primary transition-colors font-label-lg text-label-lg" data-path="dashboard" href="#"><span class="material-symbols-outlined text-[20px]">grid_view</span><span>Dashboard</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-secondary-fixed-dim hover:bg-inverse-surface hover:text-on-primary transition-colors font-label-lg text-label-lg" data-path="resume-job-match" href="#"><span class="material-symbols-outlined text-[20px]">document_scanner</span><span>Resume &amp; Job Match</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-secondary-fixed-dim hover:bg-inverse-surface hover:text-on-primary transition-colors font-label-lg text-label-lg" data-path="interview-setup" href="#"><span class="material-symbols-outlined text-[20px]">tune</span><span>Interview Setup</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-secondary-fixed-dim hover:bg-inverse-surface hover:text-on-primary transition-colors font-label-lg text-label-lg" data-path="live-session" href="#"><span class="material-symbols-outlined text-[20px]">videocam</span><span>Live Session</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-secondary-fixed-dim hover:bg-inverse-surface hover:text-on-primary transition-colors font-label-lg text-label-lg" data-path="evaluation-reports" href="#"><span class="material-symbols-outlined text-[20px]">assessment</span><span>Evaluation Reports</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-secondary-fixed-dim hover:bg-inverse-surface hover:text-on-primary transition-colors font-label-lg text-label-lg" data-path="learning-plan" href="#"><span class="material-symbols-outlined text-[20px]">psychology</span><span>Learning Plan</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-secondary-fixed-dim hover:bg-inverse-surface hover:text-on-primary transition-colors font-label-lg text-label-lg" data-path="analytics-history" href="#"><span class="material-symbols-outlined text-[20px]">trending_up</span><span>Analytics &amp; History</span></a></nav></div><div class="px-space-md pb-space-lg flex flex-col gap-space-sm"><div class="bg-inverse-surface rounded-xl p-space-md"><div class="flex items-center justify-between mb-space-xs"><span class="font-label-md text-label-md text-on-primary">Readiness Score</span><span class="font-label-md text-label-md text-primary-fixed">84%</span></div><div class="w-full bg-on-secondary-fixed-variant rounded-full h-1.5 overflow-hidden"><div class="bg-primary-container h-1.5 rounded-full w-[84%]"></div></div><p class="font-label-sm text-label-sm text-secondary-fixed-dim mt-space-xs">Target: Senior Staff Role</p></div><nav class="flex flex-col" data-active-classes="bg-primary-container text-on-primary font-label-lg rounded-lg"><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-secondary-fixed-dim hover:bg-inverse-surface hover:text-on-primary transition-colors font-label-lg text-label-lg" data-path="profile-settings" href="#"><span class="material-symbols-outlined text-[20px]">settings</span><span>Profile &amp; Settings</span></a></nav></div></aside><div class="pl-72"><header class="fixed top-0 left-72 right-0 h-16 bg-surface/85 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.03)] z-40 flex items-center justify-between px-space-lg"><div class="flex items-center gap-space-sm text-on-surface-variant font-label-md text-label-md"><span class="hover:text-on-surface transition-colors cursor-pointer">Platform</span><span class="material-symbols-outlined text-[16px]">chevron_right</span><span class="text-on-surface font-label-md text-label-md font-semibold">Console</span></div><div class="flex items-center gap-space-md"><button class="flex items-center gap-space-xs bg-primary-container text-on-primary px-space-md py-space-xs rounded-lg font-label-md text-label-md hover:bg-primary transition-colors shadow-[0_1px_3px_rgba(15,23,42,0.04)]"><span class="material-symbols-outlined text-[18px]">play_arrow</span><span>Start Mock Interview</span></button><div class="h-5 w-px bg-outline-variant"></div><button class="relative p-space-xs text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high rounded-full transition-colors"><span class="material-symbols-outlined text-[20px]">notifications</span><span class="absolute top-1.5 right-1.5 w-2 h-2 bg-primary rounded-full ring-2 ring-surface"></span></button><div class="flex items-center gap-space-sm pl-space-xs"><div class="relative flex items-center"><img alt="Profile" class="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDHEChGHJFzQz2SN-UvlyHy_P0ZhzQJqP9Fbsud3_uobq0r2YCSZZs3bGoe1EKldbqmjOuiWXKngYsaWRiKhB-e7SuRxTj_tewCKruXzAAz2FKerFDA3TVUbbFxVug7XNHPRhj7VIqL89k6XgjM43cjstlIbfdzfVfa0iqIlgOytjfXmXXqfpPFq5Io3XHpcZl9oraLQh06F-yknA6QssJ5QRS0VrzeG5fOFLAqdsZQBZpQTVyrssM"/><span class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-primary-container rounded-full ring-2 ring-surface"></span></div></div></div></header><main class="relative pt-16 bg-surface min-h-screen px-space-lg py-space-lg w-full"><div class="flex flex-col w-full">
+<!-- Top Live Session Control & Context Sub-header -->
+<div class="w-full bg-surface-container-lowest shadow-sm rounded-xl p-space-md mb-space-md flex flex-col xl:flex-row xl:items-center xl:justify-between gap-space-md">
+<!-- Left: Identity, Badges & Problem Context -->
+<div class="flex flex-col gap-space-xs min-w-0">
+<div class="flex flex-wrap items-center gap-space-sm">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-primary/10 text-primary font-label-sm text-label-sm font-semibold tracking-wide">
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+          LIVE CODE EXECUTION
+        </span>
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm font-semibold">
+          L6 Staff Frontend &amp; Distributed Algorithms
+        </span>
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm font-medium">
+<span class="material-symbols-outlined text-[14px] text-primary">security</span>
+          V8 Worker Isolated (Healthy)
+        </span>
+</div>
+<div class="flex items-center gap-space-sm pt-0.5">
+<h1 class="font-headline-sm text-headline-sm text-on-surface tracking-tight truncate">
+          Problem #2 of 4: Monotonic Distributed Event Sinks &amp; Backpressure Queue
+        </h1>
+<span class="px-2 py-0.5 rounded bg-surface-container text-on-secondary-container font-label-sm text-label-sm font-semibold">TypeScript v5.3</span>
+</div>
+</div>
+<!-- Right: Clocks, AI Listener Status & Primary Controls -->
+<div class="flex flex-wrap items-center gap-space-md shrink-0">
+<!-- Session Timers -->
+<div class="flex items-center gap-space-sm bg-surface-container-low px-space-md py-1.5 rounded-lg shadow-sm">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Remaining</span>
+<span class="font-headline-sm text-headline-sm text-primary tracking-tight font-bold" id="countdown-timer">24:18</span>
+</div>
+<div class="h-7 w-px bg-surface-container-highest"></div>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Elapsed</span>
+<span class="font-label-lg text-label-lg text-on-surface font-semibold">20:42</span>
+</div>
+</div>
+<!-- Live AST Evaluation Beacon -->
+<div class="hidden lg:flex items-center gap-2 px-space-sm py-1.5 rounded-lg bg-surface-container">
+<div class="relative flex h-2.5 w-2.5">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-primary"></span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface font-medium leading-none">Sarah Evaluating</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant text-[10px]">Real-time AST &amp; Big-O</span>
+</div>
+</div>
+<!-- Action Buttons -->
+<div class="flex items-center gap-space-xs">
+<button class="p-2 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high rounded-lg transition-colors" title="Reset Sandbox Environment">
+<span class="material-symbols-outlined text-[20px]">restart_alt</span>
+</button>
+<button class="flex items-center gap-1.5 px-space-md py-2 bg-surface-container-high hover:bg-surface-container-highest text-on-surface font-label-md text-label-md rounded-lg transition-all shadow-sm" id="run-tests-btn">
+<span class="material-symbols-outlined text-[18px] text-primary">play_arrow</span>
+<span>Run Tests <kbd class="ml-1 text-[10px] bg-surface-container px-1 rounded text-on-surface-variant">⌘↵</kbd></span>
+</button>
+<button class="flex items-center gap-1.5 px-space-md py-2 bg-primary-container text-on-primary hover:bg-primary font-label-md text-label-md rounded-lg transition-all shadow-sm">
+<span class="material-symbols-outlined text-[18px]">verified</span>
+<span>Submit Solution</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Main Workstation: Split-Screen Layout -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-md items-start w-full">
+<!-- LEFT PANE: Specification, Constraints & AI Interviewer Presence (5 of 12 cols) -->
+<div class="lg:col-span-5 flex flex-col gap-space-md">
+<!-- AI Interviewer Video Avatar & Spoken Dialogue Card -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm p-space-md flex flex-col gap-space-sm relative overflow-hidden">
+<div class="flex items-center justify-between pb-space-xs border-b border-surface-container">
+<div class="flex items-center gap-space-sm">
+<div class="relative">
+<img class="w-10 h-10 rounded-full object-cover shadow-sm" data-alt="Professional studio portrait of an Asian-American female technical executive with sleek dark hair, tailored minimalist blazer, calm analytical expression, soft architectural studio lighting in deep navy and cool indigo tones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDEiwCvm5bci6BNKbjFuiU4wN458qgh1tZLtQ6pv4prIlv2Gwjp4Ecj5rZ7jlOcE-dKyZnsDVKNWtMuw_I3jbCtav6fshvTc0xO_ATB1J4Y0ur6ex3BCmauPCmvCJ1VcejrC3cy-T89YxJS_9_4oXgxi7CjoLGuZCXUpl_og7N2gazmat-28ECzHhU8YxIvddwsYKqCqzJjIJH6VWRZT8VEsppxCx1dySTRf4T87_usmVwYjTtcUQc"/>
+<span class="absolute bottom-0 right-0 w-3 h-3 bg-primary rounded-full ring-2 ring-surface-container-lowest"></span>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center gap-1.5">
+<span class="font-label-lg text-label-lg text-on-surface font-bold">Sarah Chen</span>
+<span class="font-label-sm text-label-sm text-primary font-semibold">Principal Architect</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Lead Interviewer (Distributed Systems)</span>
+</div>
+</div>
+<!-- Live Candidate Mic / WPM Biomarker -->
+<div class="flex items-center gap-1.5 bg-surface-container-low px-2 py-1 rounded-full">
+<span class="material-symbols-outlined text-[16px] text-primary" style="font-variation-settings: 'FILL' 1;">mic</span>
+<span class="font-label-sm text-label-sm text-on-surface font-medium">Candidate: 138 WPM</span>
+</div>
+</div>
+<!-- Audio Waveform Visualizer & Activity -->
+<div class="flex items-center justify-between px-space-xs py-1">
+<div class="flex items-center gap-1.5">
+<span class="inline-block w-1.5 h-1.5 rounded-full bg-primary animate-ping"></span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Speaking • Challenging memory footprint</span>
+</div>
+<!-- Clean Non-Glowing Amplitude Waveform -->
+<div class="flex items-end gap-[3px] h-4">
+<div class="w-[3px] bg-primary h-2 rounded-full"></div>
+<div class="w-[3px] bg-primary h-3.5 rounded-full"></div>
+<div class="w-[3px] bg-primary h-4 rounded-full"></div>
+<div class="w-[3px] bg-primary h-2.5 rounded-full"></div>
+<div class="w-[3px] bg-primary h-1 rounded-full"></div>
+<div class="w-[3px] bg-primary h-3 rounded-full"></div>
+<div class="w-[3px] bg-primary h-4 rounded-full"></div>
+<div class="w-[3px] bg-primary h-1.5 rounded-full"></div>
+</div>
+</div>
+<!-- Sarah's Spoken Intervention / Architectural Nudge -->
+<div class="bg-surface-container-low rounded-lg p-space-sm flex flex-col gap-1">
+<div class="flex items-center gap-1 text-primary">
+<span class="material-symbols-outlined text-[16px]">record_voice_over</span>
+<span class="font-label-sm text-label-sm font-semibold uppercase tracking-wider">Interviewer Dialogue (T+20:14)</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface">
+            “Take a look at your <code class="font-mono text-primary font-semibold">enqueue()</code> logic when the sliding window reaches saturation. If downstream consumers experience transient degradation, how will your current eviction policy prevent memory thrashing while preserving strict sequence idempotency?”
+          </p>
+<div class="flex items-center justify-between pt-1 mt-1 border-t border-surface-container">
+<button class="font-label-sm text-label-sm text-primary hover:text-on-primary-fixed-variant font-semibold inline-flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">reply</span>
+              Answer Verbally
+            </button>
+<button class="font-label-sm text-label-sm text-on-surface-variant hover:text-on-surface inline-flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">help_outline</span>
+              Request Clarification
+            </button>
+</div>
+</div>
+</div>
+<!-- Problem Specification Panel with Multi-Tabs -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden flex flex-col">
+<!-- Navigation Tabs -->
+<div class="flex items-center border-b border-surface-container bg-surface-container-low px-space-sm">
+<button class="px-space-md py-space-sm font-label-md text-label-md text-primary font-bold border-b-2 border-primary">
+            Problem &amp; Constraints
+          </button>
+<button class="px-space-md py-space-sm font-label-md text-label-md text-on-surface-variant hover:text-on-surface font-medium">
+            AST Rubric (L6)
+          </button>
+<button class="px-space-md py-space-sm font-label-md text-label-md text-on-surface-variant hover:text-on-surface font-medium flex items-center gap-1">
+<span>Interview Notes</span>
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+</button>
+</div>
+<!-- Specification Content -->
+<div class="p-space-md flex flex-col gap-space-md overflow-y-auto max-h-[580px]">
+<!-- Problem Headline Summary -->
+<div>
+<div class="flex items-center justify-between mb-1">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant">Distributed Systems Architecture</span>
+<span class="inline-flex items-center px-2 py-0.5 rounded-full bg-primary-fixed text-on-primary-fixed font-label-sm text-label-sm font-bold">Hard • L6 Target</span>
+</div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface font-semibold">
+              Monotonic Event Sink Buffer
+            </h2>
+</div>
+<!-- Problem Narrative -->
+<div class="space-y-space-sm font-body-md text-body-md text-on-surface leading-relaxed">
+<p>
+              In our distributed telemetry processing tier, telemetry events arrive out-of-order over asynchronous WebAssembly streams across edge regions. You must implement an in-memory, thread-safe asynchronous buffer that accepts incoming telemetry frames and emits them in strictly ascending, gapless <code class="bg-surface-container px-1 py-0.5 rounded font-mono text-[12px] text-primary">sequenceId</code> order.
+            </p>
+<p>
+              Under extreme network burst conditions (up to 50,000 events/second), the buffer must enforce backpressure by rejecting replayed sequences and evicting expired sliding window frames without exceeding bounded memory.
+            </p>
+</div>
+<!-- Complexity Targets Bento Row -->
+<div class="grid grid-cols-2 gap-space-sm">
+<div class="p-space-sm bg-surface-container-low rounded-lg flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant font-medium">Time Target</span>
+<span class="font-headline-sm text-headline-sm text-primary font-bold">O(log N)</span>
+<span class="font-label-sm text-label-sm text-on-secondary-container mt-0.5">Per enqueue / dequeue operation</span>
+</div>
+<div class="p-space-sm bg-surface-container-low rounded-lg flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant font-medium">Space Target</span>
+<span class="font-headline-sm text-headline-sm text-on-surface font-bold">O(K)</span>
+<span class="font-label-sm text-label-sm text-on-secondary-container mt-0.5">K = Sliding window high watermark</span>
+</div>
+</div>
+<!-- Constraints List -->
+<div class="bg-surface-container-low p-space-sm rounded-lg flex flex-col gap-1.5">
+<span class="font-label-md text-label-md text-on-surface font-bold flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px] text-primary">rule</span>
+              Technical Constraints &amp; Invariants
+            </span>
+<ul class="font-body-sm text-body-sm text-on-surface-variant space-y-1 list-disc list-inside">
+<li><strong class="text-on-surface">Strict Monotonicity:</strong> No frame with <code class="font-mono text-[11px]">sequenceId ≤ lastCommittedSeq</code> may be emitted.</li>
+<li><strong class="text-on-surface">Sliding Window Capacity:</strong> Max uncommitted buffer capacity is fixed at <code class="font-mono text-[11px]">10,000 items</code>.</li>
+<li><strong class="text-on-surface">Zero Heap Leaks:</strong> Garbage collection pressure must stay flat during sustained 60-second burst streams.</li>
+<li><strong class="text-on-surface">Deterministic Backpressure:</strong> Reject payloads with <code class="font-mono text-[11px]">QueueFullException</code> once high watermark is breached.</li>
+</ul>
+</div>
+<!-- I/O Example Block -->
+<div class="flex flex-col gap-1.5">
+<span class="font-label-md text-label-md text-on-surface font-bold">Sample Payload Ingestion &amp; Flush</span>
+<div class="bg-inverse-surface text-inverse-on-surface rounded-lg p-space-sm font-mono text-[12px] overflow-x-auto leading-relaxed shadow-sm">
+<span class="text-secondary-fixed-dim">// Ingestion Sequence:</span><br/>
+              sink.enqueue({ sequenceId: 104, payload: <span class="text-primary-fixed">"geo_ping"</span> }); <span class="text-secondary-fixed-dim">// Buffered (waiting 101-103)</span><br/>
+              sink.enqueue({ sequenceId: 101, payload: <span class="text-primary-fixed">"sys_init"</span> }); <span class="text-secondary-fixed-dim">// Buffered</span><br/>
+              sink.enqueue({ sequenceId: 102, payload: <span class="text-primary-fixed">"auth_ok"</span>  }); <span class="text-secondary-fixed-dim">// Buffered</span><br/>
+              sink.enqueue({ sequenceId: 103, payload: <span class="text-primary-fixed">"req_exec"</span> }); <span class="text-secondary-fixed-dim">// Triggers cascade flush!</span><br/>
+<br/>
+<span class="text-secondary-fixed-dim">// Emitted Order via AsyncIterator:</span><br/>
+              → <span class="text-primary-fixed-dim">[101, 102, 103, 104]</span> in strict sequential order.
+            </div>
+</div>
+</div>
+</div>
+</div>
+<!-- RIGHT PANE: Monaco Dark Sandboxed Live Coding IDE & REPL (7 of 12 cols) -->
+<div class="lg:col-span-7 flex flex-col gap-space-md">
+<!-- IDE Window Shell (Monaco Dark Aesthetic with Rich Syntax Styling) -->
+<div class="bg-inverse-surface rounded-xl shadow-lg overflow-hidden flex flex-col">
+<!-- IDE Top Control Bar -->
+<div class="bg-[#172233] px-space-md py-2 flex items-center justify-between border-b border-[#2a384e]">
+<!-- File Tabs & Language Selector -->
+<div class="flex items-center gap-2">
+<div class="flex items-center gap-1.5 px-3 py-1.5 rounded-t bg-inverse-surface text-on-primary font-mono text-[12px] font-semibold border-t-2 border-primary">
+<span class="material-symbols-outlined text-[16px] text-primary-fixed">code</span>
+<span>EventSinkBuffer.ts</span>
+<span class="w-1.5 h-1.5 rounded-full bg-primary ml-1" title="Unsaved changes buffered"></span>
+</div>
+<div class="flex items-center gap-1.5 px-3 py-1.5 rounded-t text-secondary-fixed-dim hover:text-on-primary font-mono text-[12px] cursor-pointer">
+<span class="material-symbols-outlined text-[16px]">rule</span>
+<span>EventSink.test.ts</span>
+</div>
+</div>
+<!-- IDE Preferences & Environment Actions -->
+<div class="flex items-center gap-space-sm text-secondary-fixed-dim">
+<div class="hidden sm:flex items-center gap-1 text-[11px] font-mono px-2 py-0.5 rounded bg-[#1e2c42]">
+<span>TypeScript 5.3</span>
+<span class="text-primary-fixed">•</span>
+<span>V8 Worker</span>
+</div>
+<button class="p-1 hover:text-on-primary rounded hover:bg-[#25354e]" title="Format with Prettier">
+<span class="material-symbols-outlined text-[16px]">align_horizontal_left</span>
+</button>
+<button class="p-1 hover:text-on-primary rounded hover:bg-[#25354e]" title="Vim Keybindings: Disabled">
+<span class="material-symbols-outlined text-[16px]">keyboard</span>
+</button>
+<button class="p-1 hover:text-on-primary rounded hover:bg-[#25354e]" title="IDE Preferences">
+<span class="material-symbols-outlined text-[16px]">settings</span>
+</button>
+</div>
+</div>
+<!-- Monaco Editor Canvas (Dark High-Contrast Precision Theme) -->
+<div class="relative font-mono text-[13px] leading-6 py-3 px-1 text-[#e2e8f0] overflow-x-auto selection:bg-primary-container selection:text-on-primary min-h-[420px]">
+<!-- Line 1 -->
+<div class="flex items-start hover:bg-[#283850]/40 px-2">
+<span class="w-8 shrink-0 text-right pr-4 text-[#5f7492] select-none text-[12px]">1</span>
+<span class="text-[#81a1c1]">export</span> <span class="text-[#81a1c1]">interface</span> <span class="text-[#8fbcbb]">TelemetryEvent</span> {
+          </div>
+<!-- Line 2 -->
+<div class="flex items-start hover:bg-[#283850]/40 px-2">
+<span class="w-8 shrink-0 text-right pr-4 text-[#5f7492] select-none text-[12px]">2</span>
+              <span class="text-[#d8dee9]">sequenceId</span>: <span class="text-[#88c0d0]">number</span>;
+          </div>
+<!-- Line 3 -->
+<div class="flex items-start hover:bg-[#283850]/40 px-2">
+<span class="w-8 shrink-0 text-right pr-4 text-[#5f7492] select-none text-[12px]">3</span>
+              <span class="text-[#d8dee9]">payload</span>: <span class="text-[#88c0d0]">unknown</span>;
+          </div>
+<!-- Line 4 -->
+<div class="flex items-start hover:bg-[#283850]/40 px-2">
+<span class="w-8 shrink-0 text-right pr-4 text-[#5f7492] select-none text-[12px]">4</span>
+              <span class="text-[#d8dee9]">timestamp</span>: <span class="text-[#88c0d0]">number</span>;
+          </div>
+<!-- Line 5 -->
+<div class="flex items-start hover:bg-[#283850]/40 px-2">
+<span class="w-8 shrink-0 text-right pr-4 text-[#5f7492] select-none text-[12px]">5</span>
+            }
+          </div>
+<!-- Line 6 -->
+<div class="flex items-start hover:bg-[#283850]/40 px-2">
+<span class="w-8 shrink-0 text-right pr-4 text-[#5f7492] select-none text-[12px]">6</span>
+<span></span>
+</div>
+<!-- Line 7 -->
+<div class="flex items-start hover:bg-[#283850]/40 px-2">
+<span class="w-8 shrink-0 text-right pr-4 text-[#5f7492] select-none text-[12px]">7</span>
+<span class="text-[#81a1c1]">export</span> <span class="text-[#81a1c1]">class</span> <span class="text-[#8fbcbb]">MonotonicEventSink</span>&lt;<span class="text-[#8fbcbb]">T</span> <span class="text-[#81a1c1]">extends</span> <span class="text-[#8fbcbb]">TelemetryEvent</span>&gt; {
+          </div>
+<!-- Line 8 -->
+<div class="flex items-start hover:bg-[#283850]/40 px-2">
+<span class="w-8 shrink-0 text-right pr-4 text-[#5f7492] select-none text-[12px]">8</span>
+              <span class="text-[#81a1c1]">private</span> <span class="text-[#d8dee9]">lastCommittedSeq</span>: <span class="text-[#88c0d0]">number</span> = <span class="text-[#b48ead]">0</span>;
+          </div>
+<!-- Line 9 -->
+<div class="flex items-start hover:bg-[#283850]/40 px-2">
+<span class="w-8 shrink-0 text-right pr-4 text-[#5f7492] select-none text-[12px]">9</span>
+              <span class="text-[#81a1c1]">private</span> <span class="text-[#d8dee9]">heapBuffer</span>: <span class="text-[#8fbcbb]">Map</span>&lt;<span class="text-[#88c0d0]">number</span>, <span class="text-[#8fbcbb]">T</span>&gt; = <span class="text-[#81a1c1]">new</span> <span class="text-[#8fbcbb]">Map</span>();
+          </div>
+<!-- Line 10 -->
+<div class="flex items-start hover:bg-[#283850]/40 px-2">
+<span class="w-8 shrink-0 text-right pr-4 text-[#5f7492] select-none text-[12px]">10</span>
+              <span class="text-[#81a1c1]">private</span> <span class="text-[#81a1c1]">readonly</span> <span class="text-[#d8dee9]">capacityWatermark</span>: <span class="text-[#88c0d0]">number</span>;
+          </div>
+<!-- Line 11 -->
+<div class="flex items-start hover:bg-[#283850]/40 px-2">
+<span class="w-8 shrink-0 text-right pr-4 text-[#5f7492] select-none text-[12px]">11</span>
+<span></span>
+</div>
+<!-- Line 12 -->
+<div class="flex items-start hover:bg-[#283850]/40 px-2">
+<span class="w-8 shrink-0 text-right pr-4 text-[#5f7492] select-none text-[12px]">12</span>
+              <span class="text-[#81a1c1]">constructor</span>(<span class="text-[#d8dee9]">capacityWatermark</span>: <span class="text-[#88c0d0]">number</span> = <span class="text-[#b48ead]">10_000</span>) {
+          </div>
+<!-- Line 13 -->
+<div class="flex items-start hover:bg-[#283850]/40 px-2">
+<span class="w-8 shrink-0 text-right pr-4 text-[#5f7492] select-none text-[12px]">13</span>
+                <span class="text-[#81a1c1]">this</span>.<span class="text-[#d8dee9]">capacityWatermark</span> = <span class="text-[#d8dee9]">capacityWatermark</span>;
+          </div>
+<!-- Line 14 -->
+<div class="flex items-start hover:bg-[#283850]/40 px-2">
+<span class="w-8 shrink-0 text-right pr-4 text-[#5f7492] select-none text-[12px]">14</span>
+              }
+          </div>
+<!-- Line 15 -->
+<div class="flex items-start hover:bg-[#283850]/40 px-2">
+<span class="w-8 shrink-0 text-right pr-4 text-[#5f7492] select-none text-[12px]">15</span>
+<span></span>
+</div>
+<!-- Line 16 -->
+<div class="flex items-start hover:bg-[#283850]/40 px-2">
+<span class="w-8 shrink-0 text-right pr-4 text-[#5f7492] select-none text-[12px]">16</span>
+              <span class="text-[#81a1c1]">public</span> <span class="text-[#88c0d0]">enqueue</span>(<span class="text-[#d8dee9]">event</span>: <span class="text-[#8fbcbb]">T</span>): <span class="text-[#88c0d0]">boolean</span> {
+          </div>
+<!-- Line 17 -->
+<div class="flex items-start hover:bg-[#283850]/40 px-2">
+<span class="w-8 shrink-0 text-right pr-4 text-[#5f7492] select-none text-[12px]">17</span>
+                <span class="text-[#6c7d9c] italic">// Replay filter: Drop already committed sequences</span>
+</div>
+<!-- Line 18 (With Inline AI Diagnostic Telemetry Squiggly) -->
+<div class="flex items-start bg-[#382b20]/60 px-2 border-l-2 border-amber-400">
+<span class="w-8 shrink-0 text-right pr-4 text-amber-300 font-bold select-none text-[12px]">18</span>
+<div class="flex flex-col w-full">
+<div>
+                    <span class="text-[#81a1c1]">if</span> (<span class="text-[#d8dee9]">event</span>.<span class="text-[#d8dee9]">sequenceId</span> &lt;= <span class="text-[#81a1c1]">this</span>.<span class="text-[#d8dee9]">lastCommittedSeq</span>) <span class="text-[#81a1c1]">return</span> <span class="text-[#81a1c1]">false</span>;
+              </div>
+<!-- Real-time AI AST Telemetry Callout -->
+<div class="my-1.5 p-2 bg-[#2a241b] rounded text-[11px] text-amber-200 flex items-start gap-2 shadow-sm">
+<span class="material-symbols-outlined text-[16px] text-amber-400 shrink-0">psychology</span>
+<div class="flex flex-col">
+<span class="font-bold text-amber-300">PrepPilot AST Telemetry • O(1) Check Calibrated</span>
+<span class="text-amber-100/90 leading-normal">Fast-path sequence filter correctly prevents replay thrashing. Note: Ensure <code class="font-mono text-amber-300">heapBuffer.size</code> check occurs prior to Map allocation under 50k ops/sec.</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Line 19 -->
+<div class="flex items-start hover:bg-[#283850]/40 px-2">
+<span class="w-8 shrink-0 text-right pr-4 text-[#5f7492] select-none text-[12px]">19</span>
+                <span class="text-[#81a1c1]">if</span> (<span class="text-[#81a1c1]">this</span>.<span class="text-[#d8dee9]">heapBuffer</span>.<span class="text-[#d8dee9]">size</span> &gt;= <span class="text-[#81a1c1]">this</span>.<span class="text-[#d8dee9]">capacityWatermark</span>) {
+          </div>
+<!-- Line 20 -->
+<div class="flex items-start hover:bg-[#283850]/40 px-2">
+<span class="w-8 shrink-0 text-right pr-4 text-[#5f7492] select-none text-[12px]">20</span>
+                  <span class="text-[#81a1c1]">throw</span> <span class="text-[#81a1c1]">new</span> <span class="text-[#8fbcbb]">Error</span>(<span class="text-[#a3be8c]">"QueueFullException: Sliding window backpressure saturated."</span>);
+          </div>
+<!-- Line 21 -->
+<div class="flex items-start hover:bg-[#283850]/40 px-2">
+<span class="w-8 shrink-0 text-right pr-4 text-[#5f7492] select-none text-[12px]">21</span>
+                }
+          </div>
+<!-- Line 22 -->
+<div class="flex items-start hover:bg-[#283850]/40 px-2">
+<span class="w-8 shrink-0 text-right pr-4 text-[#5f7492] select-none text-[12px]">22</span>
+                <span class="text-[#81a1c1]">this</span>.<span class="text-[#d8dee9]">heapBuffer</span>.<span class="text-[#88c0d0]">set</span>(<span class="text-[#d8dee9]">event</span>.<span class="text-[#d8dee9]">sequenceId</span>, <span class="text-[#d8dee9]">event</span>);
+          </div>
+<!-- Line 23 -->
+<div class="flex items-start hover:bg-[#283850]/40 px-2">
+<span class="w-8 shrink-0 text-right pr-4 text-[#5f7492] select-none text-[12px]">23</span>
+                <span class="text-[#81a1c1]">return</span> <span class="text-[#81a1c1]">true</span>;
+          </div>
+<!-- Line 24 -->
+<div class="flex items-start hover:bg-[#283850]/40 px-2">
+<span class="w-8 shrink-0 text-right pr-4 text-[#5f7492] select-none text-[12px]">24</span>
+              }
+          </div>
+<!-- Line 25 -->
+<div class="flex items-start hover:bg-[#283850]/40 px-2">
+<span class="w-8 shrink-0 text-right pr-4 text-[#5f7492] select-none text-[12px]">25</span>
+<span></span>
+</div>
+<!-- Line 26 -->
+<div class="flex items-start hover:bg-[#283850]/40 px-2">
+<span class="w-8 shrink-0 text-right pr-4 text-[#5f7492] select-none text-[12px]">26</span>
+              <span class="text-[#81a1c1]">public</span> *<span class="text-[#88c0d0]">flushConsecutive</span>(): <span class="text-[#8fbcbb]">Generator</span>&lt;<span class="text-[#8fbcbb]">T</span>, <span class="text-[#88c0d0]">void</span>, <span class="text-[#88c0d0]">unknown</span>&gt; {
+          </div>
+<!-- Line 27 -->
+<div class="flex items-start hover:bg-[#283850]/40 px-2">
+<span class="w-8 shrink-0 text-right pr-4 text-[#5f7492] select-none text-[12px]">27</span>
+                <span class="text-[#81a1c1]">let</span> <span class="text-[#d8dee9]">nextSeq</span> = <span class="text-[#81a1c1]">this</span>.<span class="text-[#d8dee9]">lastCommittedSeq</span> + <span class="text-[#b48ead]">1</span>;
+          </div>
+<!-- Line 28 -->
+<div class="flex items-start hover:bg-[#283850]/40 px-2">
+<span class="w-8 shrink-0 text-right pr-4 text-[#5f7492] select-none text-[12px]">28</span>
+                <span class="text-[#81a1c1]">while</span> (<span class="text-[#81a1c1]">this</span>.<span class="text-[#d8dee9]">heapBuffer</span>.<span class="text-[#88c0d0]">has</span>(<span class="text-[#d8dee9]">nextSeq</span>)) {
+          </div>
+<!-- Line 29 -->
+<div class="flex items-start hover:bg-[#283850]/40 px-2">
+<span class="w-8 shrink-0 text-right pr-4 text-[#5f7492] select-none text-[12px]">29</span>
+                  <span class="text-[#81a1c1]">const</span> <span class="text-[#d8dee9]">item</span> = <span class="text-[#81a1c1]">this</span>.<span class="text-[#d8dee9]">heapBuffer</span>.<span class="text-[#88c0d0]">get</span>(<span class="text-[#d8dee9]">nextSeq</span>)!;
+          </div>
+<!-- Line 30 -->
+<div class="flex items-start hover:bg-[#283850]/40 px-2">
+<span class="w-8 shrink-0 text-right pr-4 text-[#5f7492] select-none text-[12px]">30</span>
+                  <span class="text-[#81a1c1]">this</span>.<span class="text-[#d8dee9]">heapBuffer</span>.<span class="text-[#88c0d0]">delete</span>(<span class="text-[#d8dee9]">nextSeq</span>);
+          </div>
+<!-- Line 31 -->
+<div class="flex items-start hover:bg-[#283850]/40 px-2">
+<span class="w-8 shrink-0 text-right pr-4 text-[#5f7492] select-none text-[12px]">31</span>
+                  <span class="text-[#81a1c1]">this</span>.<span class="text-[#d8dee9]">lastCommittedSeq</span> = <span class="text-[#d8dee9]">nextSeq</span>;
+          </div>
+<!-- Line 32 -->
+<div class="flex items-start hover:bg-[#283850]/40 px-2">
+<span class="w-8 shrink-0 text-right pr-4 text-[#5f7492] select-none text-[12px]">32</span>
+                  <span class="text-[#81a1c1]">yield</span> <span class="text-[#d8dee9]">item</span>;
+          </div>
+<!-- Line 33 -->
+<div class="flex items-start hover:bg-[#283850]/40 px-2">
+<span class="w-8 shrink-0 text-right pr-4 text-[#5f7492] select-none text-[12px]">33</span>
+                  <span class="text-[#d8dee9]">nextSeq</span>++;
+          </div>
+<!-- Line 34 -->
+<div class="flex items-start hover:bg-[#283850]/40 px-2">
+<span class="w-8 shrink-0 text-right pr-4 text-[#5f7492] select-none text-[12px]">34</span>
+                }
+          </div>
+<!-- Line 35 -->
+<div class="flex items-start hover:bg-[#283850]/40 px-2">
+<span class="w-8 shrink-0 text-right pr-4 text-[#5f7492] select-none text-[12px]">35</span>
+              }
+          </div>
+<!-- Line 36 -->
+<div class="flex items-start hover:bg-[#283850]/40 px-2">
+<span class="w-8 shrink-0 text-right pr-4 text-[#5f7492] select-none text-[12px]">36</span>
+            }
+          </div>
+</div>
+<!-- Inline Editor Status Footer -->
+<div class="bg-[#172233] px-space-md py-1.5 flex items-center justify-between text-[11px] font-mono text-secondary-fixed-dim border-t border-[#2a384e]">
+<div class="flex items-center gap-space-md">
+<span>Ln 18, Col 42</span>
+<span>Spaces: 2</span>
+<span>UTF-8</span>
+</div>
+<div class="flex items-center gap-space-sm">
+<span class="flex items-center gap-1 text-primary-fixed">
+<span class="material-symbols-outlined text-[14px]">bolt</span>
+<span>Isolated Worker: Active (3.1 ms latency)</span>
+</span>
+</div>
+</div>
+</div>
+<!-- Sandboxed Execution & Output Panel (Bottom Split) -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden flex flex-col">
+<!-- Panel Tabs & Telemetry Metrics Pill -->
+<div class="flex items-center justify-between bg-surface-container-low px-space-md border-b border-surface-container">
+<div class="flex items-center gap-space-xs">
+<button class="px-space-sm py-2.5 font-label-md text-label-md text-primary font-bold border-b-2 border-primary flex items-center gap-1.5">
+<span>Unit Test Results</span>
+<span class="px-1.5 py-0.2 rounded-full bg-primary/10 text-primary text-[11px] font-semibold">4/5 Passing</span>
+</button>
+<button class="px-space-sm py-2.5 font-label-md text-label-md text-on-surface-variant hover:text-on-surface font-medium flex items-center gap-1">
+<span>Console stdout</span>
+<span class="w-2 h-2 rounded-full bg-secondary-fixed-dim"></span>
+</button>
+<button class="px-space-sm py-2.5 font-label-md text-label-md text-on-surface-variant hover:text-on-surface font-medium">
+              V8 Heap Profiler
+            </button>
+</div>
+<!-- Micro Performance Pill -->
+<div class="hidden sm:flex items-center gap-2 bg-surface-container px-2.5 py-1 rounded font-mono text-[11px] text-on-surface">
+<span>Runtime: <strong class="text-primary font-semibold">42ms</strong></span>
+<span class="text-secondary-fixed-dim">|</span>
+<span>Alloc: <strong class="text-on-surface font-semibold">14.2 MB</strong></span>
+<span class="text-secondary-fixed-dim">|</span>
+<span class="text-primary font-semibold">0 Leaks</span>
+</div>
+</div>
+<!-- Test Suite Output List -->
+<div class="p-space-md flex flex-col gap-2 overflow-y-auto max-h-[220px]">
+<!-- Test 1: Passing -->
+<div class="flex items-center justify-between p-2 rounded bg-surface-container-low/70">
+<div class="flex items-center gap-2 min-w-0">
+<span class="material-symbols-outlined text-primary text-[18px] shrink-0" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="font-body-sm text-body-sm text-on-surface font-medium truncate">should maintain strict monotonic sequence order under burst traffic</span>
+</div>
+<span class="font-mono text-[11px] text-on-surface-variant shrink-0 ml-2">12ms</span>
+</div>
+<!-- Test 2: Passing -->
+<div class="flex items-center justify-between p-2 rounded bg-surface-container-low/70">
+<div class="flex items-center gap-2 min-w-0">
+<span class="material-symbols-outlined text-primary text-[18px] shrink-0" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="font-body-sm text-body-sm text-on-surface font-medium truncate">should enforce deduplication for replay sequence keys</span>
+</div>
+<span class="font-mono text-[11px] text-on-surface-variant shrink-0 ml-2">4ms</span>
+</div>
+<!-- Test 3: Passing -->
+<div class="flex items-center justify-between p-2 rounded bg-surface-container-low/70">
+<div class="flex items-center gap-2 min-w-0">
+<span class="material-symbols-outlined text-primary text-[18px] shrink-0" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="font-body-sm text-body-sm text-on-surface font-medium truncate">should trigger sliding window eviction without uncommitted memory growth</span>
+</div>
+<span class="font-mono text-[11px] text-on-surface-variant shrink-0 ml-2">18ms</span>
+</div>
+<!-- Test 4: Passing -->
+<div class="flex items-center justify-between p-2 rounded bg-surface-container-low/70">
+<div class="flex items-center gap-2 min-w-0">
+<span class="material-symbols-outlined text-primary text-[18px] shrink-0" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="font-body-sm text-body-sm text-on-surface font-medium truncate">should throw QueueFullException at capacity watermark threshold</span>
+</div>
+<span class="font-mono text-[11px] text-on-surface-variant shrink-0 ml-2">8ms</span>
+</div>
+<!-- Test 5: Warning / Failing -->
+<div class="flex flex-col p-2.5 rounded bg-error-container/20 border-l-2 border-error">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2 min-w-0">
+<span class="material-symbols-outlined text-error text-[18px] shrink-0">cancel</span>
+<span class="font-body-sm text-body-sm text-on-surface font-semibold truncate">should gracefully handle rapid worker termination without buffer starvation</span>
+</div>
+<span class="font-mono text-[11px] text-error font-semibold shrink-0 ml-2">250ms (Timeout)</span>
+</div>
+<div class="mt-1.5 ml-6 font-mono text-[11px] text-error">
+              Timed out after 250ms. Potential event-loop starvation detected during asynchronous drain iteration.
+            </div>
+</div>
+</div>
+<!-- Test Sandbox Actions Bar -->
+<div class="bg-surface-container-low px-space-md py-2 flex items-center justify-between border-t border-surface-container">
+<div class="flex items-center gap-space-sm">
+<button class="font-label-sm text-label-sm text-on-surface hover:text-primary font-semibold flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">bug_report</span>
+              Debug Step by Step
+            </button>
+<span class="text-secondary-fixed-dim">•</span>
+<button class="font-label-sm text-label-sm text-on-surface-variant hover:text-on-surface">
+              View AST Flamegraph
+            </button>
+</div>
+<button class="px-space-sm py-1 bg-surface-container text-on-surface hover:bg-surface-container-highest rounded font-label-sm text-label-sm font-semibold transition-colors">
+            Re-run Failed Suite (1)
+          </button>
+</div>
+</div>
+</div>
+</div>
+<!-- Bottom Telemetry, Biomarkers & Session Delivery Bar -->
+<div class="w-full bg-surface-container-lowest shadow-md rounded-xl p-space-md mt-space-md flex flex-col md:flex-row md:items-center md:justify-between gap-space-md">
+<!-- Live Biomarker Indicators -->
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-space-md">
+<!-- Speaking Cadence -->
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Candidate Pace</span>
+<div class="flex items-center gap-1.5 mt-0.5">
+<span class="font-headline-sm text-headline-sm text-on-surface font-bold">136</span>
+<span class="font-label-sm text-label-sm text-primary font-semibold">WPM (Optimal)</span>
+</div>
+</div>
+<!-- Cognitive Hesitation -->
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Cognitive Pause</span>
+<div class="flex items-center gap-1.5 mt-0.5">
+<span class="font-headline-sm text-headline-sm text-on-surface font-bold">1.2s</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Avg latency</span>
+</div>
+</div>
+<!-- Algorithmic Rigor Score -->
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Algorithmic Rigor</span>
+<div class="flex items-center gap-1.5 mt-0.5">
+<span class="font-headline-sm text-headline-sm text-primary font-bold">91<span class="text-body-sm font-normal text-on-surface-variant">/100</span></span>
+<span class="font-label-sm text-label-sm text-primary font-semibold">High L6</span>
+</div>
+</div>
+<!-- Big-O Accuracy -->
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">System Big-O</span>
+<div class="flex items-center gap-1.5 mt-0.5">
+<span class="font-headline-sm text-headline-sm text-on-surface font-bold">Staff L6</span>
+<span class="font-label-sm text-label-sm text-primary font-semibold">Calibrated</span>
+</div>
+</div>
+</div>
+<!-- Final Submission & Hint Decision Controls -->
+<div class="flex items-center gap-space-sm shrink-0">
+<button class="px-space-md py-2.5 bg-surface-container text-on-surface hover:bg-surface-container-high rounded-lg font-label-md text-label-md font-medium transition-colors flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[18px]">lightbulb</span>
+<span>Ask Sarah for Hint <span class="text-[11px] text-on-surface-variant">(-3 pts rubric)</span></span>
+</button>
+<button class="px-space-lg py-2.5 bg-primary-container hover:bg-primary text-on-primary rounded-lg font-label-lg text-label-lg font-semibold transition-all shadow-sm flex items-center gap-2">
+<span>Submit &amp; Proceed to Architectural Oral Defense</span>
+<span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Interactive Client-side Script for Timer & Micro-interactions -->
+<script>
+    (function initInterviewSandbox() {
+      // Countdown Timer Logic
+      let totalSeconds = 24 * 60 + 18;
+      const timerElement = document.getElementById('countdown-timer');
+
+      if (timerElement) {
+        setInterval(() => {
+          if (totalSeconds > 0) {
+            totalSeconds--;
+            const mins = Math.floor(totalSeconds / 60);
+            const secs = totalSeconds % 60;
+            timerElement.textContent = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+          }
+        }, 1000);
+      }
+
+      // Keyboard Shortcut (Cmd+Enter) for running tests
+      const runBtn = document.getElementById('run-tests-btn');
+      window.addEventListener('keydown', (e) => {
+        if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+          e.preventDefault();
+          if (runBtn) {
+            runBtn.classList.add('scale-95');
+            setTimeout(() => runBtn.classList.remove('scale-95'), 150);
+          }
+        }
+      });
+    })();
+  </script>
+</div></main></div></body></html>

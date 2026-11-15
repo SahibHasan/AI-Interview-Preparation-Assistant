@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_blank" name="shell-type"/><title>PrepPilot AI - Secure Authentication</title><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Plus+Jakarta+Sans:wght@600;700;800&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={"darkMode":"class","theme":{"extend":{"colors":{"primary":"#3525cd","tertiary":"#004c76","on-secondary":"#ffffff","on-surface-variant":"#464555","error":"#ba1a1a","primary-container":"#4f46e5","surface-tint":"#4d44e3","background":"#f8f9ff","secondary":"#565e74","on-primary-fixed":"#0f0069","inverse-surface":"#213145","surface-container-high":"#dce9ff","tertiary-fixed-dim":"#93ccff","outline-variant":"#c7c4d8","on-error":"#ffffff","on-secondary-fixed-variant":"#3f465c","on-background":"#0b1c30","secondary-container":"#dae2fd","on-tertiary-fixed-variant":"#004b73","on-error-container":"#93000a","tertiary-fixed":"#cce5ff","outline":"#777587","on-tertiary-fixed":"#001d31","surface-variant":"#d3e4fe","secondary-fixed-dim":"#bec6e0","on-primary":"#ffffff","error-container":"#ffdad6","on-primary-fixed-variant":"#3323cc","on-primary-container":"#dad7ff","on-tertiary-container":"#bedfff","surface-container-lowest":"#ffffff","surface-container-highest":"#d3e4fe","surface-container":"#e5eeff","primary-fixed-dim":"#c3c0ff","on-tertiary":"#ffffff","on-surface":"#0b1c30","on-secondary-fixed":"#131b2e","surface-container-low":"#eff4ff","on-secondary-container":"#5c647a","secondary-fixed":"#dae2fd","inverse-on-surface":"#eaf1ff","surface-dim":"#cbdbf5","inverse-primary":"#c3c0ff","surface":"#f8f9ff","primary-fixed":"#e2dfff","surface-bright":"#f8f9ff","tertiary-container":"#00659a"},"borderRadius":{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},"spacing":{"margin":"2rem","space-sm":"0.5rem","space-xs":"0.25rem","space-md":"1rem","gutter":"1.5rem","gutter-mobile":"1rem","margin-mobile":"1rem","space-xl":"2.5rem","space-lg":"1.5rem"},"fontFamily":{"headline-sm":["Plus Jakarta Sans"],"display-lg":["Plus Jakarta Sans"],"headline-xl":["Plus Jakarta Sans"],"label-lg":["Inter"],"body-md":["Inter"],"headline-md":["Plus Jakarta Sans"],"label-md":["Inter"],"display-lg-mobile":["Plus Jakarta Sans"],"body-sm":["Inter"],"headline-lg":["Plus Jakarta Sans"],"label-sm":["Inter"],"headline-xl-mobile":["Plus Jakarta Sans"],"body-lg":["Inter"]},"fontSize":{"headline-sm":["20px",{"lineHeight":"28px","letterSpacing":"-0.01em","fontWeight":"600"}],"display-lg":["48px",{"lineHeight":"56px","letterSpacing":"-0.025em","fontWeight":"700"}],"headline-xl":["36px",{"lineHeight":"44px","letterSpacing":"-0.02em","fontWeight":"700"}],"label-lg":["14px",{"lineHeight":"20px","letterSpacing":"-0.005em","fontWeight":"600"}],"body-md":["14px",{"lineHeight":"22px","fontWeight":"400"}],"headline-md":["24px",{"lineHeight":"32px","letterSpacing":"-0.01em","fontWeight":"600"}],"label-md":["12px",{"lineHeight":"16px","letterSpacing":"0.01em","fontWeight":"600"}],"display-lg-mobile":["32px",{"lineHeight":"40px","letterSpacing":"-0.02em","fontWeight":"700"}],"body-sm":["13px",{"lineHeight":"18px","fontWeight":"400"}],"headline-lg":["30px",{"lineHeight":"38px","letterSpacing":"-0.015em","fontWeight":"600"}],"label-sm":["11px",{"lineHeight":"14px","letterSpacing":"0.02em","fontWeight":"600"}],"headline-xl-mobile":["28px",{"lineHeight":"36px","letterSpacing":"-0.02em","fontWeight":"700"}],"body-lg":["16px",{"lineHeight":"26px","fontWeight":"400"}]}}}}</script></head><body class="bg-background font-body-md text-on-surface antialiased min-h-screen flex flex-col justify-between"><header class="w-full max-w-7xl mx-auto px-margin py-space-lg flex items-center justify-between"><a class="flex items-center gap-space-sm group" data-path="home" href="#"><div class="w-9 h-9 rounded-lg bg-primary-container flex items-center justify-center text-on-primary shadow-sm group-hover:bg-primary transition-colors"><span class="material-symbols-outlined text-[20px]">flight_takeoff</span></div><span class="font-headline-sm text-headline-sm font-bold text-on-surface tracking-tight">PrepPilot<span class="text-primary-container ml-0.5">AI</span></span></a><div class="flex items-center gap-space-xs text-on-surface-variant font-label-sm text-label-sm px-space-md py-space-xs bg-surface-container-low rounded-full"><span class="material-symbols-outlined text-[16px] text-tertiary-container">lock</span><span>256-Bit SSL Enclave</span></div></header><main class="flex-1 flex items-center justify-center w-full px-margin py-space-lg"><div class="flex flex-col w-full items-center justify-center relative">
+<!-- Subtle ambient decorative glow elements behind card -->
+<div class="absolute -top-12 -left-12 w-96 h-96 bg-primary-fixed opacity-30 rounded-full blur-3xl pointer-events-none"></div>
+<div class="absolute -bottom-16 -right-16 w-80 h-80 bg-secondary-container opacity-40 rounded-full blur-3xl pointer-events-none"></div>
+<!-- Live Prep Activity Toast Floating Badge -->
+<aside aria-label="Recent activity notification" class="mb-space-lg w-full max-w-md bg-surface-container-lowest/90 backdrop-blur-md rounded-xl shadow-sm p-space-sm pl-space-md flex items-center justify-between gap-space-md animate-fade-in transition-all hover:shadow-md">
+<div class="flex items-center gap-space-sm min-w-0">
+<div class="relative flex-shrink-0 w-8 h-8 rounded-full overflow-hidden bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="Professional headshot portrait of candidate Alex Morgan smiling softly, natural executive office lighting, neutral background, editorial corporate quality" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA9SAgMgX843GJ8paplU0vJsdqA7Y58TlYtVDFz0jP-Vyqw9z73OPV8zIbeTkyiafYkxdgWLAjijmt7KON8QhWkIVhudvru429ZvUxQm8G3erY9uhJBaXM_QITs25QUGg3sdzskjf6-pxLoXuE6YxsXPMTrBLeYTPWvZKc9izT_kUcsAJk7PnaNp0-QvgUh3qP1R1nZBjGBkeQIy7WyAJQ1LsxY_wKVVZ44Llrx3wXV8GKMerFA910"/>
+<span class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-primary-container rounded-full ring-2 ring-surface-container-lowest"></span>
+</div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-space-xs">
+<span class="font-label-md text-label-md text-on-surface font-semibold truncate">Alex Morgan</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant truncate">completed Stripe L5 drill</span>
+</div>
+<div class="flex items-center gap-1.5 text-on-surface-variant font-label-sm text-label-sm">
+<span class="inline-block w-1.5 h-1.5 rounded-full bg-primary-container"></span>
+<span>12m ago • System Design Mock</span>
+</div>
+</div>
+</div>
+<div class="flex-shrink-0 flex items-center gap-1 bg-surface-container-low px-2.5 py-1 rounded-full text-primary-container font-headline-sm text-headline-sm font-bold">
+<span class="font-label-md text-label-md text-primary font-bold">86%</span>
+<span class="font-label-sm text-label-sm text-secondary font-medium">Readiness</span>
+</div>
+</aside>
+<!-- Central Authentication Card -->
+<div class="w-full max-w-md bg-surface-container-lowest rounded-xl shadow-md p-space-xl flex flex-col relative">
+<!-- Workspace Brand Anchor -->
+<div class="flex flex-col items-center text-center mb-space-lg">
+<div class="w-12 h-12 rounded-xl bg-primary-container text-on-primary flex items-center justify-center shadow-sm mb-space-md">
+<span class="material-symbols-outlined text-[26px]">flight_takeoff</span>
+</div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">Welcome back</h1>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1 max-w-xs">
+        Log in to your executive prep workspace and resume drills
+      </p>
+</div>
+<!-- Quick Single Sign-On Providers -->
+<div class="grid grid-cols-2 gap-space-sm mb-space-lg">
+<!-- Google Auth -->
+<button class="group flex items-center justify-center gap-2.5 py-2.5 px-space-md bg-surface-container-low hover:bg-surface-container text-on-surface rounded-lg transition-colors font-label-lg text-label-lg shadow-sm" type="button">
+<svg class="w-4 h-4" viewbox="0 0 24 24">
+<path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"></path>
+<path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"></path>
+<path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" fill="#FBBC05"></path>
+<path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" fill="#EA4335"></path>
+</svg>
+<span>Google</span>
+</button>
+<!-- GitHub Auth -->
+<button class="group flex items-center justify-center gap-2.5 py-2.5 px-space-md bg-surface-container-low hover:bg-surface-container text-on-surface rounded-lg transition-colors font-label-lg text-label-lg shadow-sm" type="button">
+<svg class="w-4 h-4 fill-current text-on-surface" viewbox="0 0 24 24">
+<path clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" fill-rule="evenodd"></path>
+</svg>
+<span>GitHub</span>
+</button>
+</div>
+<!-- Soft Structural Splitter -->
+<div class="relative flex items-center justify-center mb-space-lg">
+<div class="w-full h-px bg-surface-container"></div>
+<span class="absolute px-3 bg-surface-container-lowest font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">
+        or continue with email
+      </span>
+</div>
+<!-- Email & Password Form -->
+<form class="flex flex-col gap-space-md" onsubmit="event.preventDefault();">
+<!-- Email Field -->
+<div class="flex flex-col gap-1.5">
+<label class="font-label-md text-label-md text-on-surface font-medium flex items-center justify-between" for="auth-email">
+<span>Work or Personal Email</span>
+</label>
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-3.5 text-[20px] text-on-surface-variant pointer-events-none">mail</span>
+<input autocomplete="email" class="w-full bg-surface-container-low text-on-surface placeholder:text-on-surface-variant/60 font-body-md text-body-md pl-11 pr-4 py-2.5 rounded-lg focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container transition-all" id="auth-email" name="email" placeholder="alex.morgan@example.com" required="" type="email"/>
+</div>
+</div>
+<!-- Password Field -->
+<div class="flex flex-col gap-1.5">
+<div class="flex items-center justify-between">
+<label class="font-label-md text-label-md text-on-surface font-medium" for="auth-password">Password</label>
+<a class="font-label-sm text-label-sm text-primary-container hover:text-primary transition-colors" data-path="forgot-password" href="#">
+            Forgot password?
+          </a>
+</div>
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-3.5 text-[20px] text-on-surface-variant pointer-events-none">lock</span>
+<input autocomplete="current-password" class="w-full bg-surface-container-low text-on-surface placeholder:text-on-surface-variant/60 font-body-md text-body-md pl-11 pr-11 py-2.5 rounded-lg focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container transition-all" id="auth-password" name="password" placeholder="••••••••••••" required="" type="password"/>
+<button aria-label="Toggle password visibility" class="absolute right-3 p-1 rounded hover:bg-surface-container text-on-surface-variant transition-colors flex items-center justify-center" id="toggle-password" type="button">
+<span class="material-symbols-outlined text-[20px]" id="eye-icon">visibility</span>
+</button>
+</div>
+</div>
+<!-- Remember Device Checkbox -->
+<div class="flex items-center justify-between pt-1">
+<label class="flex items-center gap-2 cursor-pointer select-none">
+<input checked="" class="w-4 h-4 rounded text-primary-container focus:ring-primary-container bg-surface-container-low" id="remember-device" type="checkbox"/>
+<span class="font-body-sm text-body-sm text-on-surface">Remember this device for 30 days</span>
+</label>
+</div>
+<!-- Primary Action CTA -->
+<button class="w-full mt-2 py-3 px-space-lg bg-primary-container hover:bg-primary text-on-primary font-label-lg text-label-lg font-semibold rounded-lg shadow-sm hover:shadow-md active:bg-primary transition-all flex items-center justify-center gap-2 group" type="submit">
+<span>Sign In to PrepPilot</span>
+<span class="material-symbols-outlined text-[18px] group-hover:translate-x-0.5 transition-transform">arrow_forward</span>
+</button>
+</form>
+<!-- Switch Mode Link -->
+<div class="mt-space-lg text-center font-body-sm text-body-sm text-on-surface-variant">
+<span>Don't have an account?</span>
+<a class="text-primary-container font-semibold hover:text-primary transition-colors ml-1 inline-flex items-center gap-0.5" data-path="signup" href="#">
+<span>Sign up for free</span>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+</a>
+</div>
+<!-- Security & Compliance Sub-Footer -->
+<div class="mt-space-xl pt-space-md border-t border-surface-container flex flex-col items-center text-center gap-1">
+<div class="flex items-center gap-1.5 text-secondary font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[15px] text-tertiary">verified_user</span>
+<span>SOC2 Type II Certified Workspace</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+        256-Bit SSL Encrypted Interview Transcripts
+      </p>
+</div>
+</div>
+<!-- Real-time Candidate Metric Visual Micro-card -->
+<div class="mt-space-lg flex items-center gap-space-md text-on-surface-variant font-label-sm text-label-sm">
+<div class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-primary-container"></span>
+<span class="text-on-surface font-medium">99.98% Model Uptime</span>
+</div>
+<span class="text-surface-dim">•</span>
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[14px] text-secondary">shield</span>
+<span>Enterprise Privacy Guard Active</span>
+</div>
+</div>
+</div>
+<script>
+  (function() {
+    const toggleBtn = document.getElementById('toggle-password');
+    const pwdInput = document.getElementById('auth-password');
+    const eyeIcon = document.getElementById('eye-icon');
+
+    if (toggleBtn && pwdInput && eyeIcon) {
+      toggleBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        const isPassword = pwdInput.getAttribute('type') === 'password';
+        pwdInput.setAttribute('type', isPassword ? 'text' : 'password');
+        eyeIcon.textContent = isPassword ? 'visibility_off' : 'visibility';
+      });
+    }
+  })();
+</script></main><footer class="w-full max-w-7xl mx-auto px-margin py-space-lg flex flex-col sm:flex-row items-center justify-between gap-space-sm text-on-surface-variant font-body-sm text-body-sm"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[16px]">support_agent</span><a class="hover:text-primary transition-colors font-label-md text-label-md" data-path="home" href="#">Contact Candidate Advisory</a></div><div class="flex items-center gap-space-md font-label-sm text-label-sm"><a class="hover:text-on-surface transition-colors" data-path="home" href="#">Security Documentation</a><a class="hover:text-on-surface transition-colors" data-path="home" href="#">Terms of Use</a></div></footer></body></html>

@@ -1,0 +1,6 @@
+{
+  "name": "PrepPilot AI — AI-Based Interview Preparation Assistant",
+  "description": "AI-powered interview preparation platform with adaptive mock interviews, resume and job description analysis, rubric-based evaluation reports, and personalized learning plans.",
+  "requestFramePermissions": ["microphone"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

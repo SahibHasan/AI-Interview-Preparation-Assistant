@@ -1,0 +1,100 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - complementary [ref=e5]:
+      - generic [ref=e6]:
+        - link "PrepPilot AI Interview Copilot" [ref=e8] [cursor=pointer]:
+          - /url: /dashboard
+          - generic [ref=e12]:
+            - generic [ref=e13]: PrepPilot AI
+            - generic [ref=e14]: Interview Copilot
+        - generic [ref=e15]: Intelligence Suite
+        - navigation [ref=e16]:
+          - link "Dashboard" [ref=e17] [cursor=pointer]:
+            - /url: /dashboard
+          - link "Resume & Job Match" [ref=e24] [cursor=pointer]:
+            - /url: /resume-job-match
+          - link "Interview Setup" [ref=e31] [cursor=pointer]:
+            - /url: /interview-setup
+          - link "Live Session" [ref=e34] [cursor=pointer]:
+            - /url: /live-session
+          - link "Evaluation Reports" [ref=e39] [cursor=pointer]:
+            - /url: /evaluation-reports
+          - link "Learning Plan" [ref=e44] [cursor=pointer]:
+            - /url: /learning-plan
+          - link "Analytics & History" [ref=e58] [cursor=pointer]:
+            - /url: /analytics-history
+      - generic [ref=e63]:
+        - link "Readiness Score 78% Senior Frontend Engineer 64% plan" [ref=e64] [cursor=pointer]:
+          - /url: /analytics-history
+          - generic [ref=e65]:
+            - generic [ref=e66]: Readiness Score
+            - generic [ref=e71]: 78%
+          - generic [ref=e74]:
+            - generic [ref=e75]: Senior Frontend Engineer
+            - generic [ref=e76]: 64% plan
+        - generic [ref=e77]:
+          - link "Profile & Settings" [ref=e78] [cursor=pointer]:
+            - /url: /profile-settings
+          - button "Sign Out" [ref=e83]
+    - generic [ref=e88]:
+      - banner [ref=e89]:
+        - generic [ref=e91]:
+          - link "Platform" [ref=e92] [cursor=pointer]:
+            - /url: /dashboard
+          - generic [ref=e95]: Profile & Settings
+        - generic [ref=e96]:
+          - link "Stripe • Senior Frontend Engineer" [ref=e97] [cursor=pointer]:
+            - /url: /profile-settings
+          - link "Start Mock Interview" [ref=e102] [cursor=pointer]:
+            - /url: /interview-setup
+          - button "View notifications (2 unread)" [ref=e108]
+          - button "User account menu" [ref=e114]:
+            - img "Alex Morgan" [ref=e116]
+      - main [ref=e118]:
+        - generic [ref=e119]:
+          - generic [ref=e120]:
+            - generic [ref=e121]:
+              - generic [ref=e122]:
+                - generic [ref=e123]: Platform
+                - generic [ref=e124]: •
+                - generic [ref=e125]: Profile & Settings
+              - heading "Candidate Profile & Settings" [level=1] [ref=e126]
+              - paragraph [ref=e127]: Manage your professional identity, target company calibration benchmarks, adversarial AI evaluation personas, and Supabase PostgreSQL database enclave.
+            - generic [ref=e128]:
+              - button "Export Dossier (JSON)" [ref=e129]
+              - button "Save Changes" [ref=e134]
+          - generic [ref=e140]:
+            - button "General Profile" [ref=e141]
+            - button "Target Track & Company" [ref=e146]
+            - button "AI Coach & Personas" [ref=e151]
+            - button "Audio & Telemetry" [ref=e156]
+            - button "Supabase Database" [ref=e161]
+            - button "Security & Privacy Enclave" [ref=e168]
+          - generic [ref=e172]:
+            - generic [ref=e173]:
+              - generic [ref=e174]:
+                - generic [ref=e175]:
+                  - heading "Executive Information" [level=3] [ref=e176]
+                  - paragraph [ref=e177]: Core identity matched against job descriptions and senior rubric benchmarks.
+                - generic [ref=e178]: Primary Dossier
+              - generic [ref=e179]:
+                - img "Alex Morgan" [ref=e180]
+                - generic [ref=e181]:
+                  - heading "Alex Morgan" [level=4] [ref=e182]
+                  - paragraph [ref=e183]: 5+ Years Frontend Architecture & Distributed UI Systems
+                  - generic [ref=e184]: Verified Candidate Enclave
+              - generic [ref=e185]:
+                - generic [ref=e186]:
+                  - generic [ref=e187]: Full Name
+                  - textbox "Full Name" [ref=e188]: Alex Morgan
+                - generic [ref=e189]:
+                  - generic [ref=e190]: Email Address
+                  - textbox "Email Address" [disabled] [ref=e191]: alex.morgan@example.com
+                - generic [ref=e192]:
+                  - generic [ref=e193]: Professional Headline
+                  - textbox "Professional Headline" [ref=e194]: 5+ Years Frontend Architecture & Distributed UI Systems
+                - generic [ref=e195]:
+                  - generic [ref=e196]: Location Preference
+                  - textbox "Location Preference" [ref=e197]: Seattle, WA • Open to Remote & Hybrid
+            - button "Save All Changes" [ref=e199]
+  - generic "Notifications"

@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Plus+Jakarta+Sans:wght@600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { colors: { "secondary": "#565e74", "outline-variant": "#c7c4d8", "secondary-fixed": "#dae2fd", "on-secondary-container": "#5c647a", "secondary-container": "#dae2fd", "on-tertiary-fixed": "#001d31", "on-tertiary-fixed-variant": "#004b73", "on-tertiary": "#ffffff", "on-secondary": "#ffffff", "on-primary-fixed-variant": "#3323cc", "primary-fixed": "#e2dfff", "on-error": "#ffffff", "on-primary": "#ffffff", "inverse-surface": "#213145", "surface-tint": "#4d44e3", "tertiary-container": "#00659a", "on-surface-variant": "#464555", "primary": "#3525cd", "tertiary-fixed": "#cce5ff", "primary-fixed-dim": "#c3c0ff", "background": "#f8f9ff", "secondary-fixed-dim": "#bec6e0", "surface-container-low": "#eff4ff", "surface-bright": "#f8f9ff", "on-background": "#0b1c30", "outline": "#777587", "error-container": "#ffdad6", "surface-container-lowest": "#ffffff", "surface-container-highest": "#d3e4fe", "on-tertiary-container": "#bedfff", "surface-variant": "#d3e4fe", "inverse-primary": "#c3c0ff", "inverse-on-surface": "#eaf1ff", "tertiary-fixed-dim": "#93ccff", "tertiary": "#004c76", "error": "#ba1a1a", "on-secondary-fixed": "#131b2e", "surface-container-high": "#dce9ff", "surface-dim": "#cbdbf5", "surface": "#f8f9ff", "on-surface": "#0b1c30", "primary-container": "#4f46e5", "on-error-container": "#93000a", "on-primary-fixed": "#0f0069", "on-secondary-fixed-variant": "#3f465c", "surface-container": "#e5eeff", "on-primary-container": "#dad7ff" }, borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, spacing: { "margin-mobile": "1rem", "space-md": "1rem", "space-sm": "0.5rem", "space-xl": "2.5rem", "space-xs": "0.25rem", "margin": "2rem", "gutter": "1.5rem", "gutter-mobile": "1rem", "space-lg": "1.5rem" }, fontFamily: { "body-lg": ["Inter"], "display-lg": ["Plus Jakarta Sans"], "headline-xl-mobile": ["Plus Jakarta Sans"], "headline-lg": ["Plus Jakarta Sans"], "label-lg": ["Inter"], "headline-md": ["Plus Jakarta Sans"], "body-md": ["Inter"], "label-md": ["Inter"], "display-lg-mobile": ["Plus Jakarta Sans"], "body-sm": ["Inter"], "headline-xl": ["Plus Jakarta Sans"], "label-sm": ["Inter"], "headline-sm": ["Plus Jakarta Sans"] }, fontSize: { "body-lg": ["16px", { lineHeight: "26px", fontWeight: "400" }], "display-lg": ["48px", { lineHeight: "56px", letterSpacing: "-0.025em", fontWeight: "700" }], "headline-xl-mobile": ["28px", { lineHeight: "36px", letterSpacing: "-0.02em", fontWeight: "700" }], "headline-lg": ["30px", { lineHeight: "38px", letterSpacing: "-0.015em", fontWeight: "600" }], "label-lg": ["14px", { lineHeight: "20px", letterSpacing: "-0.005em", fontWeight: "600" }], "headline-md": ["24px", { lineHeight: "32px", letterSpacing: "-0.01em", fontWeight: "600" }], "body-md": ["14px", { lineHeight: "22px", fontWeight: "400" }], "label-md": ["12px", { lineHeight: "16px", letterSpacing: "0.01em", fontWeight: "600" }], "display-lg-mobile": ["32px", { lineHeight: "40px", letterSpacing: "-0.02em", fontWeight: "700" }], "body-sm": ["13px", { lineHeight: "18px", fontWeight: "400" }], "headline-xl": ["36px", { lineHeight: "44px", letterSpacing: "-0.02em", fontWeight: "700" }], "label-sm": ["11px", { lineHeight: "14px", letterSpacing: "0.02em", fontWeight: "600" }], "headline-sm": ["20px", { lineHeight: "28px", letterSpacing: "-0.01em", fontWeight: "600" }] } } } };</script></head><body class="bg-surface font-body-md text-on-surface antialiased"><aside class="fixed left-0 top-0 h-full w-72 bg-on-secondary-fixed z-50 flex flex-col justify-between shadow-[0_1px_8px_rgba(0,0,0,0.06)]"><div class="flex flex-col"><div class="h-16 px-space-lg flex items-center gap-space-sm"><img alt="PrepPilot AI Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1U1Abx2XAC2v8wJ0w0QtuPK3K4Lof_aLCoXptUcJ4wlwJrm0ftTGATfWLLzV8CKcWroUY-X_9xSSD8EEwduxRdbpzlEkv7mj0KGgFbupSSSu1TgwwtfXkncowjH4_KBE8gcvdP1LTq-uM7JKQ9IVBV0lBdjwKNHB1Eh_Oj38HswRK6A--TZYcS37BIfNT7Z6RG8HdIQNiJ9Io1oT70IH39oWU0ZaRjx37NHszVYzvO6OfxGeW9XlhJ0"/><span class="font-headline-sm text-headline-sm text-on-primary tracking-tight font-bold">PrepPilot<span class="text-primary-fixed"> AI</span></span></div><div class="px-space-md py-space-sm"><span class="font-label-sm text-label-sm text-secondary-fixed-dim uppercase tracking-wider px-space-sm">Intelligence Suite</span></div><nav class="flex flex-col gap-space-xs px-space-md" data-active-classes="bg-primary-container text-on-primary font-label-lg rounded-lg"><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-secondary-fixed-dim hover:bg-inverse-surface hover:text-on-primary transition-colors font-label-lg text-label-lg" data-path="dashboard" href="#"><span class="material-symbols-outlined text-[20px]">grid_view</span><span>Dashboard</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-secondary-fixed-dim hover:bg-inverse-surface hover:text-on-primary transition-colors font-label-lg text-label-lg" data-path="resume-job-match" href="#"><span class="material-symbols-outlined text-[20px]">document_scanner</span><span>Resume &amp; Job Match</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-secondary-fixed-dim hover:bg-inverse-surface hover:text-on-primary transition-colors font-label-lg text-label-lg" data-path="interview-setup" href="#"><span class="material-symbols-outlined text-[20px]">tune</span><span>Interview Setup</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-secondary-fixed-dim hover:bg-inverse-surface hover:text-on-primary transition-colors font-label-lg text-label-lg" data-path="live-session" href="#"><span class="material-symbols-outlined text-[20px]">videocam</span><span>Live Session</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-secondary-fixed-dim hover:bg-inverse-surface hover:text-on-primary transition-colors font-label-lg text-label-lg" data-path="evaluation-reports" href="#"><span class="material-symbols-outlined text-[20px]">assessment</span><span>Evaluation Reports</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-secondary-fixed-dim hover:bg-inverse-surface hover:text-on-primary transition-colors font-label-lg text-label-lg" data-path="learning-plan" href="#"><span class="material-symbols-outlined text-[20px]">psychology</span><span>Learning Plan</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-secondary-fixed-dim hover:bg-inverse-surface hover:text-on-primary transition-colors font-label-lg text-label-lg" data-path="analytics-history" href="#"><span class="material-symbols-outlined text-[20px]">trending_up</span><span>Analytics &amp; History</span></a></nav></div><div class="px-space-md pb-space-lg flex flex-col gap-space-sm"><div class="bg-inverse-surface rounded-xl p-space-md"><div class="flex items-center justify-between mb-space-xs"><span class="font-label-md text-label-md text-on-primary">Readiness Score</span><span class="font-label-md text-label-md text-primary-fixed">84%</span></div><div class="w-full bg-on-secondary-fixed-variant rounded-full h-1.5 overflow-hidden"><div class="bg-primary-container h-1.5 rounded-full w-[84%]"></div></div><p class="font-label-sm text-label-sm text-secondary-fixed-dim mt-space-xs">Target: Senior Staff Role</p></div><nav class="flex flex-col" data-active-classes="bg-primary-container text-on-primary font-label-lg rounded-lg"><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-secondary-fixed-dim hover:bg-inverse-surface hover:text-on-primary transition-colors font-label-lg text-label-lg" data-path="profile-settings" href="#"><span class="material-symbols-outlined text-[20px]">settings</span><span>Profile &amp; Settings</span></a></nav></div></aside><div class="pl-72"><header class="fixed top-0 left-72 right-0 h-16 bg-surface/85 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.03)] z-40 flex items-center justify-between px-space-lg"><div class="flex items-center gap-space-sm text-on-surface-variant font-label-md text-label-md"><span class="hover:text-on-surface transition-colors cursor-pointer">Platform</span><span class="material-symbols-outlined text-[16px]">chevron_right</span><span class="text-on-surface font-label-md text-label-md font-semibold">Console</span></div><div class="flex items-center gap-space-md"><button class="flex items-center gap-space-xs bg-primary-container text-on-primary px-space-md py-space-xs rounded-lg font-label-md text-label-md hover:bg-primary transition-colors shadow-[0_1px_3px_rgba(15,23,42,0.04)]"><span class="material-symbols-outlined text-[18px]">play_arrow</span><span>Start Mock Interview</span></button><div class="h-5 w-px bg-outline-variant"></div><button class="relative p-space-xs text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high rounded-full transition-colors"><span class="material-symbols-outlined text-[20px]">notifications</span><span class="absolute top-1.5 right-1.5 w-2 h-2 bg-primary rounded-full ring-2 ring-surface"></span></button><div class="flex items-center gap-space-sm pl-space-xs"><div class="relative flex items-center"><img alt="Profile" class="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDHEChGHJFzQz2SN-UvlyHy_P0ZhzQJqP9Fbsud3_uobq0r2YCSZZs3bGoe1EKldbqmjOuiWXKngYsaWRiKhB-e7SuRxTj_tewCKruXzAAz2FKerFDA3TVUbbFxVug7XNHPRhj7VIqL89k6XgjM43cjstlIbfdzfVfa0iqIlgOytjfXmXXqfpPFq5Io3XHpcZl9oraLQh06F-yknA6QssJ5QRS0VrzeG5fOFLAqdsZQBZpQTVyrssM"/><span class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-primary-container rounded-full ring-2 ring-surface"></span></div></div></div></header><main class="relative pt-16 bg-surface min-h-screen px-space-lg py-space-lg w-full"><div class="flex flex-col w-full gap-space-lg">
+<!-- Top Banner / Intelligence Header -->
+<div class="relative overflow-hidden bg-surface-container-lowest rounded-xl p-space-lg shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-space-md">
+<div class="flex flex-col gap-space-xs max-w-3xl z-10">
+<div class="flex items-center gap-space-xs text-primary font-label-md text-label-md uppercase tracking-wider">
+<span class="material-symbols-outlined text-[18px]">neurology</span>
+<span>Neural Resume-to-Role Alignment</span>
+</div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface font-semibold tracking-tight">Resume &amp; Job Match Intelligence</h1>
+<p class="font-body-md text-body-md text-secondary">Upload your CV and paste a target job description to pinpoint skill gaps and tailor your AI interview questions.</p>
+</div>
+<div class="flex items-center gap-space-sm z-10 flex-shrink-0">
+<button class="flex items-center gap-space-xs bg-surface-container hover:bg-surface-container-high text-on-surface px-space-md py-space-sm rounded-lg font-label-md text-label-md transition-all shadow-sm">
+<span class="material-symbols-outlined text-[18px]">history</span>
+<span>Version History</span>
+</button>
+<button class="flex items-center gap-space-xs bg-primary-container text-on-primary px-space-md py-space-sm rounded-lg font-label-md text-label-md hover:bg-primary transition-all shadow-sm">
+<span class="material-symbols-outlined text-[18px]">compare_arrows</span>
+<span>Re-run Alignment</span>
+</button>
+</div>
+<!-- Subtle ambient decor shape -->
+<div class="absolute -right-12 -top-12 w-64 h-64 rounded-full bg-primary-fixed/30 blur-3xl pointer-events-none"></div>
+</div>
+<!-- Perspective Navigation Tabs -->
+<div class="flex items-center justify-between bg-surface-container-lowest p-space-xs rounded-xl shadow-sm overflow-x-auto">
+<div class="flex items-center gap-space-xs">
+<button class="tab-btn flex items-center gap-space-xs px-space-md py-space-xs rounded-lg font-label-md text-label-md bg-primary-container text-on-primary transition-colors shadow-sm" id="tab-btn-sections" onclick="switchPerspective('sections')">
+<span class="material-symbols-outlined text-[18px]">segment</span>
+<span>Parsed Sections</span>
+</button>
+<button class="tab-btn flex items-center gap-space-xs px-space-md py-space-xs rounded-lg font-label-md text-label-md text-secondary hover:text-on-surface hover:bg-surface-container transition-colors" id="tab-btn-keywords" onclick="switchPerspective('keywords')">
+<span class="material-symbols-outlined text-[18px]">tag</span>
+<span>Keywords &amp; Density</span>
+</button>
+<button class="tab-btn flex items-center gap-space-xs px-space-md py-space-xs rounded-lg font-label-md text-label-md text-secondary hover:text-on-surface hover:bg-surface-container transition-colors" id="tab-btn-fit" onclick="switchPerspective('fit')">
+<span class="material-symbols-outlined text-[18px]">payments</span>
+<span>Salary &amp; Seniority Fit</span>
+</button>
+</div>
+<div class="flex items-center gap-space-md px-space-sm text-secondary font-label-sm text-label-sm hidden lg:flex">
+<span class="flex items-center gap-space-xs">
+<span class="w-2 h-2 rounded-full bg-primary"></span> ATS Index: 92/100
+      </span>
+<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+<span class="flex items-center gap-space-xs">
+<span class="w-2 h-2 rounded-full bg-tertiary"></span> Engine: GPT-4o Vector Embedding
+      </span>
+</div>
+</div>
+<!-- Dynamic Views Container -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-start" id="view-sections">
+<!-- Left Column: Candidate Resume Analysis (5 cols) -->
+<div class="lg:col-span-5 flex flex-col gap-space-lg">
+<!-- Resume Metadata Card -->
+<div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm flex flex-col gap-space-md">
+<div class="flex items-center justify-between pb-space-sm bg-surface-container-low -mx-space-lg -mt-space-lg px-space-lg pt-space-md rounded-t-xl">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary text-[20px]">badge</span>
+<h2 class="font-headline-sm text-headline-sm text-on-surface font-semibold">Candidate Resume Analysis</h2>
+</div>
+<span class="px-2.5 py-1 rounded-full font-label-sm text-label-sm bg-primary-fixed text-primary font-semibold">ATS Ready</span>
+</div>
+<!-- Uploaded File Badge -->
+<div class="flex items-center justify-between p-space-md bg-surface-container-low rounded-xl">
+<div class="flex items-center gap-space-md min-w-0">
+<div class="w-10 h-10 rounded-lg bg-surface-container-lowest flex items-center justify-center text-primary shadow-sm flex-shrink-0">
+<span class="material-symbols-outlined text-[24px]">picture_as_pdf</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-md text-label-md text-on-surface font-semibold truncate">Alex_Morgan_Senior_Frontend_2025.pdf</span>
+<div class="flex items-center gap-space-xs text-secondary font-label-sm text-label-sm">
+<span>240 KB</span>
+<span>•</span>
+<span class="flex items-center gap-0.5 text-primary">
+<span class="material-symbols-outlined text-[14px]">check_circle</span>
+<span>Parsed Successfully</span>
+</span>
+</div>
+</div>
+</div>
+<button class="flex items-center gap-space-xs bg-surface-container-lowest text-on-surface hover:bg-surface-container text-label-sm font-label-sm px-space-sm py-1.5 rounded-lg transition-colors flex-shrink-0 shadow-sm ml-space-sm">
+<span class="material-symbols-outlined text-[16px]">upload_file</span>
+<span>Re-upload</span>
+</button>
+</div>
+<!-- Candidate Snapshot Banner -->
+<div class="flex items-center gap-space-md p-space-md bg-surface-container-lowest rounded-xl">
+<img class="w-14 h-14 rounded-full object-cover shadow-sm" data-alt="Professional studio portrait of Alex Morgan, senior software engineer with sharp navy attire in a sleek tech studio setting with subtle neutral depth" src="https://lh3.googleusercontent.com/aida-public/AB6AXuASS5z9KJd3sVWvmwhBiC0byx0Ey2V0nwHXx-VhWLIV6mhuJWJ5kxXXt3nc4lzc8I_o9ox2N3OFelqjbqs92R8C3cG_zWXvRpMjp2wDp1Uxut1HwrrgAhUkTG7V5axdUOoYcDQTtBgEdPJpIgsCN0RZ7bc-97WfPDbjq8t4kN_lMmL6VMuoQAequ1FQ-_qWwiK76vNxAPUKV8N2e2mHVtIb0x0IaCaz0EoKxke6S9Q9flp_CAAu6UM"/>
+<div class="flex flex-col">
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">Alex Morgan</h3>
+<p class="font-body-sm text-body-sm text-secondary">Seattle, WA • Open to Remote &amp; Hybrid</p>
+<span class="font-label-sm text-label-sm text-primary font-semibold mt-0.5">5+ Years Frontend Architecture</span>
+</div>
+</div>
+<!-- Education Highlight -->
+<div class="flex flex-col gap-space-xs pt-space-xs">
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-wider font-semibold">Education</span>
+<div class="p-space-md bg-surface-container-low rounded-xl flex items-start gap-space-sm">
+<span class="material-symbols-outlined text-primary text-[20px] mt-0.5">school</span>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface font-semibold">B.S. in Computer Science</span>
+<span class="font-body-sm text-body-sm text-secondary">University of Washington (2020)</span>
+</div>
+</div>
+</div>
+<!-- Experience Highlights Timeline -->
+<div class="flex flex-col gap-space-xs">
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-wider font-semibold">Experience Highlights</span>
+<div class="flex flex-col gap-space-xs">
+<div class="p-space-md bg-surface-container-low rounded-xl flex flex-col gap-space-xs relative overflow-hidden">
+<div class="flex items-center justify-between">
+<span class="font-label-md text-label-md text-on-surface font-semibold">Senior Frontend Engineer</span>
+<span class="font-label-sm text-label-sm text-secondary bg-surface-container-lowest px-2 py-0.5 rounded-full font-medium">3 yrs (2022 - Present)</span>
+</div>
+<span class="font-body-sm text-body-sm text-primary font-medium">TechCorp Solutions</span>
+<p class="font-body-sm text-body-sm text-secondary">Architected React/Next micro-apps reducing p95 load latency by 38%. Scaled design tokens across 14 enterprise teams.</p>
+</div>
+<div class="p-space-md bg-surface-container-low rounded-xl flex flex-col gap-space-xs">
+<div class="flex items-center justify-between">
+<span class="font-label-md text-label-md text-on-surface font-semibold">Software Engineer</span>
+<span class="font-label-sm text-label-sm text-secondary bg-surface-container-lowest px-2 py-0.5 rounded-full font-medium">2 yrs (2020 - 2022)</span>
+</div>
+<span class="font-body-sm text-body-sm text-primary font-medium">StartupX Financial</span>
+<p class="font-body-sm text-body-sm text-secondary">Implemented TypeScript merchant checkout workflows handling $12M monthly volume with Redux Toolkit and Jest suites.</p>
+</div>
+</div>
+</div>
+<!-- Parsed Skills Tags -->
+<div class="flex flex-col gap-space-sm">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-wider font-semibold">Parsed Skills (9 Verified)</span>
+<span class="font-label-sm text-label-sm text-primary font-medium cursor-pointer hover:underline">Edit Taxonomy</span>
+</div>
+<div class="flex flex-wrap gap-space-xs">
+<span class="px-space-sm py-1 bg-surface-container text-on-surface rounded-lg font-label-sm text-label-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px] text-primary">verified</span>TypeScript
+            </span>
+<span class="px-space-sm py-1 bg-surface-container text-on-surface rounded-lg font-label-sm text-label-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px] text-primary">verified</span>React.js
+            </span>
+<span class="px-space-sm py-1 bg-surface-container text-on-surface rounded-lg font-label-sm text-label-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px] text-primary">verified</span>Next.js
+            </span>
+<span class="px-space-sm py-1 bg-surface-container text-on-surface rounded-lg font-label-sm text-label-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px] text-primary">verified</span>Tailwind CSS
+            </span>
+<span class="px-space-sm py-1 bg-surface-container text-on-surface rounded-lg font-label-sm text-label-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px] text-primary">verified</span>Redux Toolkit
+            </span>
+<span class="px-space-sm py-1 bg-surface-container text-on-surface rounded-lg font-label-sm text-label-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px] text-primary">verified</span>GraphQL
+            </span>
+<span class="px-space-sm py-1 bg-surface-container text-on-surface rounded-lg font-label-sm text-label-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px] text-primary">verified</span>Jest
+            </span>
+<span class="px-space-sm py-1 bg-surface-container text-on-surface rounded-lg font-label-sm text-label-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px] text-primary">verified</span>CI/CD Pipelines
+            </span>
+<span class="px-space-sm py-1 bg-surface-container text-on-surface rounded-lg font-label-sm text-label-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px] text-primary">verified</span>System Design basics
+            </span>
+</div>
+</div>
+</div>
+<!-- Quick AI Candidate Diagnostic -->
+<div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm flex flex-col gap-space-sm">
+<div class="flex items-center gap-space-xs text-primary font-label-md text-label-md font-semibold">
+<span class="material-symbols-outlined text-[18px]">psychology_alt</span>
+<span>Candidate Strength Profile</span>
+</div>
+<p class="font-body-sm text-body-sm text-secondary">
+          Profile displays high mastery in frontend web infrastructure and modern client-side architectures. Proven delivery in fast-growth fintech product delivery.
+        </p>
+<div class="grid grid-cols-2 gap-space-sm pt-space-xs">
+<div class="p-space-sm bg-surface-container-low rounded-lg flex flex-col">
+<span class="font-label-sm text-label-sm text-secondary">Architecture Depth</span>
+<span class="font-headline-sm text-headline-sm text-on-surface font-bold">8.4<span class="text-secondary text-body-sm font-normal">/10</span></span>
+</div>
+<div class="p-space-sm bg-surface-container-low rounded-lg flex flex-col">
+<span class="font-label-sm text-label-sm text-secondary">Testing Density</span>
+<span class="font-headline-sm text-headline-sm text-on-surface font-bold">7.8<span class="text-secondary text-body-sm font-normal">/10</span></span>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column: Job Description Match & Gap Analysis (7 cols) -->
+<div class="lg:col-span-7 flex flex-col gap-space-lg">
+<!-- Target Job & Match Hero Card -->
+<div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm flex flex-col gap-space-md">
+<div class="flex items-center justify-between pb-space-sm bg-surface-container-low -mx-space-lg -mt-space-lg px-space-lg pt-space-md rounded-t-xl">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary text-[20px]">hub</span>
+<h2 class="font-headline-sm text-headline-sm text-on-surface font-semibold">Job Description Match &amp; Gap Analysis</h2>
+</div>
+<button class="text-secondary hover:text-on-surface font-label-sm text-label-sm flex items-center gap-1 transition-colors">
+<span class="material-symbols-outlined text-[16px]">edit_note</span>
+<span>Edit JD</span>
+</button>
+</div>
+<!-- Target Job Overview -->
+<div class="p-space-md bg-surface-container-low rounded-xl flex flex-col md:flex-row md:items-center justify-between gap-space-md">
+<div class="flex items-center gap-space-md">
+<div class="w-12 h-12 rounded-xl bg-on-secondary-fixed text-on-primary flex items-center justify-center font-bold text-headline-sm shadow-sm flex-shrink-0">
+              S
+            </div>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-primary uppercase font-bold tracking-wider">Target Role</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">Senior Frontend Engineer — Payments &amp; Billing Platform</h3>
+<p class="font-body-sm text-body-sm text-secondary">Stripe • Global Core Infrastructure • Full-Time / Remote</p>
+</div>
+</div>
+<div class="flex items-center gap-space-xs self-start md:self-auto">
+<span class="px-space-sm py-1 rounded-full font-label-sm text-label-sm bg-surface-container text-on-surface font-medium">L5 Senior IC</span>
+</div>
+</div>
+<!-- Match Score Hero Banner with Circular Chart -->
+<div class="p-space-lg bg-surface-container-lowest rounded-xl flex flex-col sm:flex-row items-center justify-between gap-space-lg relative overflow-hidden">
+<div class="flex flex-col gap-space-xs z-10 max-w-sm text-center sm:text-left">
+<div class="inline-flex items-center justify-center sm:justify-start gap-space-xs">
+<span class="w-2.5 h-2.5 rounded-full bg-primary-container animate-pulse"></span>
+<span class="font-label-md text-label-md text-primary font-bold uppercase tracking-wide">High Interview Probability</span>
+</div>
+<h4 class="font-headline-md text-headline-md text-on-surface font-bold">86% Skill Alignment</h4>
+<p class="font-body-sm text-body-sm text-secondary">
+              Alex fulfills 12 of 14 primary engineering competencies specified in Stripe's Payments Billing Core rubric.
+            </p>
+</div>
+<!-- Circular Score SVG -->
+<div class="relative w-32 h-32 flex-shrink-0 flex items-center justify-center z-10">
+<svg class="w-32 h-32 -rotate-90 transform" viewbox="0 0 120 120">
+<circle class="text-surface-container" cx="60" cy="60" fill="transparent" r="48" stroke="currentColor" stroke-width="10"></circle>
+<circle class="text-primary-container" cx="60" cy="60" fill="transparent" r="48" stroke="currentColor" stroke-dasharray="301.59" stroke-dashoffset="42.22" stroke-linecap="round" stroke-width="10"></circle>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center">
+<span class="font-headline-md text-headline-md text-on-surface font-bold">86%</span>
+<span class="font-label-sm text-label-sm text-secondary uppercase font-semibold">Match</span>
+</div>
+</div>
+<!-- Subtle Background tint -->
+<div class="absolute inset-0 bg-surface-container-low opacity-60"></div>
+</div>
+<!-- Matching Skills (Positive Alignment) -->
+<div class="flex flex-col gap-space-xs pt-space-xs">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary text-[18px]">task_alt</span>
+<span class="font-label-md text-label-md text-on-surface font-bold">Matching Skills (6 Core Alignments)</span>
+</div>
+<span class="font-label-sm text-label-sm text-secondary">100% Experience Coverage</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-space-xs">
+<div class="p-space-sm bg-surface-container-low rounded-lg flex items-center gap-space-sm">
+<span class="w-5 h-5 rounded-full bg-primary/10 text-primary flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-[14px]">check</span>
+</span>
+<div class="flex flex-col min-w-0">
+<span class="font-label-md text-label-md text-on-surface font-semibold truncate">React 18 &amp; Server Components</span>
+<span class="font-label-sm text-label-sm text-secondary">TechCorp (3 yrs production)</span>
+</div>
+</div>
+<div class="p-space-sm bg-surface-container-low rounded-lg flex items-center gap-space-sm">
+<span class="w-5 h-5 rounded-full bg-primary/10 text-primary flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-[14px]">check</span>
+</span>
+<div class="flex flex-col min-w-0">
+<span class="font-label-md text-label-md text-on-surface font-semibold truncate">TypeScript (Strict Mode)</span>
+<span class="font-label-sm text-label-sm text-secondary">Verified across 5 repo milestones</span>
+</div>
+</div>
+<div class="p-space-sm bg-surface-container-low rounded-lg flex items-center gap-space-sm">
+<span class="w-5 h-5 rounded-full bg-primary/10 text-primary flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-[14px]">check</span>
+</span>
+<div class="flex flex-col min-w-0">
+<span class="font-label-md text-label-md text-on-surface font-semibold truncate">State Management (Redux/Zustand)</span>
+<span class="font-label-sm text-label-sm text-secondary">StartupX Checkout Workflows</span>
+</div>
+</div>
+<div class="p-space-sm bg-surface-container-low rounded-lg flex items-center gap-space-sm">
+<span class="w-5 h-5 rounded-full bg-primary/10 text-primary flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-[14px]">check</span>
+</span>
+<div class="flex flex-col min-w-0">
+<span class="font-label-md text-label-md text-on-surface font-semibold truncate">Web Performance &amp; Core Vitals</span>
+<span class="font-label-sm text-label-sm text-secondary">p95 optimization track record</span>
+</div>
+</div>
+<div class="p-space-sm bg-surface-container-low rounded-lg flex items-center gap-space-sm">
+<span class="w-5 h-5 rounded-full bg-primary/10 text-primary flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-[14px]">check</span>
+</span>
+<div class="flex flex-col min-w-0">
+<span class="font-label-md text-label-md text-on-surface font-semibold truncate">REST &amp; GraphQL APIs</span>
+<span class="font-label-sm text-label-sm text-secondary">Bespoke Apollo client queries</span>
+</div>
+</div>
+<div class="p-space-sm bg-surface-container-low rounded-lg flex items-center gap-space-sm">
+<span class="w-5 h-5 rounded-full bg-primary/10 text-primary flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-[14px]">check</span>
+</span>
+<div class="flex flex-col min-w-0">
+<span class="font-label-md text-label-md text-on-surface font-semibold truncate">Component Driven Architecture</span>
+<span class="font-label-sm text-label-sm text-secondary">Storybook &amp; atomic system design</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Missing / High-Priority Gap Skills -->
+<div class="flex flex-col gap-space-xs pt-space-xs">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-secondary text-[18px]">warning</span>
+<span class="font-label-md text-label-md text-on-surface font-bold">Missing / High-Priority Gaps (4 Key Areas)</span>
+</div>
+<span class="font-label-sm text-label-sm text-secondary font-medium">14% Delta to 100%</span>
+</div>
+<div class="flex flex-col gap-space-xs">
+<!-- Gap Item 1 -->
+<div class="p-space-md bg-surface-container-low rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-space-sm">
+<div class="flex items-start gap-space-sm">
+<span class="w-6 h-6 rounded-full bg-surface-container-highest text-primary flex items-center justify-center flex-shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[16px]">priority_high</span>
+</span>
+<div class="flex flex-col">
+<div class="flex items-center gap-space-xs">
+<span class="font-label-md text-label-md text-on-surface font-bold">Micro-frontend Architecture</span>
+<span class="px-2 py-0.5 rounded-full text-label-sm font-label-sm bg-surface-container-highest text-primary font-semibold">Critical For Stripe</span>
+</div>
+<p class="font-body-sm text-body-sm text-secondary">Role requires Module Federation &amp; independent deploys. Resume focuses on monolithic Next.js deployments.</p>
+</div>
+</div>
+<button class="self-end sm:self-center font-label-sm text-label-sm text-primary hover:text-on-surface font-semibold flex items-center gap-0.5 transition-colors">
+<span>Inject Qs</span>
+<span class="material-symbols-outlined text-[14px]">add</span>
+</button>
+</div>
+<!-- Gap Item 2 -->
+<div class="p-space-md bg-surface-container-low rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-space-sm">
+<div class="flex items-start gap-space-sm">
+<span class="w-6 h-6 rounded-full bg-surface-container-highest text-primary flex items-center justify-center flex-shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[16px]">priority_high</span>
+</span>
+<div class="flex flex-col">
+<div class="flex items-center gap-space-xs">
+<span class="font-label-md text-label-md text-on-surface font-bold">WebSockets / Real-Time Data Streaming</span>
+<span class="px-2 py-0.5 rounded-full text-label-sm font-label-sm bg-surface-container text-secondary font-semibold">High Priority</span>
+</div>
+<p class="font-body-sm text-body-sm text-secondary">Crucial for live Stripe checkout terminal updates. Alex's CV highlights Polling/REST patterns instead.</p>
+</div>
+</div>
+<button class="self-end sm:self-center font-label-sm text-label-sm text-primary hover:text-on-surface font-semibold flex items-center gap-0.5 transition-colors">
+<span>Inject Qs</span>
+<span class="material-symbols-outlined text-[14px]">add</span>
+</button>
+</div>
+<!-- Gap Item 3 -->
+<div class="p-space-md bg-surface-container-low rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-space-sm">
+<div class="flex items-start gap-space-sm">
+<span class="w-6 h-6 rounded-full bg-surface-container-highest text-primary flex items-center justify-center flex-shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[16px]">lock</span>
+</span>
+<div class="flex flex-col">
+<div class="flex items-center gap-space-xs">
+<span class="font-label-md text-label-md text-on-surface font-bold">OAuth 2.0 / Security Best Practices</span>
+<span class="px-2 py-0.5 rounded-full text-label-sm font-label-sm bg-surface-container text-secondary font-semibold">Domain Specific</span>
+</div>
+<p class="font-body-sm text-body-sm text-secondary">Token rotation, PCI-DSS compliance, and iframe isolation are central to Stripe Billing workflows.</p>
+</div>
+</div>
+<button class="self-end sm:self-center font-label-sm text-label-sm text-primary hover:text-on-surface font-semibold flex items-center gap-0.5 transition-colors">
+<span>Inject Qs</span>
+<span class="material-symbols-outlined text-[14px]">add</span>
+</button>
+</div>
+<!-- Gap Item 4 -->
+<div class="p-space-md bg-surface-container-low rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-space-sm">
+<div class="flex items-start gap-space-sm">
+<span class="w-6 h-6 rounded-full bg-surface-container-highest text-primary flex items-center justify-center flex-shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[16px]">speed</span>
+</span>
+<div class="flex flex-col">
+<div class="flex items-center gap-space-xs">
+<span class="font-label-md text-label-md text-on-surface font-bold">Load Testing (k6 / JMeter)</span>
+<span class="px-2 py-0.5 rounded-full text-label-sm font-label-sm bg-surface-container text-secondary font-semibold">Medium Priority</span>
+</div>
+<p class="font-body-sm text-body-sm text-secondary">Stripe stress-tests UI SDKs against flash-sale bursts. Candidate has unit test mastery (Jest), not load simulation.</p>
+</div>
+</div>
+<button class="self-end sm:self-center font-label-sm text-label-sm text-primary hover:text-on-surface font-semibold flex items-center gap-0.5 transition-colors">
+<span>Inject Qs</span>
+<span class="material-symbols-outlined text-[14px]">add</span>
+</button>
+</div>
+</div>
+</div>
+<!-- AI Action & Tailored Recommendation Card -->
+<div class="p-space-lg bg-surface-container-low rounded-xl flex flex-col gap-space-md">
+<div class="flex items-start gap-space-md">
+<div class="w-10 h-10 rounded-lg bg-primary-container text-on-primary flex items-center justify-center flex-shrink-0 shadow-sm">
+<span class="material-symbols-outlined text-[20px]">lightbulb</span>
+</div>
+<div class="flex flex-col gap-0.5">
+<h4 class="font-headline-sm text-headline-sm text-on-surface font-bold">PrepPilot AI Recommendation</h4>
+<p class="font-body-md text-body-md text-secondary">
+                Focus your next mock interview on <strong class="text-on-surface font-semibold">Micro-frontends</strong> and <strong class="text-on-surface font-semibold">WebSockets</strong> to close your <strong class="text-primary font-semibold">14% gap</strong> and maximize pass probability for Stripe L5 interview loop.
+              </p>
+</div>
+</div>
+<div class="flex flex-wrap items-center gap-space-md pt-space-xs">
+<button class="flex items-center gap-space-xs bg-primary-container hover:bg-primary text-on-primary px-space-lg py-space-sm rounded-lg font-label-lg text-label-lg transition-all shadow-sm">
+<span class="material-symbols-outlined text-[20px]">smart_toy</span>
+<span>Configure Targeted Mock Interview</span>
+</button>
+<button class="flex items-center gap-space-xs bg-surface-container-lowest hover:bg-surface-container text-on-surface px-space-md py-space-sm rounded-lg font-label-md text-label-md transition-all shadow-sm">
+<span class="material-symbols-outlined text-[18px]">download</span>
+<span>Download Gap Report (PDF)</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Perspective View 2: Keywords & Density Analysis (Hidden by default) -->
+<div class="hidden flex-col gap-space-lg" id="view-keywords">
+<div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">Keyword Frequency &amp; ATS Relevance</h3>
+<p class="font-body-sm text-body-sm text-secondary">Distribution comparison between candidate resume and target job requirements.</p>
+</div>
+<span class="px-space-md py-1 bg-surface-container-low text-primary font-label-sm text-label-sm rounded-full font-bold">Keyword Overlap: 78.4%</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-space-md pt-space-sm">
+<div class="p-space-md bg-surface-container-low rounded-xl flex flex-col gap-space-sm">
+<span class="font-label-md text-label-md text-on-surface font-bold">High Density Matches</span>
+<div class="flex flex-col gap-space-xs">
+<div class="flex justify-between font-label-sm text-label-sm text-secondary">
+<span>React / Virtual DOM</span>
+<span class="font-bold text-on-surface">12 mentions</span>
+</div>
+<div class="w-full bg-surface-container rounded-full h-1.5"><div class="bg-primary-container h-1.5 rounded-full w-[95%]"></div></div>
+<div class="flex justify-between font-label-sm text-label-sm text-secondary">
+<span>TypeScript Generics</span>
+<span class="font-bold text-on-surface">9 mentions</span>
+</div>
+<div class="w-full bg-surface-container rounded-full h-1.5"><div class="bg-primary-container h-1.5 rounded-full w-[85%]"></div></div>
+<div class="flex justify-between font-label-sm text-label-sm text-secondary">
+<span>Performance / CWV</span>
+<span class="font-bold text-on-surface">6 mentions</span>
+</div>
+<div class="w-full bg-surface-container rounded-full h-1.5"><div class="bg-primary-container h-1.5 rounded-full w-[70%]"></div></div>
+</div>
+</div>
+<div class="p-space-md bg-surface-container-low rounded-xl flex flex-col gap-space-sm">
+<span class="font-label-md text-label-md text-on-surface font-bold">High Value Keyword Gaps</span>
+<div class="flex flex-col gap-space-xs">
+<div class="flex justify-between font-label-sm text-label-sm text-secondary">
+<span>Module Federation</span>
+<span class="font-bold text-error">0 in CV (JD: 4)</span>
+</div>
+<div class="w-full bg-surface-container rounded-full h-1.5"><div class="bg-secondary h-1.5 rounded-full w-[10%]"></div></div>
+<div class="flex justify-between font-label-sm text-label-sm text-secondary">
+<span>Real-Time Sockets</span>
+<span class="font-bold text-error">0 in CV (JD: 5)</span>
+</div>
+<div class="w-full bg-surface-container rounded-full h-1.5"><div class="bg-secondary h-1.5 rounded-full w-[15%]"></div></div>
+<div class="flex justify-between font-label-sm text-label-sm text-secondary">
+<span>Idempotency</span>
+<span class="font-bold text-error">1 in CV (JD: 4)</span>
+</div>
+<div class="w-full bg-surface-container rounded-full h-1.5"><div class="bg-secondary h-1.5 rounded-full w-[25%]"></div></div>
+</div>
+</div>
+<div class="p-space-md bg-surface-container-low rounded-xl flex flex-col gap-space-sm">
+<span class="font-label-md text-label-md text-on-surface font-bold">Recommended Semantic Additions</span>
+<p class="font-body-sm text-body-sm text-secondary">Include these terms naturally in your project descriptions before your mock:</p>
+<div class="flex flex-wrap gap-1.5">
+<span class="px-2 py-1 bg-surface-container-lowest text-on-surface rounded font-label-sm text-label-sm shadow-sm">+ Distributed Tracing</span>
+<span class="px-2 py-1 bg-surface-container-lowest text-on-surface rounded font-label-sm text-label-sm shadow-sm">+ Backoff Strategy</span>
+<span class="px-2 py-1 bg-surface-container-lowest text-on-surface rounded font-label-sm text-label-sm shadow-sm">+ Schema Federation</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Perspective View 3: Salary & Seniority Fit (Hidden by default) -->
+<div class="hidden flex-col gap-space-lg" id="view-fit">
+<div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">Seniority Level &amp; Compensation Benchmark</h3>
+<p class="font-body-sm text-body-sm text-secondary">Based on Level 5 equivalent engineering market data in US Tech Hubs.</p>
+</div>
+<span class="px-space-md py-1 bg-primary-fixed text-primary font-label-sm text-label-sm rounded-full font-bold">L5 Confirmed Fit</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-space-md pt-space-sm">
+<div class="p-space-md bg-surface-container-low rounded-xl flex flex-col gap-space-xs">
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-wider">Candidate Scope</span>
+<span class="font-headline-sm text-headline-sm text-on-surface font-bold">5.2 Years Total YOE</span>
+<p class="font-body-sm text-body-sm text-secondary">Exceeds the 4+ year minimum requirement for Stripe Senior Frontend roles.</p>
+</div>
+<div class="p-space-md bg-surface-container-low rounded-xl flex flex-col gap-space-xs">
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-wider">Target Base Salary Band</span>
+<span class="font-headline-sm text-headline-sm text-on-surface font-bold">$185k - $225k / yr</span>
+<p class="font-body-sm text-body-sm text-secondary">Median US base for L5 Frontend Core Platforms (excluding RSU/Bonus).</p>
+</div>
+<div class="p-space-md bg-surface-container-low rounded-xl flex flex-col gap-space-xs">
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-wider">Total Comp Expectation</span>
+<span class="font-headline-sm text-headline-sm text-on-surface font-bold">$310k - $380k TC</span>
+<p class="font-body-sm text-body-sm text-secondary">Includes target annual equity vest and performance multiplier.</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Bottom Context Visualizer / System Intelligence Status Bar -->
+<div class="p-space-md bg-surface-container-lowest rounded-xl shadow-sm flex flex-col sm:flex-row items-center justify-between gap-space-md text-secondary font-label-sm text-label-sm">
+<div class="flex items-center gap-space-md">
+<span class="flex items-center gap-1.5 text-on-surface">
+<span class="material-symbols-outlined text-primary text-[18px]">verified_user</span>
+<span>CV Authenticity Verified</span>
+</span>
+<span>•</span>
+<span>Role Taxonomy: Stripe Platform Engineering V4</span>
+<span>•</span>
+<span>Last sync: Just now</span>
+</div>
+<div class="flex items-center gap-space-sm">
+<span class="hover:text-on-surface cursor-pointer">Export Data JSON</span>
+<span>|</span>
+<span class="hover:text-on-surface cursor-pointer">Compare with Google L5</span>
+</div>
+</div>
+</div>
+<!-- Vanilla Interactive Tabs Script -->
+<script>
+  function switchPerspective(tab) {
+    const tabs = ['sections', 'keywords', 'fit'];
+    tabs.forEach(t => {
+      const view = document.getElementById('view-' + t);
+      const btn = document.getElementById('tab-btn-' + t);
+      if (t === tab) {
+        view.classList.remove('hidden');
+        if (t === 'sections') {
+          view.classList.add('grid');
+        } else {
+          view.classList.add('flex');
+        }
+        btn.className = 'tab-btn flex items-center gap-space-xs px-space-md py-space-xs rounded-lg font-label-md text-label-md bg-primary-container text-on-primary transition-colors shadow-sm';
+      } else {
+        view.classList.add('hidden');
+        view.classList.remove('grid', 'flex');
+        btn.className = 'tab-btn flex items-center gap-space-xs px-space-md py-space-xs rounded-lg font-label-md text-label-md text-secondary hover:text-on-surface hover:bg-surface-container transition-colors';
+      }
+    });
+  }
+</script></main></div></body></html>

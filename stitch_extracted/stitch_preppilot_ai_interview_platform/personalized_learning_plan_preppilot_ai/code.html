@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Plus+Jakarta+Sans:wght@600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { colors: { "secondary": "#565e74", "outline-variant": "#c7c4d8", "secondary-fixed": "#dae2fd", "on-secondary-container": "#5c647a", "secondary-container": "#dae2fd", "on-tertiary-fixed": "#001d31", "on-tertiary-fixed-variant": "#004b73", "on-tertiary": "#ffffff", "on-secondary": "#ffffff", "on-primary-fixed-variant": "#3323cc", "primary-fixed": "#e2dfff", "on-error": "#ffffff", "on-primary": "#ffffff", "inverse-surface": "#213145", "surface-tint": "#4d44e3", "tertiary-container": "#00659a", "on-surface-variant": "#464555", "primary": "#3525cd", "tertiary-fixed": "#cce5ff", "primary-fixed-dim": "#c3c0ff", "background": "#f8f9ff", "secondary-fixed-dim": "#bec6e0", "surface-container-low": "#eff4ff", "surface-bright": "#f8f9ff", "on-background": "#0b1c30", "outline": "#777587", "error-container": "#ffdad6", "surface-container-lowest": "#ffffff", "surface-container-highest": "#d3e4fe", "on-tertiary-container": "#bedfff", "surface-variant": "#d3e4fe", "inverse-primary": "#c3c0ff", "inverse-on-surface": "#eaf1ff", "tertiary-fixed-dim": "#93ccff", "tertiary": "#004c76", "error": "#ba1a1a", "on-secondary-fixed": "#131b2e", "surface-container-high": "#dce9ff", "surface-dim": "#cbdbf5", "surface": "#f8f9ff", "on-surface": "#0b1c30", "primary-container": "#4f46e5", "on-error-container": "#93000a", "on-primary-fixed": "#0f0069", "on-secondary-fixed-variant": "#3f465c", "surface-container": "#e5eeff", "on-primary-container": "#dad7ff" }, borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, spacing: { "margin-mobile": "1rem", "space-md": "1rem", "space-sm": "0.5rem", "space-xl": "2.5rem", "space-xs": "0.25rem", "margin": "2rem", "gutter": "1.5rem", "gutter-mobile": "1rem", "space-lg": "1.5rem" }, fontFamily: { "body-lg": ["Inter"], "display-lg": ["Plus Jakarta Sans"], "headline-xl-mobile": ["Plus Jakarta Sans"], "headline-lg": ["Plus Jakarta Sans"], "label-lg": ["Inter"], "headline-md": ["Plus Jakarta Sans"], "body-md": ["Inter"], "label-md": ["Inter"], "display-lg-mobile": ["Plus Jakarta Sans"], "body-sm": ["Inter"], "headline-xl": ["Plus Jakarta Sans"], "label-sm": ["Inter"], "headline-sm": ["Plus Jakarta Sans"] }, fontSize: { "body-lg": ["16px", { lineHeight: "26px", fontWeight: "400" }], "display-lg": ["48px", { lineHeight: "56px", letterSpacing: "-0.025em", fontWeight: "700" }], "headline-xl-mobile": ["28px", { lineHeight: "36px", letterSpacing: "-0.02em", fontWeight: "700" }], "headline-lg": ["30px", { lineHeight: "38px", letterSpacing: "-0.015em", fontWeight: "600" }], "label-lg": ["14px", { lineHeight: "20px", letterSpacing: "-0.005em", fontWeight: "600" }], "headline-md": ["24px", { lineHeight: "32px", letterSpacing: "-0.01em", fontWeight: "600" }], "body-md": ["14px", { lineHeight: "22px", fontWeight: "400" }], "label-md": ["12px", { lineHeight: "16px", letterSpacing: "0.01em", fontWeight: "600" }], "display-lg-mobile": ["32px", { lineHeight: "40px", letterSpacing: "-0.02em", fontWeight: "700" }], "body-sm": ["13px", { lineHeight: "18px", fontWeight: "400" }], "headline-xl": ["36px", { lineHeight: "44px", letterSpacing: "-0.02em", fontWeight: "700" }], "label-sm": ["11px", { lineHeight: "14px", letterSpacing: "0.02em", fontWeight: "600" }], "headline-sm": ["20px", { lineHeight: "28px", letterSpacing: "-0.01em", fontWeight: "600" }] } } } };</script></head><body class="bg-surface font-body-md text-on-surface antialiased"><aside class="fixed left-0 top-0 h-full w-72 bg-on-secondary-fixed z-50 flex flex-col justify-between shadow-[0_1px_8px_rgba(0,0,0,0.06)]"><div class="flex flex-col"><div class="h-16 px-space-lg flex items-center gap-space-sm"><img alt="PrepPilot AI Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1U1Abx2XAC2v8wJ0w0QtuPK3K4Lof_aLCoXptUcJ4wlwJrm0ftTGATfWLLzV8CKcWroUY-X_9xSSD8EEwduxRdbpzlEkv7mj0KGgFbupSSSu1TgwwtfXkncowjH4_KBE8gcvdP1LTq-uM7JKQ9IVBV0lBdjwKNHB1Eh_Oj38HswRK6A--TZYcS37BIfNT7Z6RG8HdIQNiJ9Io1oT70IH39oWU0ZaRjx37NHszVYzvO6OfxGeW9XlhJ0"/><span class="font-headline-sm text-headline-sm text-on-primary tracking-tight font-bold">PrepPilot<span class="text-primary-fixed"> AI</span></span></div><div class="px-space-md py-space-sm"><span class="font-label-sm text-label-sm text-secondary-fixed-dim uppercase tracking-wider px-space-sm">Intelligence Suite</span></div><nav class="flex flex-col gap-space-xs px-space-md" data-active-classes="bg-primary-container text-on-primary font-label-lg rounded-lg"><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-secondary-fixed-dim hover:bg-inverse-surface hover:text-on-primary transition-colors font-label-lg text-label-lg" data-path="dashboard" href="#"><span class="material-symbols-outlined text-[20px]">grid_view</span><span>Dashboard</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-secondary-fixed-dim hover:bg-inverse-surface hover:text-on-primary transition-colors font-label-lg text-label-lg" data-path="resume-job-match" href="#"><span class="material-symbols-outlined text-[20px]">document_scanner</span><span>Resume &amp; Job Match</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-secondary-fixed-dim hover:bg-inverse-surface hover:text-on-primary transition-colors font-label-lg text-label-lg" data-path="interview-setup" href="#"><span class="material-symbols-outlined text-[20px]">tune</span><span>Interview Setup</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-secondary-fixed-dim hover:bg-inverse-surface hover:text-on-primary transition-colors font-label-lg text-label-lg" data-path="live-session" href="#"><span class="material-symbols-outlined text-[20px]">videocam</span><span>Live Session</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-secondary-fixed-dim hover:bg-inverse-surface hover:text-on-primary transition-colors font-label-lg text-label-lg" data-path="evaluation-reports" href="#"><span class="material-symbols-outlined text-[20px]">assessment</span><span>Evaluation Reports</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-secondary-fixed-dim hover:bg-inverse-surface hover:text-on-primary transition-colors font-label-lg text-label-lg" data-path="learning-plan" href="#"><span class="material-symbols-outlined text-[20px]">psychology</span><span>Learning Plan</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-secondary-fixed-dim hover:bg-inverse-surface hover:text-on-primary transition-colors font-label-lg text-label-lg" data-path="analytics-history" href="#"><span class="material-symbols-outlined text-[20px]">trending_up</span><span>Analytics &amp; History</span></a></nav></div><div class="px-space-md pb-space-lg flex flex-col gap-space-sm"><div class="bg-inverse-surface rounded-xl p-space-md"><div class="flex items-center justify-between mb-space-xs"><span class="font-label-md text-label-md text-on-primary">Readiness Score</span><span class="font-label-md text-label-md text-primary-fixed">84%</span></div><div class="w-full bg-on-secondary-fixed-variant rounded-full h-1.5 overflow-hidden"><div class="bg-primary-container h-1.5 rounded-full w-[84%]"></div></div><p class="font-label-sm text-label-sm text-secondary-fixed-dim mt-space-xs">Target: Senior Staff Role</p></div><nav class="flex flex-col" data-active-classes="bg-primary-container text-on-primary font-label-lg rounded-lg"><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-secondary-fixed-dim hover:bg-inverse-surface hover:text-on-primary transition-colors font-label-lg text-label-lg" data-path="profile-settings" href="#"><span class="material-symbols-outlined text-[20px]">settings</span><span>Profile &amp; Settings</span></a></nav></div></aside><div class="pl-72"><header class="fixed top-0 left-72 right-0 h-16 bg-surface/85 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.03)] z-40 flex items-center justify-between px-space-lg"><div class="flex items-center gap-space-sm text-on-surface-variant font-label-md text-label-md"><span class="hover:text-on-surface transition-colors cursor-pointer">Platform</span><span class="material-symbols-outlined text-[16px]">chevron_right</span><span class="text-on-surface font-label-md text-label-md font-semibold">Console</span></div><div class="flex items-center gap-space-md"><button class="flex items-center gap-space-xs bg-primary-container text-on-primary px-space-md py-space-xs rounded-lg font-label-md text-label-md hover:bg-primary transition-colors shadow-[0_1px_3px_rgba(15,23,42,0.04)]"><span class="material-symbols-outlined text-[18px]">play_arrow</span><span>Start Mock Interview</span></button><div class="h-5 w-px bg-outline-variant"></div><button class="relative p-space-xs text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high rounded-full transition-colors"><span class="material-symbols-outlined text-[20px]">notifications</span><span class="absolute top-1.5 right-1.5 w-2 h-2 bg-primary rounded-full ring-2 ring-surface"></span></button><div class="flex items-center gap-space-sm pl-space-xs"><div class="relative flex items-center"><img alt="Profile" class="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDHEChGHJFzQz2SN-UvlyHy_P0ZhzQJqP9Fbsud3_uobq0r2YCSZZs3bGoe1EKldbqmjOuiWXKngYsaWRiKhB-e7SuRxTj_tewCKruXzAAz2FKerFDA3TVUbbFxVug7XNHPRhj7VIqL89k6XgjM43cjstlIbfdzfVfa0iqIlgOytjfXmXXqfpPFq5Io3XHpcZl9oraLQh06F-yknA6QssJ5QRS0VrzeG5fOFLAqdsZQBZpQTVyrssM"/><span class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-primary-container rounded-full ring-2 ring-surface"></span></div></div></div></header><main class="relative pt-16 bg-surface min-h-screen px-space-lg py-space-lg w-full"><div class="flex flex-col w-full">
+<div class="w-full max-w-[1440px] mx-auto space-y-space-lg">
+<!-- Top Action & Context Banner -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-space-md">
+<div class="space-y-space-xs">
+<div class="flex items-center gap-space-sm text-secondary font-label-sm text-label-sm uppercase tracking-wider">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-surface-container-high text-primary font-semibold">
+<span class="w-1.5 h-1.5 rounded-full bg-primary-container animate-pulse"></span>
+            Adaptive Syllabus v3.4
+          </span>
+<span>•</span>
+<span>Target: Stripe Staff Frontend Engineer</span>
+</div>
+<h1 class="font-headline-xl text-headline-xl text-on-surface tracking-tight font-bold">Personalized Learning &amp; Drill Roadmap</h1>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-3xl">
+          Curated curriculum generated from your Stripe Senior Frontend benchmarks, automated resume gap indexing, and transcript telemetry from your last 3 mock sessions.
+        </p>
+</div>
+<!-- Action Toolbar -->
+<div class="flex items-center flex-wrap gap-space-xs shrink-0">
+<button class="inline-flex items-center gap-space-xs bg-surface-container-lowest text-on-surface hover:bg-surface-container-high px-space-md py-2 rounded-lg font-label-sm text-label-sm shadow-sm transition-colors">
+<span class="material-symbols-outlined text-[16px] text-primary-container">sync</span>
+<span>Sync Recent Mocks</span>
+<span class="text-secondary text-[11px] font-normal pl-1 border-l border-outline-variant/30">2h ago</span>
+</button>
+<button class="inline-flex items-center gap-space-xs bg-surface-container-lowest text-on-surface hover:bg-surface-container-high px-space-md py-2 rounded-lg font-label-sm text-label-sm shadow-sm transition-colors">
+<span class="material-symbols-outlined text-[16px]">tune</span>
+<span>Target: 6.0 hrs/wk</span>
+</button>
+<button class="inline-flex items-center gap-space-xs bg-primary-container hover:bg-primary text-on-primary px-space-md py-2 rounded-lg font-label-sm text-label-sm shadow-sm transition-all duration-150">
+<span class="material-symbols-outlined text-[16px]">file_download</span>
+<span>Export PDF Plan</span>
+</button>
+</div>
+</div>
+<!-- Metric Velocity Band (Top Row Bento) -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-space-md">
+<!-- Card 1: Curriculum Progress -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm relative overflow-hidden flex flex-col justify-between">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-wider">Curriculum Progress</span>
+<span class="inline-flex items-center text-primary-container font-label-sm text-label-sm font-semibold bg-primary-fixed/50 px-2 py-0.5 rounded-full">On Track</span>
+</div>
+<div class="my-space-sm flex items-center justify-between gap-space-md">
+<div>
+<div class="font-headline-lg text-headline-lg text-on-surface font-bold">64<span class="text-body-md font-medium text-secondary">%</span></div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">18 of 28 Modules Mastered</p>
+</div>
+<!-- Mini SVG Progress Donut -->
+<div class="relative w-14 h-14 shrink-0">
+<svg class="w-full h-full transform -rotate-90" viewbox="0 0 36 36">
+<path class="text-surface-container" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="3.5"></path>
+<path class="text-primary-container" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-dasharray="64, 100" stroke-linecap="round" stroke-width="3.5"></path>
+</svg>
+<div class="absolute inset-0 flex items-center justify-center font-label-sm text-label-sm text-on-surface font-bold">
+              10<span class="text-[10px] text-secondary font-normal">left</span>
+</div>
+</div>
+</div>
+<div class="w-full bg-surface-container rounded-full h-1.5 overflow-hidden">
+<div class="bg-primary-container h-1.5 rounded-full" style="width: 64%"></div>
+</div>
+</div>
+<!-- Card 2: Countdown & Target Date -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm relative overflow-hidden flex flex-col justify-between">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-wider">Target Onsite</span>
+<span class="inline-flex items-center gap-1 font-label-sm text-label-sm text-error bg-error-container/60 px-2 py-0.5 rounded-full font-semibold">
+<span class="material-symbols-outlined text-[12px]">schedule</span> 12 Days Left
+          </span>
+</div>
+<div class="my-space-sm">
+<div class="font-headline-md text-headline-md text-on-surface font-bold leading-tight">Nov 14, 2024</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1.5 mt-0.5">
+<span class="w-2 h-2 rounded-full bg-primary-container"></span>
+            Stripe San Francisco Onsite Loop
+          </p>
+</div>
+<div class="flex items-center justify-between text-secondary font-label-sm text-label-sm pt-space-xs border-t border-surface-container">
+<span>5 Rounds Scheduled</span>
+<span class="text-on-surface font-semibold">Stage: Pre-Flight</span>
+</div>
+</div>
+<!-- Card 3: Critical Gaps -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm relative overflow-hidden flex flex-col justify-between">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-wider">Identified Gaps</span>
+<span class="font-label-sm text-label-sm text-tertiary bg-tertiary-fixed/60 px-2 py-0.5 rounded-full font-semibold">High Stakes</span>
+</div>
+<div class="my-space-sm">
+<div class="font-headline-lg text-headline-lg text-on-surface font-bold">2 <span class="font-headline-sm text-headline-sm text-secondary font-normal">P0 Gaps</span></div>
+<p class="font-body-sm text-body-sm text-on-surface-variant truncate">WebSockets Race &amp; Micro-frontends</p>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="px-2 py-0.5 bg-error-container text-on-error-container rounded text-[11px] font-medium font-label-sm">State Isolation</span>
+<span class="px-2 py-0.5 bg-secondary-fixed text-on-secondary-fixed rounded text-[11px] font-medium font-label-sm">Backoff Logic</span>
+</div>
+</div>
+<!-- Card 4: Study Velocity & Streak Tracker -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm relative overflow-hidden flex flex-col justify-between">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-wider">Weekly Velocity</span>
+<span class="font-label-sm text-label-sm text-on-surface font-semibold">4.5 / 6.0 hrs</span>
+</div>
+<div class="my-space-xs">
+<!-- Daily Streak Indicator -->
+<div class="grid grid-cols-7 gap-1 pt-1">
+<div class="flex flex-col items-center gap-1">
+<span class="text-[10px] text-secondary font-label-sm">M</span>
+<div class="w-full h-7 rounded bg-primary-container flex items-center justify-center text-on-primary text-[10px] font-bold">1.2h</div>
+</div>
+<div class="flex flex-col items-center gap-1">
+<span class="text-[10px] text-secondary font-label-sm">T</span>
+<div class="w-full h-7 rounded bg-primary-container flex items-center justify-center text-on-primary text-[10px] font-bold">1.0h</div>
+</div>
+<div class="flex flex-col items-center gap-1">
+<span class="text-[10px] text-secondary font-label-sm">W</span>
+<div class="w-full h-7 rounded bg-primary-container flex items-center justify-center text-on-primary text-[10px] font-bold">0.8h</div>
+</div>
+<div class="flex flex-col items-center gap-1">
+<span class="text-[10px] text-secondary font-label-sm">T</span>
+<div class="w-full h-7 rounded bg-primary-container flex items-center justify-center text-on-primary text-[10px] font-bold">1.5h</div>
+</div>
+<div class="flex flex-col items-center gap-1">
+<span class="text-[10px] text-secondary font-label-sm font-bold text-primary">F</span>
+<div class="w-full h-7 rounded bg-primary-fixed border border-primary text-primary text-[10px] font-bold flex items-center justify-center">0h</div>
+</div>
+<div class="flex flex-col items-center gap-1">
+<span class="text-[10px] text-secondary font-label-sm">S</span>
+<div class="w-full h-7 rounded bg-surface-container flex items-center justify-center text-secondary text-[10px]">-</div>
+</div>
+<div class="flex flex-col items-center gap-1">
+<span class="text-[10px] text-secondary font-label-sm">S</span>
+<div class="w-full h-7 rounded bg-surface-container flex items-center justify-center text-secondary text-[10px]">-</div>
+</div>
+</div>
+</div>
+<div class="text-[11px] text-secondary font-label-sm flex items-center justify-between">
+<span>7-Day Active Streak</span>
+<span class="text-primary font-bold">🔥 4 Days</span>
+</div>
+</div>
+</div>
+<!-- Main Workspace Split-Grid (2/3 Left Syllabus, 1/3 Right Companion) -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg">
+<!-- Primary Syllabus Column (8 Cols) -->
+<div class="lg:col-span-8 space-y-space-md">
+<div class="flex items-center justify-between px-space-xs">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary text-[20px]">layers</span>
+<h2 class="font-headline-sm text-headline-sm text-on-surface font-semibold">Priority Learning Tracks</h2>
+</div>
+<div class="flex items-center gap-space-xs text-secondary font-label-sm text-label-sm">
+<span>Filter:</span>
+<button class="px-2.5 py-1 rounded-md bg-surface-container text-on-surface font-semibold">All (3)</button>
+<button class="px-2.5 py-1 rounded-md hover:bg-surface-container-high text-secondary">P0 Critical</button>
+<button class="px-2.5 py-1 rounded-md hover:bg-surface-container-high text-secondary">Behavioral</button>
+</div>
+</div>
+<!-- Track 1: CRITICAL IN-PROGRESS MODULE -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden transition-all duration-200 hover:shadow-md">
+<!-- Card Header & Metadata -->
+<div class="p-space-lg bg-surface-container-low/60 flex flex-col md:flex-row md:items-center justify-between gap-space-md">
+<div class="space-y-space-xs">
+<div class="flex items-center flex-wrap gap-space-xs">
+<span class="px-2.5 py-0.5 rounded-full bg-error-container text-on-error-container font-label-sm text-label-sm font-semibold inline-flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-error"></span>
+                  Critical Gap
+                </span>
+<span class="text-secondary font-label-sm text-label-sm">• Flagged from Stripe JD &amp; System Design Mock Q2</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface font-bold">
+                Micro-Frontend Orchestration &amp; Shared State Isolation
+              </h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant max-w-2xl">
+                Mastering run-time federation lifecycle hooks, preventing memory cascading leaks between federated apps, and resilient event bus orchestration under high event frequency.
+              </p>
+</div>
+<div class="flex md:flex-col items-end justify-between shrink-0 min-w-[130px]">
+<span class="font-label-md text-label-md text-primary font-bold">3 of 4 Completed</span>
+<div class="w-32 bg-surface-container rounded-full h-2 mt-1">
+<div class="bg-primary-container h-2 rounded-full" style="width: 75%"></div>
+</div>
+<span class="text-[11px] text-secondary font-label-sm mt-1">75% Competency</span>
+</div>
+</div>
+<!-- Module Drill Step Items -->
+<div class="p-space-lg space-y-space-sm">
+<!-- Step Item 1 (Done) -->
+<div class="flex items-start gap-space-md p-space-md rounded-lg bg-surface-bright hover:bg-surface-container-low transition-colors">
+<div class="mt-0.5 w-6 h-6 rounded-full bg-primary-fixed flex items-center justify-center text-primary shrink-0">
+<span class="material-symbols-outlined text-[16px]">check</span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center justify-between gap-space-sm">
+<h4 class="font-label-lg text-label-lg text-on-surface font-semibold line-through text-on-surface-variant">
+                    Module Federation vs Web Components Deep-Dive
+                  </h4>
+<span class="font-label-sm text-label-sm text-primary font-semibold bg-primary-fixed/40 px-2 py-0.5 rounded">92% Score</span>
+</div>
+<p class="font-body-sm text-body-sm text-secondary mt-0.5">Evaluated in Mock #1: Clear runtime dependency graph articulation.</p>
+</div>
+</div>
+<!-- Step Item 2 (Done) -->
+<div class="flex items-start gap-space-md p-space-md rounded-lg bg-surface-bright hover:bg-surface-container-low transition-colors">
+<div class="mt-0.5 w-6 h-6 rounded-full bg-primary-fixed flex items-center justify-center text-primary shrink-0">
+<span class="material-symbols-outlined text-[16px]">check</span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center justify-between gap-space-sm">
+<h4 class="font-label-lg text-label-lg text-on-surface font-semibold line-through text-on-surface-variant">
+                    Cross-Application Event Bus &amp; Memory Leak Isolation
+                  </h4>
+<span class="font-label-sm text-label-sm text-primary font-semibold bg-primary-fixed/40 px-2 py-0.5 rounded">88% Score</span>
+</div>
+<p class="font-body-sm text-body-sm text-secondary mt-0.5">Evaluated in Mock #2: Demonstrated solid teardown subscriber patterns.</p>
+</div>
+</div>
+<!-- Step Item 3 (CURRENT ACTIVE FOCUS CTA) -->
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-space-md p-space-md rounded-xl bg-surface-container-high/60 shadow-sm">
+<div class="flex items-start gap-space-md min-w-0">
+<div class="mt-1 w-6 h-6 rounded-full bg-primary-container text-on-primary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[16px]">play_arrow</span>
+</div>
+<div class="space-y-space-xs">
+<div class="flex items-center gap-space-xs flex-wrap">
+<span class="font-label-sm text-label-sm text-primary-container uppercase font-bold tracking-wider">Active Exercise</span>
+<span class="inline-flex items-center gap-1 text-[11px] font-label-sm px-2 py-0.5 rounded bg-surface-container-lowest text-on-surface">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+                      AI Evaluator: Sarah (Principal Architect)
+                    </span>
+</div>
+<h4 class="font-label-lg text-label-lg text-on-surface font-bold">
+                    Interactive Drill: Design client rollback cache for distributed cart
+                  </h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant max-w-xl">
+                    Scenario drill: Network partitions during checkout trigger state drift between federated header and checkout iframe. Provide fail-soft guarantees within 15 minutes.
+                  </p>
+</div>
+</div>
+<div class="shrink-0 flex items-center gap-space-xs self-end md:self-center">
+<button class="inline-flex items-center gap-space-xs bg-primary-container hover:bg-primary text-on-primary px-space-md py-2.5 rounded-lg font-label-md text-label-md shadow-sm transition-all duration-150">
+<span class="material-symbols-outlined text-[18px]">mic</span>
+<span>Launch 15-Min Voice Drill</span>
+</button>
+</div>
+</div>
+<!-- Step Item 4 (Upcoming) -->
+<div class="flex items-start gap-space-md p-space-md rounded-lg bg-surface-bright opacity-75 hover:opacity-100 transition-opacity">
+<div class="mt-0.5 w-6 h-6 rounded-full bg-surface-container text-secondary flex items-center justify-center shrink-0 font-label-sm text-[12px] font-bold">
+                4
+              </div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center justify-between gap-space-sm">
+<h4 class="font-label-lg text-label-lg text-on-surface font-semibold">
+                    STAR Behavioral Drill: Handling Cross-Team Dependency Delays
+                  </h4>
+<span class="text-secondary font-label-sm text-label-sm">Scheduled (Tomorrow)</span>
+</div>
+<p class="font-body-sm text-body-sm text-secondary mt-0.5">Aligning delivery milestones when the core platform federated host breaks contract.</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Track 2: HIGH PRIORITY MODULE -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden transition-all duration-200 hover:shadow-md">
+<div class="p-space-lg bg-surface-container-low/40 flex flex-col md:flex-row md:items-center justify-between gap-space-md">
+<div class="space-y-space-xs">
+<div class="flex items-center flex-wrap gap-space-xs">
+<span class="px-2.5 py-0.5 rounded-full bg-secondary-container text-on-secondary-container font-label-sm text-label-sm font-semibold">
+                  High Priority
+                </span>
+<span class="text-secondary font-label-sm text-label-sm">• 14% Skill Gap Identified vs Stripe Bar</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface font-bold">
+                Real-Time WebSocket Ingestion &amp; Stream Reconnection
+              </h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant max-w-2xl">
+                Tackling socket burst drops, backpressure buffering, jittered exponential backoff, and out-of-order sequence reconcilement on high-throughput dashboards.
+              </p>
+</div>
+<div class="flex md:flex-col items-end justify-between shrink-0 min-w-[130px]">
+<span class="font-label-md text-label-md text-on-surface font-bold">1 of 3 Completed</span>
+<div class="w-32 bg-surface-container rounded-full h-2 mt-1">
+<div class="bg-primary-container h-2 rounded-full" style="width: 33%"></div>
+</div>
+<span class="text-[11px] text-secondary font-label-sm mt-1">33% Competency</span>
+</div>
+</div>
+<div class="p-space-lg space-y-space-sm">
+<!-- Step Item 1 (Done) -->
+<div class="flex items-start gap-space-md p-space-md rounded-lg bg-surface-bright">
+<div class="mt-0.5 w-6 h-6 rounded-full bg-primary-fixed flex items-center justify-center text-primary shrink-0">
+<span class="material-symbols-outlined text-[16px]">check</span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center justify-between">
+<h4 class="font-label-lg text-label-lg text-on-surface font-semibold line-through text-on-surface-variant">
+                    Heartbeat intervals and exponential backoff retry patterns
+                  </h4>
+<span class="font-label-sm text-label-sm text-primary font-semibold bg-primary-fixed/40 px-2 py-0.5 rounded">95% Mastery</span>
+</div>
+</div>
+</div>
+<!-- Step Item 2 (Active CTA) -->
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-space-md p-space-md rounded-lg bg-surface-container-high/40">
+<div class="flex items-start gap-space-md min-w-0">
+<div class="mt-0.5 w-6 h-6 rounded-full bg-surface-container text-primary flex items-center justify-center shrink-0 font-label-sm text-[12px] font-bold">
+                  2
+                </div>
+<div>
+<h4 class="font-label-lg text-label-lg text-on-surface font-semibold">
+                    Scenario Simulation: Mitigate out-of-order packet races during live checkout
+                  </h4>
+<p class="font-body-sm text-body-sm text-secondary mt-0.5">Solve sequence gap identification and state snapshot hydrate buffers.</p>
+</div>
+</div>
+<button class="inline-flex items-center gap-space-xs bg-surface-container-lowest hover:bg-surface-container-high text-on-surface px-space-md py-1.5 rounded-lg font-label-sm text-label-sm shadow-sm transition-colors shrink-0">
+<span class="material-symbols-outlined text-[16px] text-primary">play_arrow</span>
+<span>Start Practice Drill</span>
+</button>
+</div>
+<!-- Step Item 3 (Upcoming) -->
+<div class="flex items-start gap-space-md p-space-md rounded-lg bg-surface-bright opacity-70">
+<div class="mt-0.5 w-6 h-6 rounded-full bg-surface-container text-secondary flex items-center justify-center shrink-0 font-label-sm text-[12px] font-bold">
+                3
+              </div>
+<div>
+<h4 class="font-label-lg text-label-lg text-on-surface font-semibold">
+                  Monaco REPL Coding Exercise: Build a resilient WebSocket client hook
+                </h4>
+<p class="font-body-sm text-body-sm text-secondary mt-0.5">Hands-on TypeScript live coding with test suites for reconnections and cache drops.</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Track 3: MEDIUM PRIORITY (Executive Vocal Coaching) -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden">
+<div class="p-space-lg flex flex-col md:flex-row md:items-center justify-between gap-space-md">
+<div class="space-y-space-xs">
+<div class="flex items-center gap-space-xs">
+<span class="px-2.5 py-0.5 rounded-full bg-tertiary-fixed text-on-tertiary-fixed font-label-sm text-label-sm font-semibold">
+                  Vocal Precision &amp; Executive Presence
+                </span>
+<span class="text-secondary font-label-sm text-label-sm">• Benchmark: L6 Stripe Bar</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface font-bold">
+                Vocal Biomarker Calibration &amp; Filler Word Elimination
+              </h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant max-w-xl">
+                Current filler rate: <span class="font-semibold text-on-surface">1.2/min</span> (Target: &lt;0.5/min). Speech cadence: <span class="font-semibold text-on-surface">142 WPM</span> (Optimal: 130-150 WPM).
+              </p>
+</div>
+<button class="inline-flex items-center gap-space-xs bg-surface-container hover:bg-surface-container-high text-on-surface px-space-md py-2.5 rounded-lg font-label-md text-label-md transition-colors shrink-0">
+<span class="material-symbols-outlined text-[18px] text-tertiary">graphic_eq</span>
+<span>5-Min Audio Warmup</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Right Column Companion Intelligence (4 Cols) -->
+<div class="lg:col-span-4 space-y-space-md">
+<!-- AI Lead Coach Directive Card -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm relative overflow-hidden">
+<div class="flex items-center gap-space-sm mb-space-sm">
+<div class="relative">
+<img class="w-10 h-10 rounded-full object-cover shadow-sm" data-alt="Professional studio portrait of Marcus Vance, a distinguished senior tech leadership coach wearing glasses and navy tailored blazer, soft executive lighting with cool studio tones" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAGd9QB18GNElWb0IVPsg8S_K4XY4HGaIfcxz-63qXjx4cK3PyfalFENB_rjCGOUy3fG5GGgT5zGapMvVs9ZWEXr42dn-K5nyH1sMVyHz8R0wLmK568yABDDJoPgveLq6V8GLf4By5rO5aWg2GbmrXs2g5-i7HH0r2z8sQJtQ25l6C70O_tXk2o4n7btgN7h_I9Fn5Jj2tTa2J7idpcx03D1Zkq29GEvUN8AB9-Pg"/>
+<span class="absolute bottom-0 right-0 w-3 h-3 bg-primary-container rounded-full ring-2 ring-surface-container-lowest"></span>
+</div>
+<div>
+<div class="font-label-md text-label-md text-on-surface font-bold">Marcus Vance</div>
+<div class="font-label-sm text-label-sm text-secondary">Lead AI Coaching Agent</div>
+</div>
+</div>
+<div class="p-space-sm bg-surface-container-low rounded-lg text-on-surface-variant font-body-sm text-body-sm relative">
+<span class="material-symbols-outlined text-primary text-[18px] absolute top-2 right-2 opacity-40">format_quote</span>
+<p class="pr-4 leading-relaxed">
+              "Focus today on <strong class="text-on-surface">explaining rollback strategies</strong> before jumping into code. In your last drill, Sarah docked points for ambiguous failure-state guarantees during network blips."
+            </p>
+</div>
+<div class="mt-space-sm pt-space-xs flex items-center justify-between border-t border-surface-container text-secondary font-label-sm text-label-sm">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px] text-primary">event</span> Next Full Mock:
+            </span>
+<span class="font-semibold text-on-surface">Tomorrow, 10:00 AM</span>
+</div>
+</div>
+<!-- Rapid Daily Micro-Drills -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm space-y-space-sm">
+<div class="flex items-center justify-between">
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">Daily Micro-Drills</h3>
+<span class="font-label-sm text-label-sm text-primary font-semibold">10 Mins Total</span>
+</div>
+<!-- Micro Card 1 -->
+<div class="p-space-sm rounded-lg bg-surface-bright hover:bg-surface-container-low transition-colors space-y-space-xs">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm px-2 py-0.5 rounded bg-primary-fixed/50 text-primary font-bold">5 Mins</span>
+<span class="material-symbols-outlined text-[16px] text-secondary">bolt</span>
+</div>
+<h4 class="font-label-md text-label-md text-on-surface font-bold">Rapid Flashcards: 10 Hard Architecture Trade-offs</h4>
+<p class="font-body-sm text-body-sm text-secondary">PaaS vs Self-hosted, SSR vs Hydration Streaming.</p>
+<button class="w-full mt-1 bg-surface-container text-on-surface hover:bg-surface-container-high py-1.5 rounded font-label-sm text-label-sm font-semibold transition-colors">
+              Start Flashcard Run
+            </button>
+</div>
+<!-- Micro Card 2 -->
+<div class="p-space-sm rounded-lg bg-surface-bright hover:bg-surface-container-low transition-colors space-y-space-xs">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm px-2 py-0.5 rounded bg-secondary-fixed text-on-secondary-fixed font-bold">90 Secs</span>
+<span class="material-symbols-outlined text-[16px] text-secondary">mic</span>
+</div>
+<h4 class="font-label-md text-label-md text-on-surface font-bold">Vocal Pitch: Senior Staff Impact Statement</h4>
+<p class="font-body-sm text-body-sm text-secondary">Deliver crisp metric-backed answer to: "What is your biggest engineering win?"</p>
+<button class="w-full mt-1 bg-surface-container text-on-surface hover:bg-surface-container-high py-1.5 rounded font-label-sm text-label-sm font-semibold transition-colors">
+              Record 90s Response
+            </button>
+</div>
+</div>
+<!-- Curated Reference Library & Whitepapers -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm space-y-space-sm">
+<div class="flex items-center justify-between">
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">Curated Reading</h3>
+<span class="material-symbols-outlined text-secondary text-[18px]">bookmark</span>
+</div>
+<div class="space-y-space-xs">
+<a class="block p-space-sm rounded-lg hover:bg-surface-container-low transition-colors group" href="#">
+<div class="flex items-start justify-between gap-2">
+<span class="font-label-md text-label-md text-on-surface font-semibold group-hover:text-primary transition-colors">
+                  Stripe Engineering: Sub-second Resilient APIs
+                </span>
+<span class="material-symbols-outlined text-[16px] text-secondary group-hover:text-primary">arrow_outward</span>
+</div>
+<p class="font-body-sm text-body-sm text-secondary mt-0.5">8 min read • Architecture Reference</p>
+</a>
+<a class="block p-space-sm rounded-lg hover:bg-surface-container-low transition-colors group" href="#">
+<div class="flex items-start justify-between gap-2">
+<span class="font-label-md text-label-md text-on-surface font-semibold group-hover:text-primary transition-colors">
+                  Micro-frontends Architecture Patterns at Scale
+                </span>
+<span class="material-symbols-outlined text-[16px] text-secondary group-hover:text-primary">arrow_outward</span>
+</div>
+<p class="font-body-sm text-body-sm text-secondary mt-0.5">14 min read • System Design Rubric</p>
+</a>
+<a class="block p-space-sm rounded-lg hover:bg-surface-container-low transition-colors group" href="#">
+<div class="flex items-start justify-between gap-2">
+<span class="font-label-md text-label-md text-on-surface font-semibold group-hover:text-primary transition-colors">
+                  PrepPilot Benchmark: L5 vs L6 Frontend Matrix
+                </span>
+<span class="material-symbols-outlined text-[16px] text-secondary group-hover:text-primary">download</span>
+</div>
+<p class="font-body-sm text-body-sm text-secondary mt-0.5">PDF • Internal Evaluation Criteria</p>
+</a>
+</div>
+</div>
+<!-- System Architecture Drill Banner -->
+<div class="rounded-xl overflow-hidden shadow-sm relative p-space-md text-on-primary bg-inverse-surface flex flex-col justify-between min-h-[160px]">
+<div class="space-y-space-xs z-10">
+<span class="px-2 py-0.5 rounded bg-primary-container text-on-primary font-label-sm text-[11px] font-bold tracking-wider uppercase">Pro Mock Simulation</span>
+<h4 class="font-headline-sm text-headline-sm text-on-primary font-bold">Simulate 45-Min Stripe System Design</h4>
+<p class="font-body-sm text-body-sm text-secondary-fixed-dim">Next scheduled dry run covers global idempotency keys &amp; telemetry pipelines.</p>
+</div>
+<div class="pt-space-md flex items-center justify-between z-10">
+<span class="font-label-sm text-label-sm text-primary-fixed">Ready to launch</span>
+<button class="px-space-md py-1.5 rounded-lg bg-surface-container-lowest text-on-surface hover:bg-primary-fixed font-label-sm text-label-sm font-semibold transition-colors">
+              Schedule Now
+            </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div></main></div></body></html>

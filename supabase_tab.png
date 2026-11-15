@@ -1,0 +1,132 @@
+- generic [ref=f3e2]:
+  - generic [ref=f3e3]:
+    - complementary [ref=f3e5]:
+      - generic [ref=f3e6]:
+        - link "PrepPilot AI Interview Copilot" [ref=f3e8] [cursor=pointer]:
+          - /url: /dashboard
+          - generic [ref=f3e12]:
+            - generic [ref=f3e13]: PrepPilot AI
+            - generic [ref=f3e14]: Interview Copilot
+        - generic [ref=f3e15]: Intelligence Suite
+        - navigation [ref=f3e16]:
+          - link "Dashboard" [ref=f3e17] [cursor=pointer]:
+            - /url: /dashboard
+          - link "Resume & Job Match" [ref=f3e24] [cursor=pointer]:
+            - /url: /resume-job-match
+          - link "Interview Setup" [ref=f3e31] [cursor=pointer]:
+            - /url: /interview-setup
+          - link "Live Session" [ref=f3e34] [cursor=pointer]:
+            - /url: /live-session
+          - link "Evaluation Reports" [ref=f3e39] [cursor=pointer]:
+            - /url: /evaluation-reports
+          - link "Learning Plan" [ref=f3e44] [cursor=pointer]:
+            - /url: /learning-plan
+          - link "Analytics & History" [ref=f3e58] [cursor=pointer]:
+            - /url: /analytics-history
+      - generic [ref=f3e63]:
+        - link "Readiness Score 78% Senior Frontend Engineer 64% plan" [ref=f3e64] [cursor=pointer]:
+          - /url: /analytics-history
+          - generic [ref=f3e65]:
+            - generic [ref=f3e66]: Readiness Score
+            - generic [ref=f3e71]: 78%
+          - generic [ref=f3e74]:
+            - generic [ref=f3e75]: Senior Frontend Engineer
+            - generic [ref=f3e76]: 64% plan
+        - generic [ref=f3e77]:
+          - link "Profile & Settings" [ref=f3e78] [cursor=pointer]:
+            - /url: /profile-settings
+          - button "Sign Out" [ref=f3e83]
+    - generic [ref=f3e88]:
+      - banner [ref=f3e89]:
+        - generic [ref=f3e91]:
+          - link "Platform" [ref=f3e92] [cursor=pointer]:
+            - /url: /dashboard
+          - generic [ref=f3e95]: Profile & Settings
+        - generic [ref=f3e96]:
+          - link "Stripe • Senior Frontend Engineer" [ref=f3e97] [cursor=pointer]:
+            - /url: /profile-settings
+          - link "Start Mock Interview" [ref=f3e102] [cursor=pointer]:
+            - /url: /interview-setup
+          - button "View notifications (2 unread)" [ref=f3e108]
+          - button "User account menu" [ref=f3e114]:
+            - img "Alex Morgan" [ref=f3e116]
+      - main [ref=f3e118]:
+        - generic [ref=f3e119]:
+          - generic [ref=f3e120]:
+            - generic [ref=f3e121]:
+              - generic [ref=f3e122]:
+                - generic [ref=f3e123]: Platform
+                - generic [ref=f3e124]: •
+                - generic [ref=f3e125]: Profile & Settings
+              - heading "Candidate Profile & Settings" [level=1] [ref=f3e126]
+              - paragraph [ref=f3e127]: Manage your professional identity, target company calibration benchmarks, adversarial AI evaluation personas, and Supabase PostgreSQL database enclave.
+            - generic [ref=f3e128]:
+              - button "Export Dossier (JSON)" [ref=f3e129]
+              - button "Save Changes" [ref=f3e134]
+          - generic [ref=f3e140]:
+            - button "General Profile" [ref=f3e141]
+            - button "Target Track & Company" [ref=f3e146]
+            - button "AI Coach & Personas" [ref=f3e151]
+            - button "Audio & Telemetry" [ref=f3e156]
+            - button "Supabase Database" [active] [ref=f3e161]
+            - button "Security & Privacy Enclave" [ref=f3e168]
+          - generic [ref=f3e172]:
+            - generic [ref=f3e201]:
+              - generic [ref=f3e202]:
+                - generic [ref=f3e203]:
+                  - heading "Supabase PostgreSQL Cloud Database" [level=3] [ref=f3e204]
+                  - paragraph [ref=f3e210]: Persistent data storage for user profiles, resumes, mock answers, scores, and learning plans.
+                - generic [ref=f3e211]: Supabase Connected
+              - generic [ref=f3e214]:
+                - generic [ref=f3e215]: Connection Parameters
+                - generic [ref=f3e216]:
+                  - generic [ref=f3e217]:
+                    - generic [ref=f3e218]: Supabase Project URL
+                    - textbox "https://your-project-id.supabase.co" [ref=f3e219]: https://rqmxxwvijwewbyynyntb.supabase.co
+                  - generic [ref=f3e220]:
+                    - generic [ref=f3e221]: Supabase Anon / Publishable Key
+                    - textbox "eyJhbGciOiJIUzI1NiIsInR5cCI6..." [ref=f3e222]: sb_publishable_M8gPnULZhsfo6Tjl73JxYg_83jRMTyC
+                - generic [ref=f3e223]:
+                  - generic [ref=f3e224]: Obtain these from your Supabase Dashboard > Project Settings > API.
+                  - button "Save & Connect to Supabase" [ref=f3e225]
+              - generic [ref=f3e227]:
+                - generic [ref=f3e228]:
+                  - generic [ref=f3e229]:
+                    - heading "PostgreSQL Migration Script (Normalized Schema & RLS)" [level=4] [ref=f3e230]
+                    - paragraph [ref=f3e231]: Includes all 8 normalized tables, foreign keys, UUIDs, indexes, RLS policies, and user creation trigger.
+                  - button "Copy SQL Script" [ref=f3e232]
+                - generic [ref=f3e237]:
+                  - generic [ref=f3e238]:
+                    - generic [ref=f3e239]: profiles
+                    - generic [ref=f3e240]: 1-to-1 User dossier
+                    - text: RLS Enabled
+                  - generic [ref=f3e241]:
+                    - generic [ref=f3e242]: resumes
+                    - generic [ref=f3e243]: Parsed skills & ATS
+                    - text: RLS Enabled
+                  - generic [ref=f3e244]:
+                    - generic [ref=f3e245]: interview_sessions
+                    - generic [ref=f3e246]: Mock interviews
+                    - text: RLS Enabled
+                  - generic [ref=f3e247]:
+                    - generic [ref=f3e248]: interview_questions
+                    - generic [ref=f3e249]: Rubric criteria
+                    - text: RLS Enabled
+                  - generic [ref=f3e250]:
+                    - generic [ref=f3e251]: candidate_answers
+                    - generic [ref=f3e252]: Answers & pacing
+                    - text: RLS Enabled
+                  - generic [ref=f3e253]:
+                    - generic [ref=f3e254]: evaluation_reports
+                    - generic [ref=f3e255]: Scorecards & feedback
+                    - text: RLS Enabled
+                  - generic [ref=f3e256]:
+                    - generic [ref=f3e257]: learning_plans
+                    - generic [ref=f3e258]: Adaptive roadmaps
+                    - text: RLS Enabled
+                  - generic [ref=f3e259]:
+                    - generic [ref=f3e260]: learning_modules
+                    - generic [ref=f3e261]: Curriculum tasks
+                    - text: RLS Enabled
+            - button "Save All Changes" [ref=f3e199]
+  - generic "Notifications"
