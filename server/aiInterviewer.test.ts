@@ -181,7 +181,17 @@ test('buildDeterministicEvaluationFromTranscript evaluates real spoken turns and
     transcript: [],
   });
 
+  assert.ok(
+    richReport.questionFeedbacks[0].score >= 60,
+    `Expected answered topic 1 score >= 60, got ${richReport.questionFeedbacks[0].score}`
+  );
+  assert.equal(richReport.questionFeedbacks[1].score, 0);
   assert.ok(richReport.overallScore > emptyReport.overallScore);
+  assert.equal(emptyReport.overallScore, 0);
+  assert.equal(emptyReport.categoryScores.technicalCorrectness, 0);
+  assert.equal(emptyReport.categoryScores.tradeoffAnalysis, 0);
+  assert.equal(emptyReport.categoryScores.communicationStructure, 0);
+  assert.equal(emptyReport.categoryScores.problemDecomposition, 0);
   assert.match(richReport.questionFeedbacks[0].candidateResponse, /Kafka dead-letter queue/);
   assert.match(richReport.questionFeedbacks[0].followUpResponse || '', /Automated canary rollback/);
   assert.equal(richReport.durationFormatted, '3m 5s');
@@ -194,7 +204,130 @@ test('buildDeterministicEvaluationFromTranscript evaluates real spoken turns and
   assert.equal(emptyReport.evaluationBasis.candidateTurnsAnalyzed, 0);
   assert.equal(emptyReport.evaluationBasis.topicsAnswered, 0);
   assert.match(emptyReport.overallSummary, /before answering any interview questions/i);
-  assert.match(emptyReport.overallSummary, /only candidate spoken responses are evaluated/i);
+  assert.match(emptyReport.overallSummary, /0\/100/);
+
+  // Full 3-of-3 substantive answers should score >= 65 overall
+  const fullRichReport = buildDeterministicEvaluationFromTranscript({
+    candidateName: 'Priya Nair',
+    targetRole: 'Principal Backend Engineer',
+    targetCompany: 'Cloudflare',
+    difficulty: 'senior-staff',
+    interviewType: 'system-design',
+    aiPersona: 'Marcus Reed',
+    durationSeconds: 420,
+    questions: plan.questions,
+    answers: [],
+    transcript: [
+      ...plan.questions.flatMap((q, idx) => [
+        {
+          id: `full_q_${idx}`,
+          speaker: 'ai' as const,
+          speakerName: 'Marcus Reed',
+          kind: 'question' as const,
+          topicOrder: idx + 1,
+          topicTitle: q.category,
+          text: q.questionText,
+          timestamp: `10:0${idx * 2}`,
+        },
+        {
+          id: `full_a_${idx}`,
+          speaker: 'candidate' as const,
+          speakerName: 'Priya Nair',
+          kind: 'response' as const,
+          topicOrder: idx + 1,
+          topicTitle: q.category,
+          text: 'First, we scope latency budgets under 50ms p99 and separate the ingestion layer from worker pipelines. Because duplicate retries happen during partition failover, we enforce Redis idempotency keys, a Kafka dead-letter queue, and circuit breaker backoff, trading 8ms of serialization latency for strict consistency and automated canary rollback.',
+          timestamp: `10:0${idx * 2 + 1}`,
+        },
+      ]),
+    ],
+  });
+
+  assert.ok(
+    fullRichReport.overallScore >= 65,
+    `Expected full substantive session >= 65, got ${fullRichReport.overallScore}`
+  );
+  assert.equal(fullRichReport.evaluationBasis.topicsAnswered, plan.questions.length);
+});
+
+test('buildDeterministicEvaluationFromTranscript penalizes evasive "I dont know" replies well below 15 and scores dimensions independently', () => {
+  const plan = buildDeterministicInterviewPlan({
+    candidateName: 'Sam Rivera',
+    targetRole: 'Senior Backend Engineer',
+    targetCompany: 'Stripe',
+    interviewType: 'technical',
+    difficulty: 'senior-staff',
+    questionCount: 3,
+    aiPersona: 'Sarah',
+  });
+
+  const evasiveReport = buildDeterministicEvaluationFromTranscript({
+    candidateName: 'Sam Rivera',
+    targetRole: 'Senior Backend Engineer',
+    targetCompany: 'Stripe',
+    difficulty: 'senior-staff',
+    interviewType: 'technical',
+    aiPersona: 'Sarah',
+    durationSeconds: 45,
+    questions: plan.questions,
+    answers: [],
+    transcript: [
+      {
+        id: 'e1',
+        speaker: 'candidate',
+        speakerName: 'Sam Rivera',
+        kind: 'response',
+        topicOrder: 1,
+        text: "I don't know, skip this question.",
+        timestamp: '10:01',
+      },
+      {
+        id: 'e2',
+        speaker: 'candidate',
+        speakerName: 'Sam Rivera',
+        kind: 'response',
+        topicOrder: 2,
+        text: 'Not sure, no idea.',
+        timestamp: '10:02',
+      },
+    ],
+  });
+
+  assert.ok(evasiveReport.overallScore <= 10, `Expected <=10 for non-answers, got ${evasiveReport.overallScore}`);
+  assert.equal(evasiveReport.categoryScores.technicalCorrectness, 0);
+  assert.equal(evasiveReport.categoryScores.tradeoffAnalysis, 0);
+  assert.equal(evasiveReport.categoryScores.problemDecomposition, 0);
+  assert.ok(evasiveReport.questionFeedbacks[0].suggestedImprovements.length >= 1);
+
+  // Answer with strong architecture/metrics terms but ZERO tradeoffs or failure-mode discussion
+  const unevenReport = buildDeterministicEvaluationFromTranscript({
+    candidateName: 'Sam Rivera',
+    targetRole: 'Senior Backend Engineer',
+    targetCompany: 'Stripe',
+    difficulty: 'senior-staff',
+    interviewType: 'technical',
+    aiPersona: 'Sarah',
+    durationSeconds: 180,
+    questions: plan.questions,
+    answers: [],
+    transcript: [
+      {
+        id: 'u1',
+        speaker: 'candidate',
+        speakerName: 'Sam Rivera',
+        kind: 'response',
+        topicOrder: 1,
+        text: 'First, we build the database schema in Postgres with Redis cache and Kafka streaming workers for high throughput. Because we track p99 latency at 20ms and add indexing, the architecture handles 50k rps cleanly.',
+        timestamp: '10:01',
+      },
+    ],
+  });
+
+  // Technical depth + communication should clearly exceed tradeoff analysis when tradeoffs were omitted
+  assert.ok(
+    unevenReport.categoryScores.technicalCorrectness > unevenReport.categoryScores.tradeoffAnalysis + 8,
+    `Expected independent divergence: tech=${unevenReport.categoryScores.technicalCorrectness}, tradeoff=${unevenReport.categoryScores.tradeoffAnalysis}`
+  );
 });
 
 test('quota detection and model cooldown circuit breaker prevent repeated 429 retries', () => {

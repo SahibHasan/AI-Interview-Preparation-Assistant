@@ -18,13 +18,22 @@ import {
   ArrowRight,
   Layers,
   ShieldCheck,
+  Target,
+  Lightbulb,
 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import { AnimatedCounter } from '../components/common/AnimatedCounter';
 import { Skeleton } from '../components/common/Skeleton';
-import { downloadSummaryPDF } from '../utils/pdfExport';
+import {
+  downloadFullReportPDF,
+  downloadFullReportDOCX,
+  downloadSummaryPDF,
+  downloadSummaryDOCX,
+  downloadTranscriptPDF,
+  downloadTranscriptDOCX,
+} from '../utils/pdfExport';
 
 function getTierBadge(score: number): { label: string; badgeClass: string } {
   if (score >= 88) {
@@ -45,13 +54,22 @@ function getTierBadge(score: number): { label: string; badgeClass: string } {
       badgeClass: 'bg-indigo-50 text-indigo-800 border border-indigo-200',
     };
   }
+  if (score >= 35) {
+    return {
+      label: 'Needs Practice',
+      badgeClass: 'bg-amber-50 text-amber-800 border border-amber-200',
+    };
+  }
   return {
-    label: 'Needs Practice',
-    badgeClass: 'bg-amber-50 text-amber-800 border border-amber-200',
+    label: 'Critical Gap',
+    badgeClass: 'bg-red-50 text-red-800 border border-red-200',
   };
 }
 
-function getMetricNote(score: number, domain: 'tech' | 'tradeoff' | 'comm'): string {
+function getMetricNote(score: number, domain: 'tech' | 'tradeoff' | 'comm' | 'decomp'): string {
+  if (score < 35) {
+    return 'Insufficient signal demonstrated; review core concepts and attempt full structured answers.';
+  }
   if (domain === 'tech') {
     if (score >= 85) return 'Strong architectural depth and implementation accuracy.';
     if (score >= 70) return 'Solid fundamentals; expand on system edge cases and metrics.';
@@ -61,6 +79,11 @@ function getMetricNote(score: number, domain: 'tech' | 'tradeoff' | 'comm'): str
     if (score >= 85) return 'Clearly articulated failure states, latency tradeoffs, and mitigations.';
     if (score >= 70) return 'Covered primary choices; probe deeper into failure recovery and scale.';
     return 'Explicitly compare alternatives, bottlenecks, and rollback paths.';
+  }
+  if (domain === 'decomp') {
+    if (score >= 85) return 'Clear scoping, boundaries, and component decomposition.';
+    if (score >= 70) return 'Good breakdown; clarify upfront constraints and scale bounds.';
+    return 'Break problems into constraints, components, and interfaces first.';
   }
   if (score >= 85) return 'Structured verbal delivery with crisp framing and pacing.';
   if (score >= 70) return 'Clear high-level structure; tighten concrete examples and outcomes.';
@@ -75,6 +98,8 @@ export const EvaluationReportPage: React.FC = () => {
 
   const [expandedQuestion, setExpandedQuestion] = useState<string>('');
   const [filterScore, setFilterScore] = useState<'all' | 'high' | 'needs-work'>('all');
+  const [exportFormat, setExportFormat] = useState<'pdf' | 'docx'>('pdf');
+  const [isExporting, setIsExporting] = useState(false);
 
   // Sync URL ?reportId= or ?sessionId= with savedReports
   useEffect(() => {
@@ -152,22 +177,50 @@ export const EvaluationReportPage: React.FC = () => {
     setSearchParams({ reportId: id });
   };
 
-  const handleDownloadPDF = () => {
-    showToast({
-      title: 'Preparing Executive PDF',
-      message: 'Opening system print dialog with executive precision layout.',
-      type: 'info',
-    });
-    window.print();
+  const handleDownloadReport = async () => {
+    setIsExporting(true);
+    try {
+      const filename =
+        exportFormat === 'docx'
+          ? await downloadFullReportDOCX(activeReport, candidateDisplayName)
+          : downloadFullReportPDF(activeReport, candidateDisplayName);
+      showToast({
+        title: `Full Report (${exportFormat.toUpperCase()}) Downloaded`,
+        message: `Saved ${filename} with full rubric scorecard, gaps, and transcript.`,
+        type: 'success',
+      });
+    } catch {
+      showToast({
+        title: 'Export Failed',
+        message: 'Could not generate report file. Please try again.',
+        type: 'error',
+      });
+    } finally {
+      setIsExporting(false);
+    }
   };
 
-  const handleDownloadSummary = () => {
-    downloadSummaryPDF(activeReport, candidateDisplayName);
-    showToast({
-      title: 'Executive Summary Downloaded',
-      message: `Exported 1-page executive summary for Session #${activeReport.id.slice(0, 8)}.`,
-      type: 'success',
-    });
+  const handleDownloadSummary = async () => {
+    setIsExporting(true);
+    try {
+      const filename =
+        exportFormat === 'docx'
+          ? await downloadSummaryDOCX(activeReport, candidateDisplayName)
+          : downloadSummaryPDF(activeReport, candidateDisplayName);
+      showToast({
+        title: `Executive Summary (${exportFormat.toUpperCase()}) Downloaded`,
+        message: `Saved ${filename} with scorecard highlights and action plan.`,
+        type: 'success',
+      });
+    } catch {
+      showToast({
+        title: 'Summary Export Failed',
+        message: 'Could not generate summary file. Please try again.',
+        type: 'error',
+      });
+    } finally {
+      setIsExporting(false);
+    }
   };
 
   const handleShare = () => {
@@ -187,34 +240,27 @@ export const EvaluationReportPage: React.FC = () => {
     }
   };
 
-  const handleExportTranscript = () => {
-    const transcriptPayload = {
-      reportId: activeReport.id,
-      sessionId: activeReport.sessionId,
-      candidate: candidateDisplayName,
-      targetRole: activeReport.targetRole,
-      targetCompany: activeReport.targetCompany,
-      interviewerPersona: activeReport.interviewerPersona || 'AI Interviewer',
-      overallScore: activeReport.overallScore,
-      completedAt: activeReport.completedAt,
-      durationFormatted: activeReport.durationFormatted,
-      conversationTranscript: activeReport.conversationTranscript || [],
-      feedback: activeReport.questionFeedbacks || [],
-    };
-
-    const dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(transcriptPayload, null, 2));
-    const downloadAnchor = document.createElement('a');
-    downloadAnchor.setAttribute('href', dataStr);
-    downloadAnchor.setAttribute('download', `preppilot_transcript_session_${activeReport.id.slice(0, 12)}.json`);
-    document.body.appendChild(downloadAnchor);
-    downloadAnchor.click();
-    downloadAnchor.remove();
-
-    showToast({
-      title: 'Transcript Exported',
-      message: `Downloaded full conversation transcript & evaluation in JSON format.`,
-      type: 'success',
-    });
+  const handleExportTranscript = async () => {
+    setIsExporting(true);
+    try {
+      const filename =
+        exportFormat === 'docx'
+          ? await downloadTranscriptDOCX(activeReport, candidateDisplayName)
+          : downloadTranscriptPDF(activeReport, candidateDisplayName);
+      showToast({
+        title: `Transcript (${exportFormat.toUpperCase()}) Downloaded`,
+        message: `Saved formatted conversation transcript as ${filename}.`,
+        type: 'success',
+      });
+    } catch {
+      showToast({
+        title: 'Transcript Export Failed',
+        message: 'Could not generate transcript file. Please try again.',
+        type: 'error',
+      });
+    } finally {
+      setIsExporting(false);
+    }
   };
 
   const feedbacks = activeReport.questionFeedbacks || [];
@@ -265,21 +311,21 @@ export const EvaluationReportPage: React.FC = () => {
   return (
     <div className="flex flex-col w-full gap-6 pb-12 antialiased">
       {/* Top Header & Breadcrumbs & Action Bar */}
-      <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-4 text-left">
-        <div>
-          <div className="flex items-center gap-1.5 text-xs text-[#565e74] uppercase tracking-wider font-semibold mb-1">
-            <span>Platform</span>
+      <div className="flex flex-col gap-3 text-left">
+        <div className="min-w-0">
+          <div className="flex items-center flex-wrap gap-1.5 text-xs text-[#565e74] uppercase tracking-wider font-semibold mb-1">
+            <span className="whitespace-nowrap">Platform</span>
             <span>•</span>
-            <span className="text-[#3525cd]">Evaluation Reports</span>
+            <span className="text-[#3525cd] whitespace-nowrap">Evaluation Reports</span>
             <span>•</span>
-            <span className="text-[#0b1c30]">Session #{activeReport.id.slice(0, 12)}</span>
+            <span className="text-[#0b1c30] whitespace-nowrap">Session #{activeReport.id.slice(0, 12)}</span>
           </div>
           <h1 className="font-heading text-2xl sm:text-3xl font-bold text-[#0b1c30] tracking-tight">
             AI Evaluation Report &amp; Scorecard
           </h1>
         </div>
 
-        {/* Action Toolbar + Saved Report Switcher */}
+        {/* Action Toolbar + PDF/DOCX Selector + Saved Report Switcher */}
         <div className="flex items-center flex-wrap gap-2">
           {savedReports.length > 1 && (
             <div className="inline-flex items-center gap-1.5 bg-white border border-[#e2e8f0] rounded-lg px-2.5 py-1.5 shadow-sm">
@@ -299,31 +345,69 @@ export const EvaluationReportPage: React.FC = () => {
             </div>
           )}
 
+          {/* Export Format Selector (PDF or Word DOCX) */}
+          <div
+            role="group"
+            aria-label="Download file format"
+            className="inline-flex items-center bg-white border border-[#e2e8f0] rounded-lg p-0.5 shadow-sm"
+          >
+            <button
+              type="button"
+              data-testid="format-pdf-btn"
+              onClick={() => setExportFormat('pdf')}
+              className={`px-2.5 py-1 rounded-md text-[11px] font-bold transition-colors ${
+                exportFormat === 'pdf'
+                  ? 'bg-[#3525cd] text-white shadow-xs'
+                  : 'text-[#565e74] hover:text-[#0b1c30]'
+              }`}
+            >
+              PDF
+            </button>
+            <button
+              type="button"
+              data-testid="format-docx-btn"
+              onClick={() => setExportFormat('docx')}
+              className={`px-2.5 py-1 rounded-md text-[11px] font-bold transition-colors ${
+                exportFormat === 'docx'
+                  ? 'bg-[#3525cd] text-white shadow-xs'
+                  : 'text-[#565e74] hover:text-[#0b1c30]'
+              }`}
+            >
+              DOCX
+            </button>
+          </div>
+
           <button
             type="button"
-            onClick={handleDownloadPDF}
-            className="flex items-center gap-1.5 bg-white text-[#0b1c30] px-3.5 py-2 rounded-lg text-xs font-semibold hover:bg-[#eff4ff] transition-colors border border-[#e2e8f0] shadow-sm active:scale-95"
+            data-testid="download-report-btn"
+            disabled={isExporting}
+            onClick={handleDownloadReport}
+            className="flex items-center gap-1.5 bg-white text-[#0b1c30] px-3.5 py-2 rounded-lg text-xs font-semibold hover:bg-[#eff4ff] transition-colors border border-[#e2e8f0] shadow-sm active:scale-95 disabled:opacity-60"
           >
             <Download className="w-3.5 h-3.5 text-[#3525cd]" />
-            <span>Download Report</span>
+            <span>Download Report ({exportFormat.toUpperCase()})</span>
           </button>
 
           <button
             type="button"
+            data-testid="download-summary-btn"
+            disabled={isExporting}
             onClick={handleDownloadSummary}
-            className="flex items-center gap-1.5 bg-white text-[#0b1c30] px-3.5 py-2 rounded-lg text-xs font-semibold hover:bg-[#eff4ff] transition-colors border border-[#e2e8f0] shadow-sm active:scale-95"
+            className="flex items-center gap-1.5 bg-white text-[#0b1c30] px-3.5 py-2 rounded-lg text-xs font-semibold hover:bg-[#eff4ff] transition-colors border border-[#e2e8f0] shadow-sm active:scale-95 disabled:opacity-60"
           >
             <FileText className="w-3.5 h-3.5 text-[#059669]" />
-            <span>Download Summary</span>
+            <span>Download Summary ({exportFormat.toUpperCase()})</span>
           </button>
 
           <button
             type="button"
+            data-testid="export-transcript-btn"
+            disabled={isExporting}
             onClick={handleExportTranscript}
-            className="flex items-center gap-1.5 bg-white text-[#0b1c30] px-3.5 py-2 rounded-lg text-xs font-semibold hover:bg-[#eff4ff] transition-colors border border-[#e2e8f0] shadow-sm active:scale-95"
+            className="flex items-center gap-1.5 bg-white text-[#0b1c30] px-3.5 py-2 rounded-lg text-xs font-semibold hover:bg-[#eff4ff] transition-colors border border-[#e2e8f0] shadow-sm active:scale-95 disabled:opacity-60"
           >
             <FileText className="w-3.5 h-3.5 text-[#565e74]" />
-            <span>Export Transcript</span>
+            <span>Download Transcript ({exportFormat.toUpperCase()})</span>
           </button>
 
           <button
@@ -452,13 +536,13 @@ export const EvaluationReportPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Top 4-Metric Scorecard Highlights with Animated Counters */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 text-left">
+      {/* Top 5-Metric Scorecard Highlights (Overall + All 4 Independent Rubric Pillars) */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 text-left">
         {/* Metric 1: Overall Score */}
         <div className="bg-white rounded-xl p-5 border border-[#e2e8f0] shadow-sm flex flex-col justify-between">
-          <div className="flex items-start justify-between">
+          <div className="flex items-start justify-between gap-2 min-h-[34px]">
             <span className="text-xs font-bold text-[#565e74] uppercase tracking-wider">Overall Score</span>
-            <BarChart2 className="w-5 h-5 text-[#3525cd]" />
+            <BarChart2 className="w-5 h-5 text-[#3525cd] shrink-0" />
           </div>
           <div className="my-3 flex items-baseline gap-1.5">
             <span className="font-heading text-4xl font-bold text-[#0b1c30]">
@@ -468,19 +552,19 @@ export const EvaluationReportPage: React.FC = () => {
           </div>
           <div>
             <div className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs font-bold mb-1 ${tier.badgeClass}`}>
-              {tier.label} • {activeReport.targetCompany}
+              {tier.label}
             </div>
             <p className="text-xs text-[#565e74]">
-              Top <strong className="text-[#0b1c30]">{topPercentile}% percentile</strong> vs calibrated role baseline.
+              Top <strong className="text-[#0b1c30]">{topPercentile}%</strong> vs {activeReport.targetCompany} bar.
             </p>
           </div>
         </div>
 
         {/* Metric 2: Technical Correctness */}
         <div className="bg-white rounded-xl p-5 border border-[#e2e8f0] shadow-sm flex flex-col justify-between">
-          <div className="flex items-start justify-between gap-2">
+          <div className="flex items-start justify-between gap-2 min-h-[34px]">
             <span className="text-xs font-bold text-[#565e74] uppercase tracking-wider">Technical Depth</span>
-            <span className="text-xs font-bold text-[#3525cd] bg-[#eff4ff] px-2 py-0.5 rounded-full whitespace-nowrap shrink-0">Weight 35%</span>
+            <span className="text-[11px] font-bold text-[#3525cd] bg-[#eff4ff] px-2 py-0.5 rounded-full whitespace-nowrap shrink-0">35%</span>
           </div>
           <div className="my-3 flex items-baseline gap-1.5">
             <span className="font-heading text-4xl font-bold text-[#0b1c30]">
@@ -501,9 +585,9 @@ export const EvaluationReportPage: React.FC = () => {
 
         {/* Metric 3: Tradeoff Analysis */}
         <div className="bg-white rounded-xl p-5 border border-[#e2e8f0] shadow-sm flex flex-col justify-between">
-          <div className="flex items-start justify-between gap-2">
-            <span className="text-xs font-bold text-[#565e74] uppercase tracking-wider">Tradeoff Analysis</span>
-            <span className="text-xs font-bold text-[#3525cd] bg-[#eff4ff] px-2 py-0.5 rounded-full whitespace-nowrap shrink-0">Weight 25%</span>
+          <div className="flex items-start justify-between gap-2 min-h-[34px]">
+            <span className="text-xs font-bold text-[#565e74] uppercase tracking-wider">Tradeoffs</span>
+            <span className="text-[11px] font-bold text-[#3525cd] bg-[#eff4ff] px-2 py-0.5 rounded-full whitespace-nowrap shrink-0">25%</span>
           </div>
           <div className="my-3 flex items-baseline gap-1.5">
             <span className="font-heading text-4xl font-bold text-[#0b1c30]">
@@ -524,9 +608,9 @@ export const EvaluationReportPage: React.FC = () => {
 
         {/* Metric 4: Communication Structure */}
         <div className="bg-white rounded-xl p-5 border border-[#e2e8f0] shadow-sm flex flex-col justify-between">
-          <div className="flex items-start justify-between gap-2">
+          <div className="flex items-start justify-between gap-2 min-h-[34px]">
             <span className="text-xs font-bold text-[#565e74] uppercase tracking-wider">Structure &amp; STAR</span>
-            <span className="text-xs font-bold text-[#3525cd] bg-[#eff4ff] px-2 py-0.5 rounded-full whitespace-nowrap shrink-0">Weight 20%</span>
+            <span className="text-[11px] font-bold text-[#3525cd] bg-[#eff4ff] px-2 py-0.5 rounded-full whitespace-nowrap shrink-0">20%</span>
           </div>
           <div className="my-3 flex items-baseline gap-1.5">
             <span className="font-heading text-4xl font-bold text-[#0b1c30]">
@@ -543,6 +627,74 @@ export const EvaluationReportPage: React.FC = () => {
             </div>
             <p className="text-xs text-[#565e74]">{getMetricNote(activeReport.categoryScores.communicationStructure, 'comm')}</p>
           </div>
+        </div>
+
+        {/* Metric 5: Problem Decomposition */}
+        <div className="bg-white rounded-xl p-5 border border-[#e2e8f0] shadow-sm flex flex-col justify-between">
+          <div className="flex items-start justify-between gap-2 min-h-[34px]">
+            <span className="text-xs font-bold text-[#565e74] uppercase tracking-wider">Decomposition</span>
+            <span className="text-[11px] font-bold text-[#3525cd] bg-[#eff4ff] px-2 py-0.5 rounded-full whitespace-nowrap shrink-0">20%</span>
+          </div>
+          <div className="my-3 flex items-baseline gap-1.5">
+            <span className="font-heading text-4xl font-bold text-[#0b1c30]">
+              <AnimatedCounter value={activeReport.categoryScores.problemDecomposition} />
+            </span>
+            <span className="text-sm text-[#777587]">/ 100</span>
+          </div>
+          <div>
+            <div className="w-full bg-[#eff4ff] h-1.5 rounded-full overflow-hidden mb-1.5">
+              <div
+                className="bg-indigo-500 h-full rounded-full transition-all duration-700"
+                style={{ width: `${activeReport.categoryScores.problemDecomposition}%` }}
+              />
+            </div>
+            <p className="text-xs text-[#565e74]">{getMetricNote(activeReport.categoryScores.problemDecomposition, 'decomp')}</p>
+          </div>
+        </div>
+      </div>
+
+      {/* ACTIONABLE COACHING & WHAT-TO-IMPROVE PRIORITIES */}
+      <div
+        data-testid="improvement-plan-card"
+        className="bg-white rounded-xl border border-[#e2e8f0] shadow-sm p-5 text-left space-y-3"
+      >
+        <div className="flex items-center justify-between gap-2 pb-2.5 border-b border-[#e2e8f0]">
+          <div className="flex items-center gap-2">
+            <Target className="w-4 h-4 text-[#3525cd]" />
+            <h3 className="font-heading text-sm sm:text-base font-bold text-[#0b1c30]">
+              Targeted Improvement Plan — What to Improve Next
+            </h3>
+          </div>
+          <span className="text-[11px] font-semibold text-[#565e74]">
+            Prioritized from your spoken gaps
+          </span>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          {feedbacks
+            .flatMap((fb) =>
+              (fb.suggestedImprovements || []).map((tip, idx) => ({
+                topic: fb.category || 'Session',
+                score: fb.score,
+                tip,
+                id: `${fb.questionId}_${idx}`,
+              }))
+            )
+            .slice(0, 4)
+            .map((item) => (
+              <div
+                key={item.id}
+                className="p-3.5 rounded-xl bg-[#f8f9ff] border border-[#e2e8f0] flex items-start gap-2.5"
+              >
+                <Lightbulb className="w-4 h-4 text-[#3525cd] shrink-0 mt-0.5" />
+                <div className="text-xs text-[#464555] leading-relaxed">
+                  <span className="font-bold text-[#0b1c30] block mb-0.5">
+                    {item.topic} ({item.score}/100)
+                  </span>
+                  {item.tip}
+                </div>
+              </div>
+            ))}
         </div>
       </div>
 
@@ -743,6 +895,24 @@ export const EvaluationReportPage: React.FC = () => {
                             </ul>
                           </div>
                         </div>
+
+                        {/* Suggested Improvements (How to Improve This Topic) */}
+                        {(fb.suggestedImprovements || []).length > 0 && (
+                          <div className="p-4 rounded-xl bg-[#f8f9ff] border border-[#c7d2fe]/60">
+                            <div className="flex items-center gap-1.5 text-xs font-bold text-[#3525cd] uppercase tracking-wider mb-2">
+                              <Lightbulb className="w-4 h-4" />
+                              How to Improve This Answer
+                            </div>
+                            <ul className="space-y-1.5 text-xs text-[#0b1c30]">
+                              {fb.suggestedImprovements.map((tip, tipIdx) => (
+                                <li key={tipIdx} className="flex items-start gap-1.5">
+                                  <span className="text-[#3525cd] font-bold">•</span>
+                                  <span>{tip}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
 
                         {/* Model Exemplar Answer */}
                         <div className="p-4 rounded-xl bg-[#eff4ff] border border-[#c7c4d8]/50">

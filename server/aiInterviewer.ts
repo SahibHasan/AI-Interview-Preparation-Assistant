@@ -1004,8 +1004,8 @@ export interface EvaluatedReportPayload {
   evaluationBasis: EvaluatedReportBasis;
 }
 
-function clampScore(value: number, min = 25, max = 98): number {
-  if (!Number.isFinite(value)) return 60;
+function clampScore(value: number, min = 0, max = 98): number {
+  if (!Number.isFinite(value)) return 0;
   return Math.max(min, Math.min(max, Math.round(value)));
 }
 
@@ -1061,27 +1061,61 @@ function extractPerQuestionTranscriptData(input: EvaluateInterviewInput) {
 }
 
 const TECHNICAL_SIGNAL_TERMS = [
-  'architecture', 'latency', 'p99', 'cache', 'redis', 'idempotency', 'idempotent',
-  'retry', 'backoff', 'queue', 'circuit', 'partition', 'sharding', 'consistency',
-  'tradeoff', 'metric', 'monitoring', 'observability', 'rollback', 'canary', 'scale',
-  'throughput', 'dead-letter', 'concurrency', 'transaction', 'database', 'index',
-  'state', 'reconciliation', 'websocket', 'streaming', 'fallback', 'availability',
-  'situation', 'action', 'result', 'impact', 'alignment', 'stakeholder', 'benchmark',
-  'timeout', 'failover', 'replication', 'indexing', 'async', 'schema', 'validation',
+  'architecture', 'latency', 'p99', 'p95', 'cache', 'redis', 'idempotency', 'idempotent',
+  'retry', 'backoff', 'queue', 'kafka', 'circuit', 'partition', 'sharding', 'consistency',
+  'tradeoff', 'metric', 'monitoring', 'observability', 'telemetry', 'rollback', 'canary', 'scale',
+  'throughput', 'dead-letter', 'dlq', 'concurrency', 'transaction', 'database', 'postgres', 'index',
+  'state', 'reconciliation', 'websocket', 'streaming', 'fallback', 'availability', 'replication',
+  'timeout', 'failover', 'indexing', 'async', 'schema', 'validation', 'lock', 'mutex', 'rate-limit',
+  'load-balancer', 'cdn', 'hydration', 'memoization', 'bundler', 'accessibility', 'security', 'auth',
+  'oauth', 'token', 'encryption', 'deployment', 'pipeline', 'testing', 'slo', 'sla', 'sli',
+];
+
+const BEHAVIORAL_SIGNAL_TERMS = [
+  'situation', 'task', 'action', 'result', 'impact', 'alignment', 'stakeholder', 'cross-functional',
+  'ownership', 'mentored', 'resolved', 'conflict', 'prioritized', 'deadline', 'postmortem',
+  'incident', 'learned', 'retrospective', 'collaborated', 'led', 'delivered', 'reduced', 'improved',
 ];
 
 const FILLER_WORDS = new Set([
-  'um', 'uh', 'like', 'yeah', 'yep', 'ok', 'okay', 'so', 'well', 'actually', 'basically', 'literally',
+  'um', 'uh', 'uhh', 'hmm', 'er', 'like', 'yeah', 'yep', 'ok', 'okay', 'so', 'well',
+  'actually', 'basically', 'literally', 'just', 'maybe', 'stuff', 'things', 'whatever',
+]);
+
+const STOPWORDS = new Set([
+  'the', 'and', 'for', 'with', 'that', 'this', 'from', 'your', 'about', 'what', 'when', 'where',
+  'which', 'would', 'could', 'should', 'have', 'been', 'will', 'into', 'they', 'their', 'them',
+  'there', 'then', 'than', 'also', 'some', 'more', 'most', 'very', 'much', 'such', 'only',
+  'were', 'being', 'time', 'times', 'looking', 'most', 'walk', 'through', 'tell', 'describe',
+  'explain', 'design', 'approach', 'handle', 'using', 'system', 'interview', 'question', 'please',
+  'ready', 'candidate', 'today', 'impactful', 'project', 'date', 'significant', 'major', 'evolve',
+  'faced', 'face', 'give', 'example', 'make', 'sure', 'work', 'worked', 'around', 'specifically',
+  'hardest', 'before', 'after', 'during', 'how', 'you', 'role', 'company', 'team', 'peer', 'disagreed',
+  'experience', 'leadership', 'technical', 'stripe', 'google', 'backend', 'frontend', 'engineer',
 ]);
 
 const STRUCTURE_TERMS = [
-  'first', 'second', 'third', 'then', 'because', 'therefore', 'specifically',
-  'situation', 'task', 'action', 'result', 'impact', 'measured', 'reduced', 'improved',
+  'first', 'second', 'third', 'finally', 'because', 'therefore', 'specifically', 'additionally',
+  'situation', 'task', 'action', 'result', 'impact', 'measured', 'for example', 'step', 'overall',
 ];
 
 const TRADEOFF_TERMS = [
-  'tradeoff', 'versus', 'instead', 'latency', 'consistency', 'backoff', 'fallback',
-  'rollback', 'canary', 'cost', 'bottleneck', 'risk', 'partition', 'dead-letter', 'circuit',
+  'tradeoff', 'trade-off', 'trading', 'versus', 'instead', 'however', 'alternatively', 'overhead',
+  'consistency', 'backoff', 'fallback', 'rollback', 'canary', 'cost', 'bottleneck', 'risk',
+  'partition', 'dead-letter', 'circuit', 'timeout', 'failover', 'failure', 'outage', 'overload', 'contention',
+];
+
+const DECOMPOSITION_TERMS = [
+  'scope', 'scoped', 'requirement', 'constraint', 'assumption', 'boundary', 'component', 'layer',
+  'step', 'phase', 'interface', 'contract', 'schema', 'upstream', 'downstream', 'tier', 'pipeline',
+  'storage', 'compute', 'client', 'server', 'queue', 'worker', 'edge', 'read', 'write', 'isolate', 'isolated', 'split',
+];
+
+const EVASIVE_PHRASES = [
+  "i don't know", 'dont know', 'do not know', 'no idea', 'not sure', 'i have no clue',
+  'no clue', 'skip this', 'skip question', 'next question', 'pass on this', "can't answer",
+  'cannot answer', 'i forgot', 'blanking out', 'draw a blank', 'no experience with',
+  'never done that', 'nothing to add', 'no comment',
 ];
 
 function extractSubstantiveWords(text: string): string[] {
@@ -1090,6 +1124,261 @@ function extractSubstantiveWords(text: string): string[] {
     .replace(/[^a-z0-9%\-\s]/g, ' ')
     .split(/\s+/)
     .filter((w) => w.length > 0 && !FILLER_WORDS.has(w));
+}
+
+function extractPromptKeywords(question: any, candidateFirstName?: string): string[] {
+  const firstNameLower = (candidateFirstName || '').trim().toLowerCase();
+  const explicitConcepts: string[] = Array.isArray(question?.expectedKeyConcepts)
+    ? question.expectedKeyConcepts.map((s: any) => String(s).toLowerCase().trim()).filter(Boolean)
+    : [];
+  const rawSource = [
+    question?.questionText || '',
+    question?.contextOrConstraint || '',
+  ]
+    .join(' ')
+    .toLowerCase()
+    .replace(/[^a-z0-9\-\s]/g, ' ')
+    .split(/\s+/)
+    .filter((w) => w.length >= 5 && !STOPWORDS.has(w) && w !== firstNameLower);
+
+  const combined = Array.from(new Set([...explicitConcepts, ...rawSource]));
+  const domainMatches = combined.filter(
+    (kw) =>
+      TECHNICAL_SIGNAL_TERMS.some((t) => kw.includes(t)) ||
+      TRADEOFF_TERMS.some((t) => kw.includes(t)) ||
+      DECOMPOSITION_TERMS.some((t) => kw.includes(t)) ||
+      BEHAVIORAL_SIGNAL_TERMS.some((t) => kw.includes(t))
+  );
+  const pool = domainMatches.length >= 2 ? domainMatches : combined;
+  return pool.slice(0, 10);
+}
+
+type AnswerTier = 'unanswered' | 'evasive-non-answer' | 'superficial-off-topic' | 'substantive';
+
+interface AssessedTopicSignals {
+  tier: AnswerTier;
+  rawWords: string[];
+  substantiveWords: string[];
+  matchedDomainTerms: string[];
+  matchedPromptTerms: string[];
+  missedPromptTerms: string[];
+  matchedStructure: string[];
+  matchedTradeoffs: string[];
+  matchedDecomposition: string[];
+  hasQuantifiedMetric: boolean;
+  fillerRatio: number;
+  techScore: number;
+  tradeoffScore: number;
+  commScore: number;
+  decompScore: number;
+  topicScore: number;
+}
+
+function assessTopicCandidateSpeech(
+  question: any,
+  primaryResponse: string,
+  followUpResponse: string | undefined,
+  interviewType: string,
+  candidateFirstName?: string
+): AssessedTopicSignals {
+  const combinedSpoken = [primaryResponse, followUpResponse].filter(Boolean).join(' ').trim();
+  const rawWords = combinedSpoken ? combinedSpoken.split(/\s+/).filter(Boolean) : [];
+  const substantiveWords = extractSubstantiveWords(combinedSpoken);
+  const lower = combinedSpoken.toLowerCase();
+
+  const promptKeywords = extractPromptKeywords(question, candidateFirstName);
+  const matchedPromptTerms = promptKeywords.filter((kw) => lower.includes(kw));
+  const missedPromptTerms = promptKeywords.filter((kw) => !lower.includes(kw)).slice(0, 4);
+
+  const domainPool =
+    interviewType === 'behavioral' || interviewType === 'hr-cultural'
+      ? [...BEHAVIORAL_SIGNAL_TERMS, ...TECHNICAL_SIGNAL_TERMS]
+      : [...TECHNICAL_SIGNAL_TERMS, ...BEHAVIORAL_SIGNAL_TERMS];
+  const matchedDomainTerms = Array.from(new Set(domainPool.filter((term) => lower.includes(term))));
+  const matchedStructure = STRUCTURE_TERMS.filter((term) => lower.includes(term));
+  const matchedTradeoffs = TRADEOFF_TERMS.filter((term) => lower.includes(term));
+  const matchedDecomposition = DECOMPOSITION_TERMS.filter((term) => lower.includes(term));
+  const hasQuantifiedMetric = /\d+%|\d+\s*(ms|s|sec|min|k|m|x|rps|qps|mb|gb|tb)|p99|p95|o\(/i.test(
+    combinedSpoken
+  );
+
+  const fillerCount = Math.max(0, rawWords.length - substantiveWords.length);
+  const fillerRatio = rawWords.length > 0 ? fillerCount / rawWords.length : 1;
+
+  if (rawWords.length === 0) {
+    return {
+      tier: 'unanswered',
+      rawWords,
+      substantiveWords,
+      matchedDomainTerms,
+      matchedPromptTerms,
+      missedPromptTerms,
+      matchedStructure,
+      matchedTradeoffs,
+      matchedDecomposition,
+      hasQuantifiedMetric,
+      fillerRatio,
+      techScore: 0,
+      tradeoffScore: 0,
+      commScore: 0,
+      decompScore: 0,
+      topicScore: 0,
+    };
+  }
+
+  const normalizedTrimmed = lower.replace(/[^a-z0-9\s']/g, ' ').replace(/\s+/g, ' ').trim();
+  const isExplicitEvasive =
+    EVASIVE_PHRASES.some((p) => normalizedTrimmed.includes(p)) &&
+    matchedDomainTerms.length === 0 &&
+    matchedPromptTerms.length <= 1;
+  const isTinyNonAnswer =
+    substantiveWords.length <= 5 && matchedDomainTerms.length === 0 && matchedPromptTerms.length === 0;
+
+  if (isExplicitEvasive || isTinyNonAnswer) {
+    const acknowledged = rawWords.length >= 3 ? 6 : 2;
+    const techScore = 0;
+    const tradeoffScore = 0;
+    const commScore = Math.min(12, acknowledged + (matchedStructure.length > 0 ? 4 : 0));
+    const decompScore = 0;
+    const topicScore = clampScore(
+      techScore * 0.35 + tradeoffScore * 0.25 + commScore * 0.2 + decompScore * 0.2
+    );
+    return {
+      tier: 'evasive-non-answer',
+      rawWords,
+      substantiveWords,
+      matchedDomainTerms,
+      matchedPromptTerms,
+      missedPromptTerms,
+      matchedStructure,
+      matchedTradeoffs,
+      matchedDecomposition,
+      hasQuantifiedMetric,
+      fillerRatio,
+      techScore,
+      tradeoffScore,
+      commScore,
+      decompScore,
+      topicScore,
+    };
+  }
+
+  // Superficial / off-topic answer: candidate spoke >5 words, yet zero domain terms and zero prompt keyword relevance
+  const isOffTopicOrSuperficial =
+    matchedDomainTerms.length === 0 && matchedPromptTerms.length === 0 && substantiveWords.length < 24;
+
+  if (isOffTopicOrSuperficial) {
+    const lengthSignal = Math.min(14, Math.round(substantiveWords.length * 0.7));
+    const techScore = clampScore(4 + Math.round(lengthSignal * 0.5), 4, 18);
+    const tradeoffScore = clampScore(matchedTradeoffs.length * 6, 0, 14);
+    const commScore = clampScore(10 + lengthSignal + (matchedStructure.length > 0 ? 8 : 0) - Math.round(fillerRatio * 12), 6, 32);
+    const decompScore = clampScore(4 + matchedDecomposition.length * 6, 2, 18);
+    const topicScore = clampScore(
+      techScore * 0.35 + tradeoffScore * 0.25 + commScore * 0.2 + decompScore * 0.2
+    );
+    return {
+      tier: 'superficial-off-topic',
+      rawWords,
+      substantiveWords,
+      matchedDomainTerms,
+      matchedPromptTerms,
+      missedPromptTerms,
+      matchedStructure,
+      matchedTradeoffs,
+      matchedDecomposition,
+      hasQuantifiedMetric,
+      fillerRatio,
+      techScore,
+      tradeoffScore,
+      commScore,
+      decompScore,
+      topicScore,
+    };
+  }
+
+  // Substantive answer: compute ALL 4 dimensions INDEPENDENTLY so categories genuinely diverge!
+  const followUpWords = followUpResponse ? extractSubstantiveWords(followUpResponse).length : 0;
+  const sentences = combinedSpoken
+    .split(/[.!?]+/)
+    .map((s) => s.trim())
+    .filter((s) => s.length > 4);
+  const clauseSignals = (combinedSpoken.match(/[,;:]|\b(?:and|because|while|then|so)\b/gi) || []).length;
+  const effectiveClauses = Math.max(sentences.length, clauseSignals >= 3 ? 3 : clauseSignals >= 1 ? 2 : 1);
+
+  const relevanceRatio =
+    promptKeywords.length > 0 ? Math.min(1, matchedPromptTerms.length / Math.min(3, promptKeywords.length)) : 0.5;
+
+  // 1. Technical Depth & Accuracy (0-98)
+  const techScore = clampScore(
+    22 +
+      Math.round(relevanceRatio * 18) +
+      Math.min(36, matchedDomainTerms.length * 8) +
+      Math.min(14, Math.round(substantiveWords.length * 0.35)) +
+      (hasQuantifiedMetric ? 10 : 0),
+    8,
+    98
+  );
+
+  // 2. Tradeoff & Failure-Mode Analysis (0-98)
+  const tradeoffScore = clampScore(
+    12 +
+      Math.min(48, matchedTradeoffs.length * 16) +
+      (hasQuantifiedMetric ? 8 : 0) +
+      (followUpWords >= 8 ? 14 : followUpWords >= 4 ? 7 : 0) +
+      (matchedTradeoffs.length > 0 ? Math.round(relevanceRatio * 12) : 0),
+    4,
+    98
+  );
+
+  // 3. Communication Clarity & Structure / STAR (0-98)
+  const sentenceClarityPts =
+    effectiveClauses >= 3 ? 22 : effectiveClauses === 2 ? 15 : 8;
+  const fillerPenalty = fillerRatio > 0.35 ? 18 : fillerRatio > 0.2 ? 9 : 0;
+  const commScore = clampScore(
+    22 +
+      sentenceClarityPts +
+      Math.min(26, matchedStructure.length * 10) +
+      Math.min(20, Math.round(substantiveWords.length * 0.45)) -
+      fillerPenalty,
+    8,
+    96
+  );
+
+  // 4. Problem Decomposition & Scoping (0-98)
+  const decompScore = clampScore(
+    16 +
+      Math.min(40, matchedDecomposition.length * 11) +
+      Math.round(relevanceRatio * 16) +
+      (followUpWords >= 10 ? 14 : followUpWords >= 5 ? 8 : 0) +
+      (substantiveWords.length >= 25 ? 10 : substantiveWords.length >= 15 ? 5 : 0),
+    6,
+    96
+  );
+
+  const topicScore = clampScore(
+    techScore * 0.35 + tradeoffScore * 0.25 + commScore * 0.2 + decompScore * 0.2,
+    0,
+    98
+  );
+
+  return {
+    tier: 'substantive',
+    rawWords,
+    substantiveWords,
+    matchedDomainTerms,
+    matchedPromptTerms,
+    missedPromptTerms,
+    matchedStructure,
+    matchedTradeoffs,
+    matchedDecomposition,
+    hasQuantifiedMetric,
+    fillerRatio,
+    techScore,
+    tradeoffScore,
+    commScore,
+    decompScore,
+    topicScore,
+  };
 }
 
 export function buildDeterministicEvaluationFromTranscript(input: EvaluateInterviewInput): EvaluatedReportPayload {
@@ -1108,7 +1397,6 @@ export function buildDeterministicEvaluationFromTranscript(input: EvaluateInterv
       t.text.trim().length > 0
   );
 
-  // Fallback if questions list was unexpectedly empty
   const itemsToScore =
     perQuestion.length > 0
       ? perQuestion
@@ -1138,59 +1426,32 @@ export function buildDeterministicEvaluationFromTranscript(input: EvaluateInterv
   let totalDecomp = 0;
   let totalTradeoff = 0;
   let answeredCount = 0;
+  let substantiveCount = 0;
   let totalCandidateWords = 0;
+  const topicSignalsById = new Map<string, AssessedTopicSignals>();
 
   const questionFeedbacks: EvaluatedQuestionFeedback[] = itemsToScore.map((item) => {
-    // STRICTLY score only candidate spoken responses — zero AI text is included
-    const combinedSpoken = [item.primaryResponse, item.followUpResponse].filter(Boolean).join(' ').trim();
-    const rawWords = combinedSpoken.split(/\s+/).filter(Boolean);
-    const substantiveWords = extractSubstantiveWords(combinedSpoken);
-    const lower = combinedSpoken.toLowerCase();
+    const signals = assessTopicCandidateSpeech(
+      item.question,
+      item.primaryResponse,
+      item.followUpResponse,
+      input.interviewType,
+      candidateFirstName
+    );
+    topicSignalsById.set(item.question.id, signals);
 
-    const matchedTerms = TECHNICAL_SIGNAL_TERMS.filter((term) => lower.includes(term));
-    const matchedStructure = STRUCTURE_TERMS.filter((term) => lower.includes(term));
-    const matchedTradeoffs = TRADEOFF_TERMS.filter((term) => lower.includes(term));
-    const hasQuantifiedMetric = /\d+%|\d+\s*(ms|s|k|x|rps|qps|mb|gb)/i.test(combinedSpoken);
-
-    if (rawWords.length > 0) {
+    if (signals.rawWords.length > 0) {
       answeredCount += 1;
-      totalCandidateWords += rawWords.length;
+      totalCandidateWords += signals.rawWords.length;
+    }
+    if (signals.tier === 'substantive') {
+      substantiveCount += 1;
     }
 
-    const depthPoints = Math.min(26, Math.round(substantiveWords.length * 0.72));
-    const signalPoints = Math.min(20, matchedTerms.length * 4.5);
-    const metricBonus = hasQuantifiedMetric ? 5 : 0;
-    const structureBonus = matchedStructure.length >= 1 ? 4 : 0;
-    const followUpSubstantiveCount = item.followUpResponse ? extractSubstantiveWords(item.followUpResponse).length : 0;
-    const followUpBonus = followUpSubstantiveCount >= 6 ? 9 : 0;
-
-    const unansweredScore = 30;
-    const baseScore =
-      rawWords.length === 0
-        ? unansweredScore
-        : clampScore(38 + depthPoints + signalPoints + metricBonus + structureBonus + followUpBonus, 36, 96);
-
-    const techScore =
-      rawWords.length === 0
-        ? unansweredScore
-        : clampScore(baseScore + (matchedTerms.length >= 2 ? 4 : -3));
-    const commScore =
-      rawWords.length === 0
-        ? unansweredScore
-        : clampScore(baseScore + (substantiveWords.length >= 16 || matchedStructure.length >= 1 ? 3 : -5));
-    const decompScore =
-      rawWords.length === 0
-        ? unansweredScore
-        : clampScore(baseScore + (followUpBonus > 0 ? 4 : -2));
-    const tradeoffScore =
-      rawWords.length === 0
-        ? unansweredScore
-        : clampScore(baseScore + (matchedTradeoffs.length >= 2 ? 5 : matchedTradeoffs.length === 1 ? 1 : -4));
-
-    totalTech += techScore;
-    totalComm += commScore;
-    totalDecomp += decompScore;
-    totalTradeoff += tradeoffScore;
+    totalTech += signals.techScore;
+    totalComm += signals.commScore;
+    totalDecomp += signals.decompScore;
+    totalTradeoff += signals.tradeoffScore;
 
     const rubric = item.question.evaluationRubric?.length
       ? item.question.evaluationRubric
@@ -1201,56 +1462,156 @@ export function buildDeterministicEvaluationFromTranscript(input: EvaluateInterv
         ];
 
     const criterionScores = rubric.map((r, rIdx) => {
-      const variance = rIdx === 0 ? techScore : rIdx === 1 ? tradeoffScore : commScore;
+      const scoreVal =
+        rIdx === 0 ? signals.techScore : rIdx === 1 ? signals.tradeoffScore : signals.commScore;
+      let feedback = '';
+      if (signals.tier === 'unanswered') {
+        feedback = `Scored 0/100: Candidate gave no spoken response for "${item.question.category}".`;
+      } else if (signals.tier === 'evasive-non-answer') {
+        feedback = `Scored ${scoreVal}/100: Candidate reply ("${item.primaryResponse.slice(0, 60)}") did not answer the question or declined to address ${r.criterion.toLowerCase()}.`;
+      } else if (signals.tier === 'superficial-off-topic') {
+        feedback = `Scored ${scoreVal}/100: Brief ${signals.rawWords.length}-word reply lacked concrete ${r.criterion.toLowerCase()} concepts or prompt relevance.`;
+      } else if (rIdx === 0) {
+        feedback =
+          signals.matchedDomainTerms.length > 0
+            ? `Demonstrated ${signals.matchedDomainTerms.slice(0, 4).join(', ')} across ${signals.rawWords.length} spoken words${signals.hasQuantifiedMetric ? ' with quantified SLIs/metrics' : ''}.`
+            : `Covered ${signals.matchedPromptTerms.slice(0, 3).join(', ') || item.question.category} at a high level; needs deeper concrete system mechanics.`;
+      } else if (rIdx === 1) {
+        feedback =
+          signals.matchedTradeoffs.length > 0
+            ? `Addressed reliability/tradeoff factors (${signals.matchedTradeoffs.slice(0, 3).join(', ')}).`
+            : `Limited tradeoff or failure-mode discussion; explain what breaks under scale or partial failure.`;
+      } else {
+        feedback =
+          signals.matchedStructure.length > 0
+            ? `Organized delivery using clear logical transitions (${signals.matchedStructure.slice(0, 3).join(', ')}).`
+            : `Delivery would be sharper using Problem -> Architecture -> Tradeoffs -> Metrics framing.`;
+      }
       return {
         criterion: r.criterion,
-        score: variance,
-        feedback:
-          rawWords.length === 0
-            ? `Scored ${unansweredScore}/100: Candidate did not speak a response for this topic before ending the session (AI prompts are excluded).`
-            : matchedTerms.length > 0
-            ? `Based solely on your ${rawWords.length}-word spoken answer: referenced ${matchedTerms.slice(0, 3).join(', ')} while addressing ${r.criterion.toLowerCase()}.`
-            : `Based solely on your ${rawWords.length}-word spoken outline: expanding with concrete ${r.criterion.toLowerCase()} mechanics and quantified metrics would elevate the ${level} signal.`,
+        score: scoreVal,
+        feedback,
       };
     });
 
-    const strengths =
-      rawWords.length === 0
-        ? ['Topic was queued in the session plan, but no candidate speech was recorded here.']
+    const strengths: string[] =
+      signals.tier === 'unanswered'
+        ? ['No candidate speech recorded for this topic before ending the session.']
+        : signals.tier === 'evasive-non-answer'
+        ? ['Acknowledged the prompt briefly, though without technical or experiential substance.']
+        : signals.tier === 'superficial-off-topic'
+        ? [`Spoke ${signals.rawWords.length} words, though key domain terminology was missing.`]
         : [
-            matchedTerms.length > 0
-              ? `Candidate directly articulated domain concepts: ${matchedTerms.slice(0, 4).join(', ')}.`
-              : `Candidate delivered a ${rawWords.length}-word spoken explanation for ${item.question.category}.`,
-            ...(hasQuantifiedMetric
-              ? ['Included concrete quantitative impact or latency/scale numbers in spoken response.']
+            signals.matchedDomainTerms.length > 0
+              ? `Applied relevant concepts directly: ${signals.matchedDomainTerms.slice(0, 4).join(', ')}.`
+              : `Addressed ${item.question.category} across ${signals.rawWords.length} spoken words.`,
+            ...(signals.hasQuantifiedMetric
+              ? ['Quantified impact or latency/throughput constraints using concrete numbers.']
               : []),
-            ...(item.followUpResponse
-              ? [`Answered ${input.aiPersona}'s real-time follow-up probe with ${followUpSubstantiveCount} substantive words.`]
+            ...(signals.matchedTradeoffs.length >= 2
+              ? [`Evaluated multiple tradeoff dimensions (${signals.matchedTradeoffs.slice(0, 3).join(', ')}).`]
+              : []),
+            ...(item.followUpResponse && extractSubstantiveWords(item.followUpResponse).length >= 6
+              ? [`Responded meaningfully to ${input.aiPersona}'s live follow-up probe.`]
               : []),
           ];
 
-    const missingConcepts =
-      rawWords.length === 0
-        ? [`No candidate spoken answer recorded for "${item.question.category}".`]
+    const missingConcepts: string[] =
+      signals.tier === 'unanswered'
+        ? [`No spoken candidate answer recorded for "${item.question.category}".`]
+        : signals.tier === 'evasive-non-answer'
+        ? [
+            `Failed to provide a substantive answer for ${item.question.category}.`,
+            ...(signals.missedPromptTerms.length > 0
+              ? [`Core prompt concepts unaddressed: ${signals.missedPromptTerms.join(', ')}.`]
+              : []),
+          ]
         : [
-            ...(substantiveWords.length < 22
-              ? ['Response was brief; expand with step-by-step system mechanics and measurable production constraints.']
+            ...(signals.missedPromptTerms.length > 0
+              ? [`Prompt/domain keywords omitted: ${signals.missedPromptTerms.slice(0, 3).join(', ')}.`]
+              : []),
+            ...(signals.matchedTradeoffs.length === 0
+              ? ['Did not compare architectural tradeoffs, bottlenecks, or failure/rollback paths.']
+              : []),
+            ...(!signals.hasQuantifiedMetric
+              ? ['Missing quantitative SLIs, p95/p99 latency targets, scale estimates, or measurable outcomes.']
               : []),
             ...(!item.followUpResponse && item.followUpQuestion
-              ? ['Session ended before the candidate answered the real-time follow-up probe.']
-              : []),
-            ...(!hasQuantifiedMetric && !lower.includes('metric') && !lower.includes('latency') && !lower.includes('monitor')
-              ? ['Candidate did not specify quantitative SLIs, latency targets, or observability triggers.']
+              ? ['Did not complete a spoken answer to the real-time follow-up probe.']
               : []),
           ];
 
-    const suggestedImprovements =
-      rawWords.length === 0
-        ? [`Deliver a complete spoken walkthrough for ${item.question.category} targeting ${level} depth.`]
+    const suggestedImprovements: string[] =
+      signals.tier === 'unanswered'
+        ? [
+            `Attempt every planned topic—even stating initial clarifying assumptions and a high-level component breakdown earns partial signal.`,
+            `Prepare a 60-second structured outline covering constraints, core design, and failure handling for ${item.question.category}.`,
+          ]
+        : signals.tier === 'evasive-non-answer'
+        ? [
+            `Instead of stopping at "${item.primaryResponse.slice(0, 40)}", break down what you do know: clarify assumptions, propose a baseline architecture/STAR story, and reason from first principles.`,
+            `Review core concepts for ${item.question.category}: ${signals.missedPromptTerms.slice(0, 3).join(', ') || 'system mechanics, tradeoffs, and measurable metrics'}.`,
+          ]
+        : signals.tier === 'superficial-off-topic'
+        ? [
+            `Anchor your spoken answer directly to the prompt keywords (${signals.missedPromptTerms.slice(0, 3).join(', ') || item.question.category}) rather than speaking generally.`,
+            `Use a 4-part verbal checklist: (1) Scope & constraints, (2) Step-by-step mechanism, (3) Tradeoffs & failure modes, (4) Concrete metrics.`,
+          ]
         : [
-            `Lead your spoken answer with system invariants, concrete bottlenecks, and measured outcomes for ${input.targetCompany}.`,
-            `Explicitly compare rejected alternatives and define rollback/monitoring triggers.`,
+            ...(signals.tradeoffScore < 60
+              ? [
+                  `Strengthen Tradeoff Analysis (${signals.tradeoffScore}/100): explicitly contrast two alternatives (e.g., latency vs. consistency or cost) and explain rollback/circuit-breaker safeguards.`,
+                ]
+              : []),
+            ...(signals.commScore < 65
+              ? [
+                  `Tighten Verbal Structure (${signals.commScore}/100): signpost with "First / Second / As a result" and avoid filler words (${Math.round(signals.fillerRatio * 100)}% filler rate observed).`,
+                ]
+              : []),
+            ...(signals.decompScore < 65
+              ? [
+                  `Improve Problem Decomposition (${signals.decompScore}/100): state scale/SLO constraints upfront before diving into component details.`,
+                ]
+              : []),
+            ...(!signals.hasQuantifiedMetric
+              ? [
+                  `Quantify your outcome with real numbers (e.g., p99 latency bounds, throughput, error budget %, or time saved) tailored to ${input.targetCompany}.`,
+                ]
+              : []),
           ];
+
+    if (suggestedImprovements.length === 0) {
+      const dims = [
+        {
+          key: 'Tradeoff Analysis',
+          score: signals.tradeoffScore,
+          tip: `contrast one alternative architecture for ${item.question.category} and specify exact rollback thresholds`,
+        },
+        {
+          key: 'Problem Decomposition',
+          score: signals.decompScore,
+          tip: `state explicit scale bounds and component contracts upfront before detailing ${item.question.category}`,
+        },
+        {
+          key: 'Structure & STAR',
+          score: signals.commScore,
+          tip: `summarize the final measured outcome in a crisp 1-sentence closer for ${item.question.category}`,
+        },
+        {
+          key: 'Technical Depth',
+          score: signals.techScore,
+          tip: `incorporate missed prompt concepts (${signals.missedPromptTerms.slice(0, 2).join(', ') || 'failure isolation & edge invariants'}) to reach L7/Principal depth`,
+        },
+      ].sort((a, b) => a.score - b.score);
+      const targetDim = dims[0];
+      const keywordAddendum =
+        signals.missedPromptTerms.length > 0
+          ? ` Also weave in ${signals.missedPromptTerms.slice(0, 2).join(', ')} for stronger signal.`
+          : '';
+      suggestedImprovements.push(
+        `Elevate ${targetDim.key} (${targetDim.score}/100): ${targetDim.tip}.${keywordAddendum}`
+      );
+    }
 
     return {
       questionId: item.question.id,
@@ -1259,42 +1620,60 @@ export function buildDeterministicEvaluationFromTranscript(input: EvaluateInterv
       candidateResponse: item.primaryResponse || 'No candidate spoken response recorded.',
       followUpQuestion: item.followUpQuestion,
       followUpResponse: item.followUpResponse,
-      score: baseScore,
+      score: signals.topicScore,
       criterionScores,
       strengths,
       missingConcepts,
       suggestedImprovements,
-      modelExemplarAnswer: `For ${input.targetRole} at ${input.targetCompany} (${level}), start by stating system invariants and SLO bounds, explain your chosen mechanism (e.g., idempotency tokens, bounded backoff, or decoupled state stores), explicitly weigh latency vs. consistency tradeoffs, and close with concrete observability metrics and rollback safeguards.`,
+      modelExemplarAnswer: `For ${input.targetRole} at ${input.targetCompany} (${level}), open by stating explicit constraints and SLO targets for ${item.question.category}, lay out the core architecture/workflow (${signals.missedPromptTerms.slice(0, 2).join(', ') || 'key components'}), weigh latency vs. consistency/cost tradeoffs with failure rollback triggers, and cite measurable production metrics.`,
     };
   });
 
   const n = questionFeedbacks.length || 1;
-  const technicalCorrectness = clampScore(totalTech / n);
-  const communicationStructure = clampScore(totalComm / n);
-  const problemDecomposition = clampScore(totalDecomp / n);
-  const tradeoffAnalysis = clampScore(totalTradeoff / n);
+  const technicalCorrectness = clampScore(totalTech / n, 0, 98);
+  const communicationStructure = clampScore(totalComm / n, 0, 98);
+  const problemDecomposition = clampScore(totalDecomp / n, 0, 98);
+  const tradeoffAnalysis = clampScore(totalTradeoff / n, 0, 98);
   const overallScore = clampScore(
     technicalCorrectness * 0.35 +
       tradeoffAnalysis * 0.25 +
       communicationStructure * 0.2 +
-      problemDecomposition * 0.2
+      problemDecomposition * 0.2,
+    0,
+    98
   );
-  const percentileRank = clampScore(overallScore + 2, 15, 99);
+  const percentileRank =
+    overallScore === 0 ? 1 : clampScore(Math.round(overallScore * 0.96), 1, 99);
 
-  const lowestCategory = [
+  const rankedCategories = [
     { label: 'Technical Depth & System Mechanics', score: technicalCorrectness },
     { label: 'Tradeoff & Failure-Mode Analysis', score: tradeoffAnalysis },
     { label: 'Structured Verbal Communication', score: communicationStructure },
     { label: 'Problem Decomposition & Scoping', score: problemDecomposition },
-  ].sort((a, b) => a.score - b.score)[0];
+  ].sort((a, b) => a.score - b.score);
 
-  const recommendedDrills = [
-    `${lowestCategory.label} for ${input.targetRole} (${input.targetCompany})`,
-    ...questionFeedbacks
-      .filter((fb) => fb.score < 85)
+  const lowestCategory = rankedCategories[0];
+  const highestCategory = rankedCategories[rankedCategories.length - 1];
+
+  const recommendedDrills: string[] = [];
+  if (substantiveCount === 0) {
+    recommendedDrills.push(
+      `Foundational Readiness Drill: Practice answering ${input.targetRole} prompts aloud with structured 60-second outlines`,
+      `Core Concept Review for ${input.targetCompany}: ${questionFeedbacks[0]?.category || input.interviewType}`
+    );
+  } else {
+    recommendedDrills.push(
+      `Priority Fix (${lowestCategory.score}/100): ${lowestCategory.label} for ${input.targetRole} (${input.targetCompany})`
+    );
+    questionFeedbacks
+      .filter((fb) => fb.score < 78)
       .slice(0, 2)
-      .map((fb) => `Deep-Dive Practice: ${fb.category}`),
-  ];
+      .forEach((fb) => {
+        recommendedDrills.push(
+          `Targeted Drill (${fb.score}/100): ${fb.category} — focus on ${fb.missingConcepts[0]?.slice(0, 75) || 'depth & tradeoffs'}`
+        );
+      });
+  }
   if (recommendedDrills.length < 2) {
     recommendedDrills.push(`${input.targetCompany} ${level} Real-Time Follow-Up Handling & Edge Cases`);
   }
@@ -1304,12 +1683,14 @@ export function buildDeterministicEvaluationFromTranscript(input: EvaluateInterv
     perQuestion.reduce((acc, p) => acc + (p.primaryResponse ? 1 : 0) + (p.followUpResponse ? 1 : 0), 0)
   );
 
-  const overallSummary =
-    answeredCount === 0
-      ? `${candidateFirstName} ended the ${input.targetRole} session for ${input.targetCompany} before answering any interview questions. Because only candidate spoken responses are evaluated (all ${aiTurnsExcluded} AI interviewer prompts are excluded), no topic credit was awarded.`
-      : `Evaluated strictly from ${candidateFirstName}'s ${candidateTurnsAnalyzed} spoken responses (${totalCandidateWords} candidate words across ${answeredCount} of ${n} topics; ${aiTurnsExcluded} AI interviewer turns excluded). Earned ${overallScore}/100 overall—strongest performance in ${
-          technicalCorrectness >= communicationStructure ? 'technical depth' : 'structured verbal communication'
-        }, with highest-leverage improvement in ${lowestCategory.label.toLowerCase()}.`;
+  let overallSummary = '';
+  if (answeredCount === 0) {
+    overallSummary = `${candidateFirstName} ended the ${input.targetRole} session for ${input.targetCompany} before answering any interview questions. Because only candidate spoken responses are evaluated (all ${aiTurnsExcluded} AI interviewer prompts are excluded), the earned score is 0/100 across all categories.`;
+  } else if (substantiveCount === 0) {
+    overallSummary = `Evaluated strictly from ${candidateFirstName}'s ${candidateTurnsAnalyzed} spoken responses (${totalCandidateWords} candidate words across ${answeredCount} of ${n} topics; ${aiTurnsExcluded} AI turns excluded). Responses were missing domain depth or did not address the questions directly, resulting in ${overallScore}/100 overall. Prioritize building concrete, concept-grounded answers before your next session.`;
+  } else {
+    overallSummary = `Evaluated strictly from ${candidateFirstName}'s ${candidateTurnsAnalyzed} spoken responses (${totalCandidateWords} candidate words across ${answeredCount} of ${n} topics; ${aiTurnsExcluded} AI interviewer turns excluded). Earned ${overallScore}/100 overall—strongest in ${highestCategory.label.toLowerCase()} (${highestCategory.score}/100), with highest-leverage improvement needed in ${lowestCategory.label.toLowerCase()} (${lowestCategory.score}/100).`;
+  }
 
   return {
     overallScore,
@@ -1329,7 +1710,12 @@ export function buildDeterministicEvaluationFromTranscript(input: EvaluateInterv
     overallSummary,
     questionFeedbacks,
     recommendedDrills,
-    keyWeakness: lowestCategory.label,
+    keyWeakness:
+      answeredCount === 0
+        ? 'No Candidate Responses Recorded'
+        : substantiveCount === 0
+        ? 'Missing Substantive Domain Answers'
+        : lowestCategory.label,
     source: 'calibrated-fallback',
     evaluationBasis: {
       evaluatedSpeaker: 'candidate-only',
@@ -1368,15 +1754,22 @@ export async function generateTranscriptEvaluationReport(
       .map((t) => `[${t.timestamp}] Topic ${t.topicOrder} Candidate Answer: ${t.text}`)
       .join('\n');
 
-    const prompt = `You are a Principal Hiring Committee Evaluator grading a mock interview for "${input.targetRole}" at "${input.targetCompany}" (${level}).
+    const prompt = `You are a strict, fair Principal Hiring Committee Evaluator grading a verbal mock interview for "${input.targetRole}" at "${input.targetCompany}" (${level}).
 
-STRICT EVALUATION RULE — CANDIDATE-ONLY SCORING:
-- Grade STRICTLY and ONLY from the candidate's spoken responses and overall performance below.
-- DO NOT count, reward, or average in anything the AI interviewer said (questions and follow-ups are provided solely as context labels for what was asked).
-- If a topic shows "[No candidate response recorded]", score that topic low (25-35) and state that no candidate answer was given.
-- Overall Performance Metrics Observed: ${deterministicBaseline.evaluationBasis.topicsAnswered}/${deterministicBaseline.evaluationBasis.totalTopics} topics answered, ${deterministicBaseline.evaluationBasis.candidateTurnsAnalyzed} spoken candidate turns, ${deterministicBaseline.evaluationBasis.totalCandidateWords} candidate words over ${deterministicBaseline.durationFormatted}.
+STRICT CALIBRATION & CANDIDATE-ONLY RULES:
+1. Grade STRICTLY and ONLY from the candidate's spoken responses below. DO NOT credit or score anything the AI interviewer said.
+2. NEVER assign uniform/identical placeholder scores across categories (e.g., avoid giving 35/35/35/35 or 65/65/65/65). Score each rubric dimension independently based on real evidence in the candidate's words!
+3. Strict 0-100 Calibration Scale:
+   - 0: No candidate response recorded for that topic.
+   - 1-15: "I don't know", "skip", "pass", evasive non-answer, or pure filler (<6 meaningful words with zero technical/behavioral substance).
+   - 16-38: Off-topic, vague buzzwords, or superficial response lacking mechanics and examples.
+   - 39-62: Partial understanding; covers basics but misses key mechanisms, tradeoffs, or structure.
+   - 63-79: Solid competent answer; correct core concepts, clear reasoning, minor edge-case gaps.
+   - 80-89: Strong ${level} answer; structured, handles failure modes/tradeoffs and follow-ups well.
+   - 90-98: Exceptional bar-raising answer with quantified metrics, invariants, and deep tradeoffs.
+4. Observed Candidate Metrics: ${deterministicBaseline.evaluationBasis.topicsAnswered}/${deterministicBaseline.evaluationBasis.totalTopics} topics answered, ${deterministicBaseline.evaluationBasis.candidateTurnsAnalyzed} spoken candidate turns, ${deterministicBaseline.evaluationBasis.totalCandidateWords} candidate words over ${deterministicBaseline.durationFormatted}.
 
-Topic Prompts & Candidate-Only Spoken Responses:
+Topic Prompts (Context Only) & Candidate-Only Spoken Responses:
 ${JSON.stringify(
   perQuestion.map((p) => ({
     questionId: p.question.id,
@@ -1391,18 +1784,18 @@ ${JSON.stringify(
 Candidate-Only Chronological Spoken Log:
 ${candidateOnlyTurns.slice(0, 5000)}
 
-Produce a grounded, honest JSON evaluation object based strictly on what the candidate actually said above:
-1. "overallScore" (integer 25-98) and "categoryScores" (technicalCorrectness [35% weight], tradeoffAnalysis [25% weight], communicationStructure [20% weight], problemDecomposition [20% weight], each 25-98).
-2. "percentileRank" (integer 15-99).
-3. "overallSummary": 2-3 specific sentences citing actual points from the candidate's spoken responses and overall completion (${deterministicBaseline.evaluationBasis.topicsAnswered}/${deterministicBaseline.evaluationBasis.totalTopics} topics answered).
-4. "keyWeakness": concise 3-7 word summary of the primary skill gap in the candidate's spoken answers.
-5. "recommendedDrills": 2-4 specific study/practice drills addressing the candidate's actual gaps.
-6. "questionFeedbacks": array matching the ${perQuestion.length} questions above with "questionId", "score" (25-98), "criterionScores" (2-3 items with criterion, score, feedback quoting/referencing the candidate's spoken words), "strengths" (1-3 items), "missingConcepts" (1-3 items), "suggestedImprovements" (1-2 items), and "modelExemplarAnswer" (concise staff-level ideal answer).`;
+Produce a detailed, discriminating JSON evaluation object:
+1. "categoryScores": independent 0-98 scores for "technicalCorrectness" (35%), "tradeoffAnalysis" (25%), "communicationStructure" (20%), "problemDecomposition" (20%). Note: overallScore MUST equal the weighted average of these 4 categories (and unanswered topics count as 0!).
+2. "overallScore" (integer 0-98) and "percentileRank" (integer 1-99).
+3. "overallSummary": 3-4 concrete sentences citing what the candidate actually said (or failed to answer), highlighting strongest vs. weakest areas and exact next steps.
+4. "keyWeakness": concise 3-7 word summary of the primary skill gap.
+5. "recommendedDrills": 3-4 concrete, specific practice drills explaining what to improve and how.
+6. "questionFeedbacks": array matching the ${perQuestion.length} questions with "questionId", "score" (0-98), "criterionScores" (2-3 items quoting candidate's words or noting exact omission), "strengths" (1-3 items), "missingConcepts" (1-3 items), "suggestedImprovements" (2-3 specific actionable recommendations explaining how to rewrite/improve the spoken answer), and "modelExemplarAnswer" (concise staff-level ideal spoken response).`;
 
     const rawJson = await callJsonTextModelWithFallback({
       ai,
       prompt,
-      timeoutMs: 6500,
+      timeoutMs: 7500,
       responseSchema: {
         type: Type.OBJECT,
         properties: {
@@ -1479,18 +1872,41 @@ Produce a grounded, honest JSON evaluation object based strictly on what the can
     if (parsed && parsed.overallSummary && Array.isArray(parsed.questionFeedbacks)) {
       const mergedFeedbacks: EvaluatedQuestionFeedback[] = deterministicBaseline.questionFeedbacks.map(
         (baseFb, idx) => {
+          const item = perQuestion[idx];
+          const signals = item
+            ? assessTopicCandidateSpeech(
+                item.question,
+                item.primaryResponse,
+                item.followUpResponse,
+                input.interviewType
+              )
+            : null;
+
+          // Never let Gemini assign >0 to an unanswered topic or >15 to an explicit non-answer / "I don't know"
+          if (signals?.tier === 'unanswered') {
+            return baseFb;
+          }
+
           const aiFb =
             parsed.questionFeedbacks.find((f: any) => f.questionId === baseFb.questionId) ||
             parsed.questionFeedbacks[idx];
           if (!aiFb) return baseFb;
+
+          const topicCap =
+            signals?.tier === 'evasive-non-answer'
+              ? 15
+              : signals?.tier === 'superficial-off-topic'
+              ? 32
+              : 98;
+
           return {
             ...baseFb,
-            score: clampScore(Number(aiFb.score ?? baseFb.score)),
+            score: clampScore(Number(aiFb.score ?? baseFb.score), 0, topicCap),
             criterionScores:
               Array.isArray(aiFb.criterionScores) && aiFb.criterionScores.length > 0
                 ? aiFb.criterionScores.map((c: any) => ({
                     criterion: String(c.criterion || 'Rubric Criterion'),
-                    score: clampScore(Number(c.score ?? baseFb.score)),
+                    score: clampScore(Number(c.score ?? baseFb.score), 0, topicCap),
                     feedback: String(c.feedback || ''),
                   }))
                 : baseFb.criterionScores,
@@ -1511,23 +1927,48 @@ Produce a grounded, honest JSON evaluation object based strictly on what the can
         }
       );
 
+      // Compute weighted category cap based on deterministic non-answer / unanswered ratio
+      const allNonSubstantive = deterministicBaseline.questionFeedbacks.every((fb) => fb.score <= 20);
+      const catCap = allNonSubstantive ? 25 : 98;
+
+      const tech = clampScore(
+        Number(parsed.categoryScores?.technicalCorrectness ?? deterministicBaseline.categoryScores.technicalCorrectness),
+        0,
+        catCap
+      );
+      const comm = clampScore(
+        Number(parsed.categoryScores?.communicationStructure ?? deterministicBaseline.categoryScores.communicationStructure),
+        0,
+        catCap
+      );
+      const decomp = clampScore(
+        Number(parsed.categoryScores?.problemDecomposition ?? deterministicBaseline.categoryScores.problemDecomposition),
+        0,
+        catCap
+      );
+      const tradeoff = clampScore(
+        Number(parsed.categoryScores?.tradeoffAnalysis ?? deterministicBaseline.categoryScores.tradeoffAnalysis),
+        0,
+        catCap
+      );
+      const weightedOverall = clampScore(
+        tech * 0.35 + tradeoff * 0.25 + comm * 0.2 + decomp * 0.2,
+        0,
+        catCap
+      );
+
       return {
         ...deterministicBaseline,
-        overallScore: clampScore(Number(parsed.overallScore ?? deterministicBaseline.overallScore)),
-        percentileRank: clampScore(Number(parsed.percentileRank ?? deterministicBaseline.percentileRank), 20, 99),
+        overallScore: weightedOverall,
+        percentileRank:
+          weightedOverall === 0
+            ? 1
+            : clampScore(Number(parsed.percentileRank ?? Math.round(weightedOverall * 0.96)), 1, 99),
         categoryScores: {
-          technicalCorrectness: clampScore(
-            Number(parsed.categoryScores?.technicalCorrectness ?? deterministicBaseline.categoryScores.technicalCorrectness)
-          ),
-          communicationStructure: clampScore(
-            Number(parsed.categoryScores?.communicationStructure ?? deterministicBaseline.categoryScores.communicationStructure)
-          ),
-          problemDecomposition: clampScore(
-            Number(parsed.categoryScores?.problemDecomposition ?? deterministicBaseline.categoryScores.problemDecomposition)
-          ),
-          tradeoffAnalysis: clampScore(
-            Number(parsed.categoryScores?.tradeoffAnalysis ?? deterministicBaseline.categoryScores.tradeoffAnalysis)
-          ),
+          technicalCorrectness: tech,
+          communicationStructure: comm,
+          problemDecomposition: decomp,
+          tradeoffAnalysis: tradeoff,
         },
         overallSummary: String(parsed.overallSummary).trim(),
         keyWeakness: String(parsed.keyWeakness || deterministicBaseline.keyWeakness).trim(),
