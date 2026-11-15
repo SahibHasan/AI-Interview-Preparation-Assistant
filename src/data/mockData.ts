@@ -94,7 +94,27 @@ export const sampleResumeAnalysis: ResumeAnalysis = {
   fileName: 'Alex_Morgan_Senior_Frontend_2025.pdf',
   fileSizeKb: 240,
   uploadedAt: 'Yesterday, 4:10 PM',
-  atsScore: 92,
+  atsScore: 86,
+  wordCount: 412,
+  rawText: `Alex Morgan
+Seattle, WA
+5+ Years Frontend Architecture & Distributed UI Systems
+Experience:
+Staff Frontend Engineer — Fintech Scaleup (CloudPay) (2022 - Present)
+• Architected real-time payments dashboard serving 4M+ daily active merchants with <50ms P95 latency.
+• Implemented resilient offline-first optimistic cache invalidation layer reducing checkout abandonment by 14%.
+• Led cross-functional migration to TypeScript monorepo with 45 engineers.
+Senior Software Engineer — DataMetrics Corp (2020 - 2022)
+• Built high-frequency telemetry charting suite rendering 50,000 live data points using WebGL and Canvas.
+• Designed component design system with 60+ accessible WCAG AAA compliant primitives.
+Education: B.S. in Computer Science, University of Washington (2020)
+Skills: TypeScript, React 19, Next.js, State Synchronization, Distributed Client Caching, Web Vitals, GraphQL, REST, System Design, Tailwind CSS, WebSockets, Unit & E2E Testing`,
+  atsBreakdown: {
+    keywordAlignment: 84,
+    technicalDepth: 90,
+    quantifiedImpact: 86,
+    sectionCompleteness: 88,
+  },
   parsedProfile: sampleCandidateProfile,
   matchAnalysis: {
     overallMatchPercentage: 84,
@@ -122,6 +142,102 @@ export const sampleResumeAnalysis: ResumeAnalysis = {
       'Cross-tab multi-window cache consistency primitives',
     ],
   },
+  keywordAnalysis: [
+    { term: 'TypeScript', status: 'present', count: 3, density: '0.7%', category: 'Language' },
+    { term: 'React & Next.js', status: 'present', count: 2, density: '0.5%', category: 'Frontend Framework' },
+    { term: 'Distributed Client Caching', status: 'present', count: 2, density: '0.5%', category: 'Architecture' },
+    { term: 'State Synchronization', status: 'present', count: 2, density: '0.5%', category: 'Reliability' },
+    { term: 'Web Vitals & Performance Optimization', status: 'present', count: 1, density: '0.2%', category: 'Performance' },
+    { term: 'Raft / Distributed Consensus', status: 'missing', count: 0, density: '0.0%', category: 'Distributed Systems' },
+    { term: 'Security & OAuth Authentication', status: 'missing', count: 0, density: '0.0%', category: 'Security' },
+  ],
+  levelingFit: [
+    { level: 'L4 · Mid-Level', bar: 'Independent Contributor', fit: '94% Strong Exceed', score: 94, status: 'solid' },
+    { level: 'L5 · Senior Engineer', bar: 'Subsystem & Ownership Lead', fit: '86% Target Match', score: 86, status: 'target' },
+    { level: 'L6 · Staff Engineer', bar: 'Multi-Team Architecture Bar', fit: '74% Stretch Fit', score: 74, status: 'solid' },
+    { level: 'L7 · Principal', bar: 'Org-Wide Technical Strategy', fit: '52% Growth Gap', score: 52, status: 'gap' },
+  ],
+  compensationBand: '$245k - $315k Total Comp',
+  detectedRoleSections: [
+    {
+      id: 'sec_1',
+      order: 1,
+      sectionName: 'Resume & Production Architecture Deep-Dive',
+      category: 'Resume & Project Defense',
+      focusSource: 'resume',
+      weightPercentage: 25,
+      topicsCovered: ['Payments Dashboard Latency (<50ms P95)', 'Optimistic Cache Invalidation', 'Monorepo Tradeoffs'],
+      rationale: 'Validates hands-on ownership and architectural decisions behind claimed resume metrics.',
+      assessmentCriteria: ['Specificity of your personal technical decisions', 'Measured latency & conversion impact', 'Post-launch operational lessons'],
+    },
+    {
+      id: 'sec_2',
+      order: 2,
+      sectionName: 'Frontend Architecture, Rendering & Web Vitals',
+      category: 'Frontend Engineering',
+      focusSource: 'jd',
+      weightPercentage: 25,
+      topicsCovered: ['State Synchronization', '60fps Virtualized Charts', 'Layout Stability & Core Web Vitals'],
+      rationale: 'Tests deep understanding of browser rendering, React concurrency, and real-time data batching.',
+      assessmentCriteria: ['Frame-budget & memory leak prevention', 'State normalization & cache staleness handling'],
+    },
+    {
+      id: 'sec_3',
+      order: 3,
+      sectionName: 'Distributed Systems & Client Resilience',
+      category: 'System Design',
+      focusSource: 'jd',
+      weightPercentage: 25,
+      topicsCovered: ['Idempotency Keys', 'Offline Queuing & Retry Backoff', 'Multi-Tab Sync'],
+      rationale: 'Closes JD-identified gaps in network jitter recovery and fault-tolerant financial workflows.',
+      assessmentCriteria: ['Failure-mode enumeration', 'Idempotency guarantees under spotty networks'],
+    },
+    {
+      id: 'sec_4',
+      order: 4,
+      sectionName: 'Engineering Leadership & Tradeoffs (STAR)',
+      category: 'Behavioral & Cross-Team Impact',
+      focusSource: 'role-calibration',
+      weightPercentage: 25,
+      topicsCovered: ['Technical Debt vs Velocity', 'Cross-Functional Alignment', 'Incident Post-Mortems'],
+      rationale: 'Evaluates senior/staff influence, ambiguity handling, and metrics-backed prioritization.',
+      assessmentCriteria: ['Clear Situation-Task-Action-Result flow', 'Quantified team or business outcomes'],
+    },
+  ],
+  assessmentRules: [
+    {
+      id: 'rule_depth',
+      dimension: 'Technical Depth & Mechanism Precision',
+      weightPercentage: 35,
+      ruleDescription: 'Grades concrete mechanisms, complexities, schemas, and protocol details from your spoken explanations.',
+      passSignals: ['Names exact algorithms, data structures, or SQL indexing strategies', 'Explains execution flow step-by-step'],
+      redFlags: ['Buzzword dropping without mechanism', 'Skipping edge-case failure behavior'],
+    },
+    {
+      id: 'rule_tradeoff',
+      dimension: 'Tradeoff & Failure-Mode Analysis',
+      weightPercentage: 25,
+      ruleDescription: 'Evaluates ability to compare alternatives cleanly and reason about bottlenecks under scale.',
+      passSignals: ['Contrasts latency vs consistency or memory vs CPU', 'Identifies failure modes and mitigation'],
+      redFlags: ['Single-option answers with zero tradeoff awareness'],
+    },
+    {
+      id: 'rule_decomp',
+      dimension: 'Problem Decomposition & Scoping',
+      weightPercentage: 20,
+      ruleDescription: 'Measures how systematically you clarify constraints and partition complex problems.',
+      passSignals: ['Establishes API contracts & constraints early', 'Breaks problem into clean testable modules'],
+      redFlags: ['Jumping into details without defining constraints'],
+    },
+    {
+      id: 'rule_clarity',
+      dimension: 'Verbal Clarity & Candidate-Only Evidence',
+      weightPercentage: 20,
+      ruleDescription: 'Scores ONLY candidate responses (AI prompts excluded); zero-tolerance deduction for non-answers or evasion.',
+      passSignals: ['Structured STAR examples with real numbers', 'Direct answers tied to your own experience'],
+      redFlags: ['Evasive replies ("skip", "idk") or off-topic filler'],
+    },
+  ],
 };
 
 export const sampleInterviewQuestions: InterviewQuestion[] = [

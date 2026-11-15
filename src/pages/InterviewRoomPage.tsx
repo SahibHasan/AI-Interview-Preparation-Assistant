@@ -183,6 +183,7 @@ export const InterviewRoomPage: React.FC = () => {
               matchedSkills: resumeAnalysis.matchAnalysis.matchedSkills.map((s) => s.skill),
               missingSkills: resumeAnalysis.matchAnalysis.missingSkills.map((s) => s.skill),
               suggestedFocusAreas: resumeAnalysis.matchAnalysis.suggestedFocusAreas,
+              rawText: resumeAnalysis.rawText,
             },
             jobDescriptionText,
           }),
@@ -988,6 +989,11 @@ export const InterviewRoomPage: React.FC = () => {
                             {isDone ? <CheckCircle2 className="w-3.5 h-3.5" /> : topic.order}
                           </span>
                           <div className="min-w-0">
+                            {topic.sectionName && (
+                              <span className="inline-block text-[10px] font-bold uppercase tracking-wider text-[#3525cd] bg-[#eff4ff] px-1.5 py-0.5 rounded mb-1">
+                                {topic.sectionName}
+                              </span>
+                            )}
                             <div className="text-xs font-bold text-[#0b1c30] leading-snug">
                               {topic.title}
                             </div>
@@ -1038,6 +1044,13 @@ export const InterviewRoomPage: React.FC = () => {
                   <p className="text-xs text-[#464555] bg-[#f8f9ff] p-3 rounded-lg border border-[#e2e8f0] leading-relaxed">
                     <strong className="text-[#0b1c30]">Scenario Scope: </strong>
                     {currentQuestion.contextOrConstraint}
+                  </p>
+                )}
+
+                {currentQuestion.assessmentRule && (
+                  <p className="text-[11px] text-[#3525cd] bg-[#eff4ff] p-2.5 rounded-lg border border-[#c7d2fe] leading-relaxed">
+                    <strong className="text-[#0b1c30]">Assessment Rule: </strong>
+                    {currentQuestion.assessmentRule}
                   </p>
                 )}
 

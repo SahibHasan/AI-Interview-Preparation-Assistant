@@ -1,6 +1,8 @@
 import { GoogleGenAI, ThinkingLevel, Type } from '@google/genai';
 import { Communicate } from '@travisvn/edge-tts';
 import { KokoroTTS } from 'kokoro-js';
+import { buildRoleInterviewSectionsAndRules } from './resumeParser';
+import type { AssessmentRule, InterviewSectionPlan } from '../src/types';
 
 export type PersonaName = 'Sarah' | 'Dr. Elena Vance' | 'Marcus Reed' | 'David Chen';
 export type PrebuiltVoiceName = 'Kore' | 'Zephyr' | 'Charon' | 'Puck' | 'Fenrir';
@@ -108,19 +110,23 @@ export interface PlannedTopicItem {
   id: string;
   order: number;
   title: string;
+  sectionName?: string;
   category: string;
   focusSource: 'resume' | 'jd' | 'role-calibration';
   rationale: string;
+  assessmentCriteria?: string[];
 }
 
 export interface PlannedInterviewQuestion {
   id: string;
   topicId: string;
   order: number;
+  sectionName?: string;
   category: string;
   difficulty: 'L4' | 'L5' | 'L6' | 'L7';
   questionText: string;
   contextOrConstraint?: string;
+  assessmentRule?: string;
   evaluationRubric: {
     criterion: string;
     weight: number;
@@ -132,6 +138,8 @@ export interface InterviewPlanPayload {
   greetingOverview: string;
   topicOrder: PlannedTopicItem[];
   questions: PlannedInterviewQuestion[];
+  interviewSections?: InterviewSectionPlan[];
+  assessmentRules?: AssessmentRule[];
   source: 'gemini' | 'calibrated-fallback';
 }
 
@@ -150,6 +158,7 @@ export interface PlanInput {
     matchedSkills?: string[];
     missingSkills?: string[];
     suggestedFocusAreas?: string[];
+    rawText?: string;
   };
   jobDescriptionText?: string;
 }
@@ -310,6 +319,167 @@ function extractJdHighlights(jdText?: string): string[] {
   return lines.slice(0, 4);
 }
 
+function buildQuestionForSection(params: {
+  section: InterviewSectionPlan;
+  input: PlanInput;
+  recentWork: string;
+  resumeHighlight: string;
+  matchedSkill: string;
+  criticalGap: string;
+  jdHighlights: string[];
+  level: 'L4' | 'L5' | 'L6' | 'L7';
+}): {
+  title: string;
+  category: string;
+  focusSource: 'resume' | 'jd' | 'role-calibration';
+  rationale: string;
+  questionText: string;
+  contextOrConstraint: string;
+  assessmentRule: string;
+  rubric: { criterion: string; weight: number; description: string }[];
+} {
+  const sLower = params.section.sectionName.toLowerCase();
+  const { input, recentWork, resumeHighlight, matchedSkill, criticalGap, jdHighlights, level } = params;
+
+  if (sLower.includes('resume')) {
+    const cleanHighlight =
+      resumeHighlight.length <= 165
+        ? resumeHighlight.replace(/[.,;:\s]+$/, '')
+        : resumeHighlight.slice(0, 165).replace(/\s+\S*$/, '').replace(/[.,;:\s]+$/, '');
+    return {
+      title: params.section.sectionName,
+      category: params.section.category,
+      focusSource: 'resume',
+      rationale: params.section.rationale,
+      questionText: `Looking at your background in ${recentWork}, walk me through the hardest technical problem or bottleneck you owned—specifically around "${cleanHighlight}"—and the measurable impact you delivered.`,
+      contextOrConstraint: `Focus on your individual architecture decisions, alternatives you rejected, and concrete outcomes for ${input.targetCompany}.`,
+      assessmentRule: params.section.assessmentCriteria.join(' • '),
+      rubric: [
+        { criterion: 'Personal Technical Ownership', weight: 40, description: 'Clearly isolates individual design choices and system boundaries' },
+        { criterion: 'Measurable Impact & Tradeoffs', weight: 35, description: 'Cites metrics and explains why alternative approaches were rejected' },
+        { criterion: 'Production Failure Handling', weight: 25, description: 'Discusses monitoring, edge cases, and rollback safety' },
+      ],
+    };
+  }
+
+  if (sLower.includes('dsa') || sLower.includes('algorithm')) {
+    return {
+      title: params.section.sectionName,
+      category: params.section.category,
+      focusSource: params.section.focusSource,
+      rationale: params.section.rationale,
+      questionText: `Let's switch to DSA and algorithmic problem solving. Suppose ${input.targetCompany} receives a high-velocity stream of API events and you need to support O(1) lookup, top-K frequent items over a sliding 5-minute window, and bounded memory. How would you choose and combine the data structures, and what are the time and space complexities?`,
+      contextOrConstraint: `Compare HashMap + Doubly Linked List / Min-Heap / Bucket approaches and walk through boundary cases verbally.`,
+      assessmentRule: params.section.assessmentCriteria.join(' • '),
+      rubric: [
+        { criterion: 'Optimal Data Structure Selection', weight: 40, description: 'Picks right combination of structures (HashMap, Heap, Queue) cleanly' },
+        { criterion: 'Time & Space Big-O Tradeoffs', weight: 35, description: 'Derives accurate worst-case and amortized time/space bounds' },
+        { criterion: 'Boundary & Memory Edge Cases', weight: 25, description: 'Handles evictions, ties, empty streams, and concurrency cleanly' },
+      ],
+    };
+  }
+
+  if (sLower.includes('oop') || sLower.includes('software design')) {
+    return {
+      title: params.section.sectionName,
+      category: params.section.category,
+      focusSource: params.section.focusSource,
+      rationale: params.section.rationale,
+      questionText: `Moving to Object-Oriented Design and clean architecture: if you were modeling a pluggable notification and payment retry engine at ${input.targetCompany} where new channels or retry policies get added every quarter, how would you apply OOP principles, SOLID, and design patterns to keep classes decoupled and testable?`,
+      contextOrConstraint: `Explain interfaces vs abstract classes, composition vs inheritance, and Strategy or Observer pattern tradeoffs.`,
+      assessmentRule: params.section.assessmentCriteria.join(' • '),
+      rubric: [
+        { criterion: 'SOLID Principles & Abstractions', weight: 40, description: 'Applies Dependency Inversion, Open/Closed, and clean interfaces' },
+        { criterion: 'Composition vs Inheritance Tradeoffs', weight: 35, description: 'Avoids brittle deep inheritance hierarchies in favor of composable contracts' },
+        { criterion: 'Extensibility & Testability', weight: 25, description: 'Demonstrates dependency injection and isolated unit test boundaries' },
+      ],
+    };
+  }
+
+  if (sLower.includes('sql') || sLower.includes('dbms') || sLower.includes('data modeling')) {
+    return {
+      title: params.section.sectionName,
+      category: params.section.category,
+      focusSource: params.section.focusSource,
+      rationale: params.section.rationale,
+      questionText: `Now let's assess SQL and Database Engineering. Imagine an orders and ledger table with 100 million rows where queries filtering by user_id and created_at status are slowing down, and concurrent updates risk double-spending. How do you design the schema, composite B-Tree indexes, and ACID transaction isolation to fix both latency and correctness?`,
+      contextOrConstraint: `Discuss leftmost index prefix rules, N+1 query elimination, optimistic vs pessimistic locking, and deadlock prevention.`,
+      assessmentRule: params.section.assessmentCriteria.join(' • '),
+      rubric: [
+        { criterion: 'Indexing & Query Execution Plan', weight: 40, description: 'Chooses selective composite index ordering and diagnoses table scans' },
+        { criterion: 'ACID Transactions & Concurrency Locks', weight: 35, description: 'Handles isolation levels, SELECT FOR UPDATE / optimistic versioning' },
+        { criterion: 'Normalization & Scale Tradeoffs', weight: 25, description: 'Balances 3NF integrity against read replicas or controlled denormalization' },
+      ],
+    };
+  }
+
+  if (sLower.includes('react') || sLower.includes('web vitals') || sLower.includes('frontend')) {
+    return {
+      title: params.section.sectionName,
+      category: params.section.category,
+      focusSource: params.section.focusSource,
+      rationale: params.section.rationale,
+      questionText: `For this ${input.targetRole} role at ${input.targetCompany}, how would you architect client-side state synchronization and optimistic UI caching so real-time dashboards stay sub-120ms P99 and never trigger duplicate mutations during spotty mobile connectivity?`,
+      contextOrConstraint: `Address Core Web Vitals (INP/LCP/CLS), idempotency keys, and render batching.`,
+      assessmentRule: params.section.assessmentCriteria.join(' • '),
+      rubric: [
+        { criterion: 'Idempotency & Cache Reconciliation', weight: 40, description: 'Prevents duplicate mutations and handles stale cache invalidation' },
+        { criterion: 'Rendering & Web Vitals Discipline', weight: 35, description: 'Protects main thread with batching, memoization, and layout stability' },
+        { criterion: 'Degraded Network Recovery', weight: 25, description: 'Uses exponential backoff and clean offline queues' },
+      ],
+    };
+  }
+
+  if (sLower.includes('conflict') || sLower.includes('consensus') || sLower.includes('leadership') || sLower.includes('culture') || sLower.includes('ambiguity')) {
+    return {
+      title: params.section.sectionName,
+      category: params.section.category,
+      focusSource: 'role-calibration',
+      rationale: params.section.rationale,
+      questionText: `Tell me about a time you had a significant technical disagreement with an engineering peer or product lead right before a major launch. How did you structure your case, drive consensus, and measure the outcome?`,
+      contextOrConstraint: `Use Situation, Task, Action, Result (STAR) framing with objective data and personal accountability.`,
+      assessmentRule: params.section.assessmentCriteria.join(' • '),
+      rubric: [
+        { criterion: 'Structured STAR Delivery', weight: 35, description: 'Clear context, personal action, and measurable business outcome' },
+        { criterion: 'Evidence-Driven Influence', weight: 40, description: 'Relies on prototypes, latency/risk data, and stakeholder empathy' },
+        { criterion: 'Retrospective Learning', weight: 25, description: 'Reflects candidly on what could have been improved' },
+      ],
+    };
+  }
+
+  if (sLower.includes('product')) {
+    return {
+      title: params.section.sectionName,
+      category: params.section.category,
+      focusSource: 'jd',
+      rationale: params.section.rationale,
+      questionText: `For ${input.targetCompany}, suppose activation dropped by 8% after a major onboarding redesign. Walk me through how you decompose the funnel, slice cohorts using SQL/analytics, and decide whether to roll back or iterate.`,
+      contextOrConstraint: `Identify primary North Star metrics, guardrail metrics, and A/B test pitfalls.`,
+      assessmentRule: params.section.assessmentCriteria.join(' • '),
+      rubric: [
+        { criterion: 'Metric & Funnel Decomposition', weight: 40, description: 'Isolates instrumentation bugs vs true behavioral cohort drops' },
+        { criterion: 'Experimentation & Guardrails', weight: 35, description: 'Defines clear success and counter-metrics before acting' },
+        { criterion: 'Cross-Team Execution', weight: 25, description: 'Coordinates engineering and design tradeoffs decisively' },
+      ],
+    };
+  }
+
+  return {
+    title: params.section.sectionName,
+    category: params.section.category,
+    focusSource: 'jd',
+    rationale: params.section.rationale || `Targets ${criticalGap} & ${jdHighlights[0] || matchedSkill} at ${level} bar.`,
+    questionText: `Suppose ${input.targetCompany} experiences a sudden 10x traffic surge combined with intermittent downstream timeouts on a critical workflow (${criticalGap}). How do you architect caching, backpressure, observability, and safe rollback mechanisms to protect P99 latency and data integrity?`,
+    contextOrConstraint: `Target ${level} bar: discuss circuit breakers, idempotent retries, distributed tracing, and graceful degradation.`,
+    assessmentRule: params.section.assessmentCriteria.join(' • '),
+    rubric: [
+      { criterion: 'Fault Isolation & Backpressure', weight: 40, description: 'Applies circuit breakers, bounded queues, and jittered backoff cleanly' },
+      { criterion: 'Consistency & Idempotency', weight: 35, description: 'Prevents corrupt state or duplicate writes under partial failure' },
+      { criterion: 'Observability & Rollback Speed', weight: 25, description: 'Defines concrete SLIs, canary alerts, and kill-switch triggers' },
+    ],
+  };
+}
+
 export function buildDeterministicInterviewPlan(input: PlanInput): InterviewPlanPayload {
   const firstName = (input.candidateName || 'there').trim().split(/\s+/)[0] || 'there';
   const personaCfg = resolveVoiceConfig(input.aiPersona);
@@ -322,119 +492,74 @@ export function buildDeterministicInterviewPlan(input: PlanInput): InterviewPlan
     : input.resumeSummary?.headline || 'recent engineering architecture';
   const resumeHighlight =
     exp?.bulletPoints?.[0] ||
-    `scalable ${input.targetRole} systems using ${(input.resumeSummary?.skills || ['TypeScript', 'React']).slice(0, 3).join(', ')}`;
+    `scalable ${input.targetRole} systems using ${(input.resumeSummary?.skills || ['TypeScript', 'SQL', 'OOP']).slice(0, 3).join(', ')}`;
   const criticalGap =
-    input.resumeSummary?.missingSkills?.[0] || 'edge-case fault tolerance and WAN jitter recovery';
+    input.resumeSummary?.missingSkills?.[0] || 'edge-case fault tolerance and scaling optimization';
   const matchedSkill =
     input.resumeSummary?.matchedSkills?.[0] ||
     input.resumeSummary?.skills?.[0] ||
-    'Architecture & State Management';
+    'Core Software Engineering';
   const jdHighlights = extractJdHighlights(input.jobDescriptionText);
 
-  const blueprintTemplates: Array<{
-    title: string;
-    category: string;
-    focusSource: 'resume' | 'jd' | 'role-calibration';
-    rationale: string;
-    questionText: string;
-    contextOrConstraint: string;
-    rubric: { criterion: string; weight: number; description: string }[];
-  }> = [
-    {
-      title: 'Resume Deep-Dive & Production Impact',
-      category: 'Resume Experience',
-      focusSource: 'resume',
-      rationale: `Grounded in your ${recentWork} and core strength in ${matchedSkill}.`,
-      questionText: `Looking at your background in ${recentWork}, walk me through the hardest architectural bottleneck you solved—specifically around "${resumeHighlight.slice(0, 120)}"—and what measurable impact it had.`,
-      contextOrConstraint: `Focus on concrete metrics, alternative approaches you rejected, and production reliability tradeoffs for ${input.targetCompany}.`,
-      rubric: [
-        { criterion: 'Architectural Ownership & Clarity', weight: 40, description: 'Explains personal technical contribution and system boundaries clearly' },
-        { criterion: 'Quantitative Impact & Tradeoffs', weight: 35, description: 'Cites latency, reliability, or adoption metrics and why alternatives were rejected' },
-        { criterion: 'Operational Failure Handling', weight: 25, description: 'Discusses monitoring, rollbacks, and edge-case mitigation' },
-      ],
-    },
-    {
-      title: `${input.targetCompany} JD Alignment: ${criticalGap}`,
-      category: 'JD Core Architecture',
-      focusSource: 'jd',
-      rationale: `Directly tests a high-priority requirement from the ${input.targetRole} job description: ${jdHighlights[0] || criticalGap}.`,
-      questionText: `For this ${input.targetRole} role at ${input.targetCompany}, how would you design a client-to-server synchronization pipeline that stays consistent and avoids duplicate mutations when network latency spikes or drops intermittently?`,
-      contextOrConstraint: `Assume strict financial/transactional correctness under 500ms–2000ms jitter and offline reconnect bursts.`,
-      rubric: [
-        { criterion: 'Idempotency & Deduplication Design', weight: 40, description: 'Defines stable idempotency keys and retry state transitions' },
-        { criterion: 'State Reconciliation & Caching', weight: 35, description: 'Handles optimistic updates, conflict resolution, and cache invalidation' },
-        { criterion: 'Performance & Backpressure', weight: 25, description: 'Controls retry storms with jittered backoff and bounded queues' },
-      ],
-    },
-    {
-      title: 'Scalability, Bottlenecks & P99 Latency',
-      category: 'System Scaling',
-      focusSource: 'jd',
-      rationale: `Evaluates senior ${level} calibration against the JD's performance and observability bar.`,
-      questionText: `Suppose your production application experiences a sudden 10x traffic surge paired with a slow downstream API. How do you protect user-facing responsiveness, diagnose where time is lost, and keep P99 performance within budget?`,
-      contextOrConstraint: `Consider telemetry signals, graceful degradation, and circuit-breaking without corrupting user state.`,
-      rubric: [
-        { criterion: 'Degradation & Isolation Strategy', weight: 40, description: 'Applies circuit breakers, stale-while-revalidate, or feature shedding cleanly' },
-        { criterion: 'Observability & Root Cause', weight: 35, description: 'Tracks structured traces, Core Web Vitals, and queue saturation' },
-        { criterion: 'Resource & Memory Discipline', weight: 25, description: 'Prevents unbounded retries, memory leaks, or cascading failures' },
-      ],
-    },
-    {
-      title: 'Cross-Team Consensus & Leadership',
-      category: 'Leadership & Judgment',
-      focusSource: 'role-calibration',
-      rationale: `Calibrated for ${input.targetRole} (${level}) cross-functional ownership and decision-making.`,
-      questionText: `Tell me about a time you strongly disagreed with a product or engineering peer on a major technical tradeoff right before a critical launch. How did you drive alignment and what happened afterward?`,
-      contextOrConstraint: `Use structured Situation, Task, Action, Result framing highlighting data-driven persuasion.`,
-      rubric: [
-        { criterion: 'Structured STAR Framing', weight: 35, description: 'Crisp context, personal action, and concrete outcome' },
-        { criterion: 'Stakeholder Empathy & Evidence', weight: 40, description: 'Uses benchmarks, prototypes, or risk analysis rather than rank' },
-        { criterion: 'Retrospective Maturity', weight: 25, description: 'Demonstrates learning and team trust preservation' },
-      ],
-    },
-    {
-      title: 'Security, Reliability & Edge-Case Defense',
-      category: 'Reliability Engineering',
-      focusSource: 'role-calibration',
-      rationale: `Covers defensive engineering practices expected of ${input.targetCompany} ${input.targetRole} candidates.`,
-      questionText: `How do you structure automated verification, safe rollouts, and boundary validation so a critical user workflow cannot silently fail or expose sensitive state in production?`,
-      contextOrConstraint: `Address canary checks, schema validation, and rollback safety nets.`,
-      rubric: [
-        { criterion: 'Defense-in-Depth Strategy', weight: 40, description: 'Covers input validation, auth boundaries, and blast-radius isolation' },
-        { criterion: 'Testing & Rollout Discipline', weight: 35, description: 'Balances unit/integration/E2E gates with staged feature flags' },
-        { criterion: 'Incident Recovery Speed', weight: 25, description: 'Defines clear rollback triggers and post-incident safeguards' },
-      ],
-    },
-  ];
+  const { sections, assessmentRules } = buildRoleInterviewSectionsAndRules({
+    targetRole: input.targetRole,
+    targetCompany: input.targetCompany,
+    interviewType: input.interviewType,
+    difficulty: input.difficulty,
+    questionCount: count,
+    resumeSkills: input.resumeSummary?.skills,
+    matchedSkills: input.resumeSummary?.matchedSkills,
+    missingSkills: input.resumeSummary?.missingSkills,
+    jobDescriptionText: input.jobDescriptionText,
+    experiences: input.resumeSummary?.experiences,
+  });
 
-  const selected = blueprintTemplates.slice(0, count);
-  const topicOrder: PlannedTopicItem[] = selected.map((item, idx) => ({
+  const selectedTemplates = sections.map((sec) =>
+    buildQuestionForSection({
+      section: sec,
+      input,
+      recentWork,
+      resumeHighlight,
+      matchedSkill,
+      criticalGap,
+      jdHighlights,
+      level,
+    })
+  );
+
+  const topicOrder: PlannedTopicItem[] = selectedTemplates.map((item, idx) => ({
     id: `topic_${idx + 1}`,
     order: idx + 1,
     title: item.title,
+    sectionName: sections[idx]?.sectionName || item.title,
     category: item.category,
     focusSource: item.focusSource,
     rationale: item.rationale,
+    assessmentCriteria: sections[idx]?.assessmentCriteria || [],
   }));
 
-  const questions: PlannedInterviewQuestion[] = selected.map((item, idx) => ({
+  const questions: PlannedInterviewQuestion[] = selectedTemplates.map((item, idx) => ({
     id: `q_${idx + 1}`,
     topicId: `topic_${idx + 1}`,
     order: idx + 1,
+    sectionName: sections[idx]?.sectionName || item.title,
     category: item.category,
     difficulty: level,
     questionText: item.questionText,
     contextOrConstraint: item.contextOrConstraint,
+    assessmentRule: item.assessmentRule,
     evaluationRubric: item.rubric,
   }));
 
   const topicPreview = topicOrder.map((t) => `${t.order}. ${t.title}`).join(', ');
-  const greetingOverview = `Hi ${firstName}, welcome to your live ${input.targetRole} interview for ${input.targetCompany}. I'm ${input.aiPersona}, ${personaCfg.roleTitle}. I've reviewed your resume—including your ${recentWork}—alongside the ${input.targetCompany} job description. To give you a realistic ${level} loop, here is our planned topic order: ${topicPreview}. Expect conversational follow-up questions tailored in real time to your spoken answers. Whenever you're ready, let me know you're ready to start and we'll jump right into topic one.`;
+  const greetingOverview = `Hi ${firstName}, welcome to your live ${input.targetRole} interview for ${input.targetCompany}. I'm ${input.aiPersona}, ${personaCfg.roleTitle}. I've analyzed your uploaded resume—including your ${recentWork}—alongside the ${input.targetCompany} job description. To evaluate you fairly across every required pillar for this role, I divided our ${level} loop into ${topicOrder.length} structured sections: ${topicPreview}. I'll ask conversational follow-ups based on your spoken answers and grade strictly on technical depth, tradeoffs, problem decomposition, and clarity. Whenever you're ready to begin section one, just say you're ready.`;
 
   return {
     greetingOverview,
     topicOrder,
     questions,
+    interviewSections: sections,
+    assessmentRules,
     source: 'calibrated-fallback',
   };
 }
@@ -449,11 +574,25 @@ function buildPlanCacheKey(input: PlanInput): string {
     input.questionCount,
     input.aiPersona,
     (input.resumeSummary?.headline || '').slice(0, 80),
+    (input.resumeSummary?.rawText || '').slice(0, 120),
     (input.jobDescriptionText || '').slice(0, 160),
   ]);
 }
 
 export async function generateInterviewPlan(input: PlanInput): Promise<InterviewPlanPayload> {
+  const { sections: plannedSections, assessmentRules } = buildRoleInterviewSectionsAndRules({
+    targetRole: input.targetRole,
+    targetCompany: input.targetCompany,
+    interviewType: input.interviewType,
+    difficulty: input.difficulty,
+    questionCount: input.questionCount || 4,
+    resumeSkills: input.resumeSummary?.skills,
+    matchedSkills: input.resumeSummary?.matchedSkills,
+    missingSkills: input.resumeSummary?.missingSkills,
+    jobDescriptionText: input.jobDescriptionText,
+    experiences: input.resumeSummary?.experiences,
+  });
+
   const ai = getGeminiClient();
   if (!ai) {
     return buildDeterministicInterviewPlan(input);
@@ -476,23 +615,30 @@ export async function generateInterviewPlan(input: PlanInput): Promise<Interview
       const personaCfg = resolveVoiceConfig(input.aiPersona);
       const level = mapDifficultyLevel(input.difficulty);
       const count = Math.max(3, Math.min(5, input.questionCount || 4));
+      const sectionOutline = plannedSections
+        .map((s) => `${s.order}. ${s.sectionName} (${s.weightPercentage}% weight): ${s.topicsCovered.join(', ')} | Assess: ${s.assessmentCriteria.join('; ')}`)
+        .join('\n');
 
       const prompt = `You are ${input.aiPersona}, ${personaCfg.roleTitle}, conducting a real-time spoken mock interview for "${input.targetRole}" at "${input.targetCompany}" (calibration level: ${level}, round focus: ${input.interviewType}).
 
 Review all candidate context below carefully:
-- Candidate Name: ${input.candidateName || 'Alex Morgan'} (address first name "${firstName}")
-- Resume Headline: ${input.resumeSummary?.headline || 'Senior Software Engineer'}
+- Candidate Name: ${input.candidateName || 'Candidate'} (address first name "${firstName}")
+- Resume Headline: ${input.resumeSummary?.headline || 'Software Engineer'}
 - Resume Skills: ${(input.resumeSummary?.skills || []).join(', ')}
 - Matched Strengths: ${(input.resumeSummary?.matchedSkills || []).join(', ')}
 - Skill Gaps to Probe: ${(input.resumeSummary?.missingSkills || []).join(', ')}
-- Recent Resume Roles: ${JSON.stringify(input.resumeSummary?.experiences || [])}
+- Recent Resume Roles / Projects: ${JSON.stringify(input.resumeSummary?.experiences || [])}
+${input.resumeSummary?.rawText ? `- Uploaded Resume Excerpt:\n${input.resumeSummary.rawText.slice(0, 1400)}` : ''}
 - Target Job Description:
-${(input.jobDescriptionText || '').slice(0, 2200)}
+${(input.jobDescriptionText || '').slice(0, 2000)}
 
-Produce a structured JSON interview plan with exactly ${count} ordered topics and ${count} matching initial questions:
-1. "greetingOverview": Natural spoken opening by ${input.aiPersona} welcoming ${firstName}, mentioning 1-2 specific details reviewed from their resume & the ${input.targetCompany} JD, clearly stating the planned topic order (${count} topics in sequence), and ending by asking if the candidate is ready to begin. Keep it concise enough to be spoken naturally in ~25-35 seconds (under 115 words), no markdown formatting or bullet symbols.
-2. "topicOrder": Array of ${count} topics in logical interview progression (e.g. Resume Deep-Dive -> JD Core Technical Architecture -> Scalability/Edge Cases -> Tradeoffs & Leadership).
-3. "questions": Array of ${count} interview questions aligned 1-to-1 with "topicOrder", phrased naturally for a verbal conversation.`;
+Required Role-Divided Interview Sections (${count} sections in sequence):
+${sectionOutline}
+
+Produce a structured JSON interview plan with exactly ${count} ordered topics matching the sections above and ${count} matching initial questions:
+1. "greetingOverview": Natural spoken opening by ${input.aiPersona} welcoming ${firstName}, mentioning 1-2 specific details reviewed from their uploaded resume & the ${input.targetCompany} JD, clearly stating the ${count} planned interview sections in order, briefly noting how candidate answers will be assessed (technical depth, tradeoffs, problem decomposition, clarity), and ending by asking if the candidate is ready to begin. Keep it concise enough to be spoken naturally in ~25-35 seconds (under 120 words), no markdown formatting or bullet symbols.
+2. "topicOrder": Array of ${count} topics matching the ${count} divided sections in exact sequence.
+3. "questions": Array of ${count} interview questions aligned 1-to-1 with "topicOrder", grounded in the uploaded resume for the resume section and tailored to DSA/OOPs/SQL/Architecture/STAR as specified by each section.`;
 
       const rawJson = await callJsonTextModelWithFallback({
         ai,
@@ -561,15 +707,15 @@ Produce a structured JSON interview plan with exactly ${count} ordered topics an
         const normalizedTopics: PlannedTopicItem[] = parsed.topicOrder.slice(0, count).map((t: any, idx: number) => ({
           id: t.id || `topic_${idx + 1}`,
           order: idx + 1,
-          title: String(t.title || `Topic ${idx + 1}`),
-          category: String(t.category || 'Technical'),
+          title: String(t.title || plannedSections[idx]?.sectionName || `Topic ${idx + 1}`),
+          sectionName: plannedSections[idx]?.sectionName || String(t.title || `Section ${idx + 1}`),
+          category: String(t.category || plannedSections[idx]?.category || 'Technical'),
           focusSource:
             t.focusSource === 'resume' || t.focusSource === 'jd' || t.focusSource === 'role-calibration'
               ? t.focusSource
-              : idx === 0
-              ? 'resume'
-              : 'jd',
-          rationale: String(t.rationale || 'Calibrated to job description and resume.'),
+              : plannedSections[idx]?.focusSource || (idx === 0 ? 'resume' : 'jd'),
+          rationale: String(t.rationale || plannedSections[idx]?.rationale || 'Calibrated to job description and resume.'),
+          assessmentCriteria: plannedSections[idx]?.assessmentCriteria || [],
         }));
 
         const normalizedQuestions: PlannedInterviewQuestion[] = parsed.questions
@@ -578,6 +724,7 @@ Produce a structured JSON interview plan with exactly ${count} ordered topics an
             id: q.id || `q_${idx + 1}`,
             topicId: normalizedTopics[idx]?.id || `topic_${idx + 1}`,
             order: idx + 1,
+            sectionName: normalizedTopics[idx]?.sectionName || normalizedTopics[idx]?.title,
             category: String(q.category || normalizedTopics[idx]?.category || 'Technical'),
             difficulty: (['L4', 'L5', 'L6', 'L7'].includes(q.difficulty) ? q.difficulty : level) as
               | 'L4'
@@ -586,6 +733,7 @@ Produce a structured JSON interview plan with exactly ${count} ordered topics an
               | 'L7',
             questionText: String(q.questionText || ''),
             contextOrConstraint: q.contextOrConstraint ? String(q.contextOrConstraint) : undefined,
+            assessmentRule: (plannedSections[idx]?.assessmentCriteria || []).join(' • ') || undefined,
             evaluationRubric:
               Array.isArray(q.evaluationRubric) && q.evaluationRubric.length > 0
                 ? q.evaluationRubric.map((r: any) => ({
@@ -603,6 +751,8 @@ Produce a structured JSON interview plan with exactly ${count} ordered topics an
           greetingOverview: String(parsed.greetingOverview).trim(),
           topicOrder: normalizedTopics,
           questions: normalizedQuestions,
+          interviewSections: plannedSections,
+          assessmentRules,
           source: 'gemini',
         };
         if (recentPlanCache.size > 24) {
@@ -666,6 +816,22 @@ export function buildDeterministicTurnResponse(input: RespondTurnInput): Respond
     'queue',
     'websocket',
     'database',
+    'sql',
+    'index',
+    'b-tree',
+    'join',
+    'acid',
+    'deadlock',
+    'hashmap',
+    'heap',
+    'tree',
+    'graph',
+    'complexity',
+    'solid',
+    'interface',
+    'polymorphism',
+    'encapsulation',
+    'inheritance',
     'react',
     'state',
     'timeout',
@@ -1309,6 +1475,10 @@ const TECHNICAL_SIGNAL_TERMS = [
   'timeout', 'failover', 'indexing', 'async', 'schema', 'validation', 'lock', 'mutex', 'rate-limit',
   'load-balancer', 'cdn', 'hydration', 'memoization', 'bundler', 'accessibility', 'security', 'auth',
   'oauth', 'token', 'encryption', 'deployment', 'pipeline', 'testing', 'slo', 'sla', 'sli',
+  'sql', 'b-tree', 'acid', 'isolation', 'deadlock', 'normalization', 'denormalization', 'join',
+  'hashmap', 'heap', 'binary', 'graph', 'traversal', 'recursion', 'dynamic', 'amortized', 'big-o',
+  'polymorphism', 'encapsulation', 'inheritance', 'abstraction', 'solid', 'composition', 'interface',
+  'dependency', 'singleton', 'strategy', 'observer', 'factory',
 ];
 
 const BEHAVIORAL_SIGNAL_TERMS = [

@@ -9,10 +9,12 @@ export type InterviewPhase =
 export interface PlannedTopic {
   id: string;
   order: number;
+  sectionName?: string;
   title: string;
   category: string;
   focusSource: 'resume' | 'jd' | 'role-calibration';
   rationale: string;
+  assessmentCriteria?: string[];
 }
 
 export interface TranscriptEntry {

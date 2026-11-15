@@ -13,8 +13,8 @@ const app = express();
 const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
 
 // Middleware
-app.use(express.json({ limit: '10mb' }));
-app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+app.use(express.json({ limit: '15mb' }));
+app.use(express.urlencoded({ extended: true, limit: '15mb' }));
 
 // Server-side protected Supabase credentials
 // NEVER sent to the client or exposed in browser APIs
@@ -44,6 +44,10 @@ import {
   generateTranscriptEvaluationReport,
   warmNeuralVoiceEngine,
 } from './server/aiInterviewer';
+import {
+  analyzeResumeAndJobDescription,
+  buildRoleInterviewSectionsAndRules,
+} from './server/resumeParser';
 
 let serverSupabase: SupabaseClient | null = null;
 let cloudReachable = false;
@@ -390,6 +394,7 @@ app.get('/api/db/resume', async (req: Request, res: Response) => {
     }
 
     const matchAnalysis = data.match_analysis || {};
+    const localResume = enclaveDb.getResume(userId);
     res.json({
       data: {
         id: data.id,
@@ -397,7 +402,15 @@ app.get('/api/db/resume', async (req: Request, res: Response) => {
         fileSizeKb: Number(data.file_size_kb),
         atsScore: Number(data.ats_score),
         uploadedAt: data.uploaded_at,
-        parsedProfile: data.parsed_profile || {},
+        rawText: matchAnalysis.rawText || localResume?.rawText,
+        wordCount: matchAnalysis.wordCount || localResume?.wordCount,
+        atsBreakdown: matchAnalysis.atsBreakdown || localResume?.atsBreakdown,
+        keywordAnalysis: matchAnalysis.keywordAnalysis || localResume?.keywordAnalysis,
+        levelingFit: matchAnalysis.levelingFit || localResume?.levelingFit,
+        compensationBand: matchAnalysis.compensationBand || localResume?.compensationBand,
+        detectedRoleSections: matchAnalysis.detectedRoleSections || localResume?.detectedRoleSections,
+        assessmentRules: matchAnalysis.assessmentRules || localResume?.assessmentRules,
+        parsedProfile: data.parsed_profile || localResume?.parsedProfile || {},
         matchAnalysis: {
           overallMatchPercentage: matchAnalysis.overallMatchPercentage ?? 86,
           matchedSkills: matchAnalysis.matchedSkills || [],
@@ -444,6 +457,14 @@ app.post('/api/db/resume', async (req: Request, res: Response) => {
         missingSkills: matchAnalysisObj.missingSkills || resume.missingSkills || [],
         inferredStrengths: matchAnalysisObj.inferredStrengths || resume.inferredStrengths || [],
         suggestedFocusAreas: matchAnalysisObj.suggestedFocusAreas || resume.suggestedFocusAreas || [],
+        atsBreakdown: resume.atsBreakdown || undefined,
+        keywordAnalysis: resume.keywordAnalysis || undefined,
+        levelingFit: resume.levelingFit || undefined,
+        compensationBand: resume.compensationBand || undefined,
+        detectedRoleSections: resume.detectedRoleSections || undefined,
+        assessmentRules: resume.assessmentRules || undefined,
+        rawText: resume.rawText ? String(resume.rawText).slice(0, 12000) : undefined,
+        wordCount: resume.wordCount || undefined,
       },
       uploaded_at: new Date().toISOString(),
     });
@@ -1347,6 +1368,26 @@ app.get('/api/ai/voices', (_req: Request, res: Response) => {
   res.json({
     voices: Object.values(VOICE_PERSONAS),
   });
+});
+
+app.post('/api/ai/resume/parse-and-analyze', async (req: Request, res: Response) => {
+  try {
+    const analysis = await analyzeResumeAndJobDescription(req.body || {});
+    res.json({ success: true, analysis });
+  } catch (err: any) {
+    console.warn('[API] Resume parse/analyze notice:', err?.message || err);
+    res.status(400).json({ error: err?.message || 'Failed to parse and analyze resume document' });
+  }
+});
+
+app.post('/api/ai/interview/sections', (req: Request, res: Response) => {
+  try {
+    const result = buildRoleInterviewSectionsAndRules(req.body || {});
+    res.json({ success: true, ...result });
+  } catch (err: any) {
+    console.error('[API] Interview sections calculation error:', err?.message || err);
+    res.status(500).json({ error: 'Failed to compute interview sections and assessment rules' });
+  }
 });
 
 app.post('/api/ai/interview/plan', async (req: Request, res: Response) => {

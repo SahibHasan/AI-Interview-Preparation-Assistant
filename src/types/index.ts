@@ -78,12 +78,59 @@ export interface JobDescription {
   };
 }
 
+export interface AtsBreakdown {
+  keywordAlignment: number;
+  technicalDepth: number;
+  quantifiedImpact: number;
+  sectionCompleteness: number;
+}
+
+export interface KeywordMetric {
+  term: string;
+  status: 'present' | 'missing';
+  count: number;
+  density: string;
+  category: string;
+}
+
+export interface LevelingFitItem {
+  level: string;
+  bar: string;
+  fit: string;
+  score: number;
+  status: 'solid' | 'target' | 'gap';
+}
+
+export interface InterviewSectionPlan {
+  id: string;
+  order: number;
+  sectionName: string;
+  category: string;
+  focusSource: 'resume' | 'jd' | 'role-calibration';
+  weightPercentage: number;
+  topicsCovered: string[];
+  rationale: string;
+  assessmentCriteria: string[];
+}
+
+export interface AssessmentRule {
+  id: string;
+  dimension: string;
+  weightPercentage: number;
+  ruleDescription: string;
+  passSignals: string[];
+  redFlags: string[];
+}
+
 export interface ResumeAnalysis {
   id: string;
   fileName: string;
   fileSizeKb: number;
   uploadedAt: string;
   atsScore: number;
+  rawText?: string;
+  wordCount?: number;
+  atsBreakdown?: AtsBreakdown;
   parsedProfile: Partial<CandidateProfile>;
   matchAnalysis: {
     overallMatchPercentage: number;
@@ -92,15 +139,23 @@ export interface ResumeAnalysis {
     inferredStrengths: string[];
     suggestedFocusAreas: string[];
   };
+  keywordAnalysis?: KeywordMetric[];
+  levelingFit?: LevelingFitItem[];
+  compensationBand?: string;
+  detectedRoleSections?: InterviewSectionPlan[];
+  assessmentRules?: AssessmentRule[];
+  analysisSource?: 'gemini' | 'deterministic-parser';
 }
 
 export interface InterviewQuestion {
   id: string;
   order: number;
+  sectionName?: string;
   category: string;
   difficulty: 'L4' | 'L5' | 'L6' | 'L7';
   questionText: string;
   contextOrConstraint?: string;
+  assessmentRule?: string;
   sampleExpectedAnswer?: string;
   evaluationRubric: {
     criterion: string;

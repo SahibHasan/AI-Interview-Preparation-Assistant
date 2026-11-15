@@ -133,7 +133,7 @@ cp .env.example .env
 ```
 
 Edit `.env` with your credentials:
-```env
+```env 
 # Optional: Enables live Google Gemini question planning & AI transcript analysis
 # Without this, the calibrated deterministic engine & Kokoro-82M human voice still run out of the box.
 GEMINI_API_KEY="your-gemini-api-key"

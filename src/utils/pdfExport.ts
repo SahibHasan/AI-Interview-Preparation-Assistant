@@ -13,7 +13,7 @@ import {
   TextRun,
   WidthType,
 } from 'docx';
-import { EvaluationReport } from '../types';
+import { EvaluationReport, ResumeAnalysis } from '../types';
 
 function sanitizePdfText(value: string | undefined | null): string {
   return String(value || '')
@@ -864,6 +864,182 @@ export async function downloadTranscriptDOCX(
     ],
   });
 
+  const blob = await Packer.toBlob(doc);
+  triggerBlobDownload(blob, filename);
+  return filename;
+}
+
+/* =========================================================================
+ * 5. RESUME & JD ALIGNMENT REPORT (PDF & DOCX)
+ * ========================================================================= */
+export function downloadResumeAnalysisPDF(
+  analysis: ResumeAnalysis,
+  targetRole = 'Target Role',
+  targetCompany = 'Target Company',
+  candidateName = 'Candidate'
+): string {
+  const safeSlug = (analysis.fileName || 'resume').replace(/\.[^.]+$/, '').toLowerCase().replace(/[^a-z0-9]+/g, '_');
+  const filename = `preppilot_resume_ats_report_${safeSlug}.pdf`;
+  const pdf = new PdfWriter(`PrepPilot AI Resume & ATS Alignment Report - ${candidateName}`);
+  const breakdown = analysis.atsBreakdown || {
+    keywordAlignment: analysis.matchAnalysis.overallMatchPercentage,
+    technicalDepth: analysis.atsScore,
+    quantifiedImpact: 72,
+    sectionCompleteness: 85,
+  };
+
+  pdf.drawBanner(
+    `Resume ATS & JD Alignment Report | ${targetRole} @ ${targetCompany}`,
+    `ATS Score: ${analysis.atsScore}/100 | ${analysis.fileName}`
+  );
+
+  pdf.drawCalloutBox(
+    `CANDIDATE RESUME SNAPSHOT — ATS ${analysis.atsScore}/100 | JD MATCH ${analysis.matchAnalysis.overallMatchPercentage}%`,
+    [
+      `Candidate: ${analysis.parsedProfile.fullName || candidateName} (${analysis.parsedProfile.location || 'Remote'})`,
+      `Headline: ${analysis.parsedProfile.headline || targetRole}`,
+      `Document: ${analysis.fileName} (${analysis.fileSizeKb} KB, ${analysis.wordCount || 0} words extracted)`,
+      `Education: ${analysis.parsedProfile.education?.degree || 'Verified'} — ${analysis.parsedProfile.education?.institution || ''}`,
+    ],
+    [239, 244, 255],
+    [199, 210, 254]
+  );
+
+  pdf.drawSectionTitle('ATS Score Breakdown');
+  pdf.drawScoreProgressBar('JD Keyword Alignment', breakdown.keywordAlignment, '35% weight');
+  pdf.drawScoreProgressBar('Technical Competency Depth', breakdown.technicalDepth, '25% weight');
+  pdf.drawScoreProgressBar('Quantified Impact & Metrics', breakdown.quantifiedImpact, '20% weight');
+  pdf.drawScoreProgressBar('Section & Structure Completeness', breakdown.sectionCompleteness, '20% weight');
+  pdf.y += 2;
+
+  if ((analysis.matchAnalysis.matchedSkills || []).length > 0) {
+    pdf.drawSectionTitle('Verified Matched Skills');
+    analysis.matchAnalysis.matchedSkills.forEach((m) => {
+      pdf.drawParagraph(`* ${m.skill} (${m.category}) — ${m.matchStrength}% alignment`, { indent: 2 });
+    });
+    pdf.y += 3;
+  }
+
+  if ((analysis.matchAnalysis.missingSkills || []).length > 0) {
+    pdf.drawSectionTitle('Identified Competency Gaps');
+    analysis.matchAnalysis.missingSkills.forEach((g) => {
+      pdf.drawParagraph(`* [${g.importance.toUpperCase()}] ${g.skill} (${g.category})`, { indent: 2, color: [180, 83, 9] });
+    });
+    pdf.y += 3;
+  }
+
+  if ((analysis.matchAnalysis.inferredStrengths || []).length > 0) {
+    pdf.drawSectionTitle('Key Resume Strengths');
+    analysis.matchAnalysis.inferredStrengths.forEach((s, i) => {
+      pdf.drawParagraph(`${i + 1}. ${s}`, { indent: 2 });
+    });
+    pdf.y += 3;
+  }
+
+  if ((analysis.matchAnalysis.suggestedFocusAreas || []).length > 0) {
+    pdf.drawSectionTitle('Recommended Interview Focus & Improvements');
+    analysis.matchAnalysis.suggestedFocusAreas.forEach((f, i) => {
+      pdf.drawParagraph(`${i + 1}. ${f}`, { indent: 2, color: [53, 37, 205] });
+    });
+    pdf.y += 3;
+  }
+
+  if ((analysis.detectedRoleSections || []).length > 0) {
+    pdf.drawSectionTitle('Planned Role-Divided Interview Sections');
+    analysis.detectedRoleSections!.forEach((sec) => {
+      pdf.drawParagraph(
+        `${sec.order}. ${sec.sectionName} (${sec.weightPercentage}% weight): ${sec.rationale}`,
+        { indent: 2, bold: true }
+      );
+      pdf.drawParagraph(`Assess: ${sec.assessmentCriteria.join(' | ')}`, { indent: 5, fontSize: 8.6 });
+    });
+  }
+
+  pdf.addPageFooters(`PrepPilot AI | Resume & ATS Alignment Report | ${analysis.fileName}`);
+  const blob = pdf.doc.output('blob');
+  triggerBlobDownload(blob, filename);
+  return filename;
+}
+
+export async function downloadResumeAnalysisDOCX(
+  analysis: ResumeAnalysis,
+  targetRole = 'Target Role',
+  targetCompany = 'Target Company',
+  candidateName = 'Candidate'
+): Promise<string> {
+  const safeSlug = (analysis.fileName || 'resume').replace(/\.[^.]+$/, '').toLowerCase().replace(/[^a-z0-9]+/g, '_');
+  const filename = `preppilot_resume_ats_report_${safeSlug}.docx`;
+  const breakdown = analysis.atsBreakdown || {
+    keywordAlignment: analysis.matchAnalysis.overallMatchPercentage,
+    technicalDepth: analysis.atsScore,
+    quantifiedImpact: 72,
+    sectionCompleteness: 85,
+  };
+
+  const children: (Paragraph | Table)[] = [
+    new Paragraph({
+      spacing: { after: 60 },
+      children: [
+        new TextRun({
+          text: 'PrepPilot AI — Resume ATS & JD Alignment Report',
+          bold: true,
+          size: 34,
+          color: '0B1C30',
+          font: 'Calibri',
+        }),
+      ],
+    }),
+    makeBody(
+      `${analysis.parsedProfile.fullName || candidateName} | ${targetRole} @ ${targetCompany} | Document: ${analysis.fileName} (${analysis.fileSizeKb} KB)`,
+      { color: '565E74' }
+    ),
+    makeBody(
+      `ATS Score: ${analysis.atsScore}/100 | Overall JD Match: ${analysis.matchAnalysis.overallMatchPercentage}% | Extracted Words: ${analysis.wordCount || 0}`,
+      { bold: true, color: '3525CD' }
+    ),
+    makeHeading('1. ATS Score Breakdown'),
+    new Table({
+      width: { size: 100, type: WidthType.PERCENTAGE },
+      rows: [
+        new TableRow({
+          children: [
+            makeCell('ATS Dimension', true, 'EFF4FF', '3525CD'),
+            makeCell('Weight', true, 'EFF4FF', '3525CD'),
+            makeCell('Score', true, 'EFF4FF', '3525CD'),
+          ],
+        }),
+        new TableRow({ children: [makeCell('JD Keyword Alignment'), makeCell('35%'), makeCell(`${breakdown.keywordAlignment}/100`, true)] }),
+        new TableRow({ children: [makeCell('Technical Competency Depth'), makeCell('25%'), makeCell(`${breakdown.technicalDepth}/100`, true)] }),
+        new TableRow({ children: [makeCell('Quantified Impact & Metrics'), makeCell('20%'), makeCell(`${breakdown.quantifiedImpact}/100`, true)] }),
+        new TableRow({ children: [makeCell('Section & Structure Completeness'), makeCell('20%'), makeCell(`${breakdown.sectionCompleteness}/100`, true)] }),
+      ],
+    }),
+    makeHeading('2. Verified Matched Skills'),
+    ...analysis.matchAnalysis.matchedSkills.map((m) =>
+      makeBody(`• ${m.skill} (${m.category}) — ${m.matchStrength}% match`, { color: '047857' })
+    ),
+    makeHeading('3. Competency Gaps & Action Plan'),
+    ...analysis.matchAnalysis.missingSkills.map((g) =>
+      makeBody(`• [${g.importance.toUpperCase()}] ${g.skill} (${g.category})`, { color: 'B45309' })
+    ),
+    makeHeading('4. Recommended Interview Focus'),
+    ...analysis.matchAnalysis.suggestedFocusAreas.map((f, i) => makeBody(`${i + 1}. ${f}`)),
+  ];
+
+  if ((analysis.detectedRoleSections || []).length > 0) {
+    children.push(makeHeading('5. Role-Divided Interview Sections'));
+    analysis.detectedRoleSections!.forEach((sec) => {
+      children.push(
+        makeBody(`${sec.order}. ${sec.sectionName} (${sec.weightPercentage}% weight): ${sec.rationale}`, {
+          bold: true,
+          color: '3525CD',
+        })
+      );
+      children.push(makeBody(`Assessment Criteria: ${sec.assessmentCriteria.join(' | ')}`));
+    });
+  }
+
+  const doc = new Document({ sections: [{ children }] });
   const blob = await Packer.toBlob(doc);
   triggerBlobDownload(blob, filename);
   return filename;

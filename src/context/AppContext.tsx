@@ -55,13 +55,30 @@ export interface FinishInterviewPayload {
   durationSeconds?: number;
 }
 
+export interface AnalyzeResumePayload {
+  fileName: string;
+  fileBase64?: string;
+  rawText?: string;
+  mimeType?: string;
+  jdText: string;
+  customSkills?: string[];
+  targetRole?: string;
+  targetCompany?: string;
+  interviewType?: InterviewSetupState['interviewType'];
+  difficulty?: InterviewSetupState['difficulty'];
+  questionCount?: number;
+}
+
 interface AppContextType {
   profile: CandidateProfile;
   updateProfile: (updates: Partial<CandidateProfile>) => Promise<void>;
   resumeAnalysis: ResumeAnalysis;
   jobDescriptionText: string;
   setJobDescriptionText: (text: string) => void;
-  analyzeResumeAndJD: (resumeFileName: string, jdText: string) => Promise<void>;
+  analyzeResumeAndJD: (
+    arg1: string | AnalyzeResumePayload,
+    jdTextArg?: string
+  ) => Promise<ResumeAnalysis>;
   interviewSetup: InterviewSetupState;
   updateInterviewSetup: (updates: Partial<InterviewSetupState>) => void;
   questions: InterviewQuestion[];
@@ -125,6 +142,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     userId?: string | null;
     profile?: CandidateProfile;
     resumeAnalysis?: ResumeAnalysis;
+    interviewSetup?: InterviewSetupState;
     learningPlan?: LearningPlan;
     sessionHistory?: SessionHistoryItem[];
     activeReport?: EvaluationReport | null;
@@ -138,6 +156,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         JSON.stringify({
           profile: overrides.profile ?? profile,
           resumeAnalysis: overrides.resumeAnalysis ?? resumeAnalysis,
+          interviewSetup: overrides.interviewSetup ?? interviewSetup,
           learningPlan: overrides.learningPlan ?? learningPlan,
           sessionHistory: overrides.sessionHistory ?? sessionHistory,
           activeReport: overrides.activeReport !== undefined ? overrides.activeReport : activeReport,
@@ -211,6 +230,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
             }));
           }
           if (parsed.resumeAnalysis) setResumeAnalysis(parsed.resumeAnalysis);
+          if (parsed.interviewSetup) {
+            setInterviewSetup((prev) => ({ ...prev, ...parsed.interviewSetup }));
+          }
           if (parsed.learningPlan) setLearningPlan(parsed.learningPlan);
           if (Array.isArray(parsed.savedReports) && parsed.savedReports.length > 0) {
             cachedReports = parsed.savedReports;
@@ -247,7 +269,14 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
             const rawDbProf = dbProfile as any;
             const resolvedRole = rawDbProf.targetRole || rawDbProf.target_role;
             const resolvedCompany = rawDbProf.targetCompany || rawDbProf.target_company;
-            if (resolvedRole || resolvedCompany) {
+            let hasSavedSetup = false;
+            try {
+              const savedRaw = localStorage.getItem(getAppStateKey(user.id));
+              hasSavedSetup = Boolean(savedRaw && JSON.parse(savedRaw)?.interviewSetup?.targetRole);
+            } catch {
+              hasSavedSetup = false;
+            }
+            if (!hasSavedSetup && (resolvedRole || resolvedCompany)) {
               setInterviewSetup((prev) => ({
                 ...prev,
                 targetRole: resolvedRole || prev.targetRole,
@@ -321,61 +350,93 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   const updateInterviewSetup = (updates: Partial<InterviewSetupState>) => {
-    setInterviewSetup((prev) => ({ ...prev, ...updates }));
+    setInterviewSetup((prev) => {
+      const next = { ...prev, ...updates };
+      persistLocalAppState({ interviewSetup: next });
+      return next;
+    });
   };
 
-  const analyzeResumeAndJD = async (resumeFileName: string, jdText: string) => {
-    setJobDescriptionText(jdText);
+  const analyzeResumeAndJD = async (
+    arg1: string | AnalyzeResumePayload,
+    jdTextArg?: string
+  ): Promise<ResumeAnalysis> => {
+    const payload: AnalyzeResumePayload =
+      typeof arg1 === 'string'
+        ? { fileName: arg1, jdText: jdTextArg ?? jobDescriptionText }
+        : arg1;
 
-    const isStripe =
-      jdText.toLowerCase().includes('stripe') || interviewSetup.targetCompany.toLowerCase().includes('stripe');
-    const isSenior =
-      jdText.toLowerCase().includes('senior') ||
-      jdText.toLowerCase().includes('staff') ||
-      interviewSetup.difficulty === 'senior-staff';
+    const effectiveJdText = payload.jdText ?? jobDescriptionText;
+    setJobDescriptionText(effectiveJdText);
 
-    const newAnalysis: ResumeAnalysis = {
-      ...sampleResumeAnalysis,
-      id: `analysis_${Date.now()}`,
-      fileName: resumeFileName || sampleResumeAnalysis.fileName,
-      uploadedAt: 'Just now',
-      atsScore: isSenior ? 94 : 88,
-      matchAnalysis: {
-        overallMatchPercentage: isStripe ? 86 : 82,
-        matchedSkills: [
-          { skill: 'TypeScript & React Architecture', category: 'Frontend Core', matchStrength: 98 },
-          { skill: 'Distributed Client Caching', category: 'Architecture', matchStrength: 92 },
-          { skill: 'Web Vitals & Performance Optimization', category: 'Reliability', matchStrength: 90 },
-          { skill: 'State Synchronization & Events', category: 'Systems', matchStrength: 88 },
-          { skill: 'Modern CSS & Design Systems', category: 'UI Craft', matchStrength: 95 },
-        ],
-        missingSkills: [
-          { skill: 'High-Throughput Partition Consensus', category: 'Distributed Systems', importance: 'critical' },
-          { skill: 'Decoupled Client Edge Idempotency', category: 'Reliability', importance: 'critical' },
-          { skill: 'Multi-Region WAN Jitter Compensation', category: 'Network Engineering', importance: 'moderate' },
-        ],
-        inferredStrengths: [
-          'Demonstrated expertise in resilient front-end application architectures',
-          'Production-tested optimistic state mutations and offline handling',
-          'Deep familiarity with component design token systems',
-        ],
-        suggestedFocusAreas: [
-          'Pre-vote phase Raft algorithms during WAN jitter',
-          'Idempotent API retry guarantees on degraded connections',
-          'High-density dashboard streaming optimization',
-        ],
-      },
+    const effectiveRole = payload.targetRole || interviewSetup.targetRole;
+    const effectiveCompany = payload.targetCompany || interviewSetup.targetCompany;
+
+    const response = await fetch('/api/ai/resume/parse-and-analyze', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        fileName: payload.fileName || resumeAnalysis.fileName,
+        fileBase64: payload.fileBase64,
+        rawText: payload.rawText ?? (!payload.fileBase64 ? resumeAnalysis.rawText : undefined),
+        mimeType: payload.mimeType,
+        jobDescriptionText: effectiveJdText,
+        targetRole: effectiveRole,
+        targetCompany: effectiveCompany,
+        interviewType: payload.interviewType || interviewSetup.interviewType,
+        difficulty: payload.difficulty || interviewSetup.difficulty,
+        questionCount: payload.questionCount || interviewSetup.questionCount || 5,
+        candidateName: user?.name || profile.fullName,
+        customSkills: payload.customSkills,
+      }),
+    });
+
+    const data = await response.json();
+    if (!response.ok || !data?.analysis) {
+      throw new Error(data?.error || 'Failed to parse and analyze resume document.');
+    }
+
+    const newAnalysis: ResumeAnalysis = data.analysis;
+
+    const updatedProfile: CandidateProfile = {
+      ...profile,
+      fullName: newAnalysis.parsedProfile?.fullName || profile.fullName,
+      headline: newAnalysis.parsedProfile?.headline || profile.headline,
+      location: newAnalysis.parsedProfile?.location || profile.location,
+      yearsOfExperience: newAnalysis.parsedProfile?.yearsOfExperience ?? profile.yearsOfExperience,
+      education: newAnalysis.parsedProfile?.education?.degree
+        ? newAnalysis.parsedProfile.education
+        : profile.education,
+      skills:
+        Array.isArray(newAnalysis.parsedProfile?.skills) && newAnalysis.parsedProfile.skills.length > 0
+          ? newAnalysis.parsedProfile.skills
+          : profile.skills,
+      extractedExperiences:
+        Array.isArray(newAnalysis.parsedProfile?.extractedExperiences) &&
+        newAnalysis.parsedProfile.extractedExperiences.length > 0
+          ? newAnalysis.parsedProfile.extractedExperiences
+          : profile.extractedExperiences,
     };
 
+    setProfile(updatedProfile);
     setResumeAnalysis(newAnalysis);
-    persistLocalAppState({ resumeAnalysis: newAnalysis });
+    persistLocalAppState({
+      profile: updatedProfile,
+      resumeAnalysis: newAnalysis,
+    });
 
     if (user && isSupabaseConfigured()) {
       await Promise.all([
         saveResumeInDb(user.id, newAnalysis),
-        saveJobDescriptionInDb(user.id, interviewSetup.targetRole, interviewSetup.targetCompany, jdText),
+        upsertProfileInDb(user.id, updatedProfile),
+        saveJobDescriptionInDb(user.id, effectiveRole, effectiveCompany, effectiveJdText, {
+          matchedSkills: newAnalysis.matchAnalysis.matchedSkills.map((s) => s.skill),
+          missingSkills: newAnalysis.matchAnalysis.missingSkills.map((s) => s.skill),
+        }),
       ]);
     }
+
+    return newAnalysis;
   };
 
   const saveAnswer = (
