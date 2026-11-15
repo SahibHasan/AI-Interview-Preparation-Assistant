@@ -186,4 +186,12 @@ If connecting a cloud Supabase project, apply the SQL migrations in `/supabase/m
 
 ## License
 
-Built for engineering interview preparation and academic demonstration. See package dependencies for respective open-source licenses (`kokoro-js` / Kokoro-82M Apache 2.0).
+Built for engineering interview preparation and academic demonstration. See package dependencies for respective open-source licence.
+
+---
+
+## Author
+
+**Sahib Hasan**
+* GitHub: [@SahibHasan](https://github.com/SahibHasan)
+* LinkedIn: https://in.linkedin.com/in/sahib-hasan-a27294320
