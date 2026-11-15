@@ -5,6 +5,7 @@ import {
   buildDeterministicTurnResponse,
   buildDeterministicEvaluationFromTranscript,
   resolveVoiceConfig,
+  prepareNaturalSpeechText,
   isQuotaOrRateLimitError,
   parseRetryDelayMs,
   isModelInCooldown,
@@ -95,12 +96,37 @@ test('buildDeterministicTurnResponse asks personalized follow-up on first verbal
   assert.match(nextTurn.spokenResponse, new RegExp(plan.topicOrder[1].title.slice(0, 12)));
 });
 
-test('resolveVoiceConfig maps interviewer personas to realistic neural voice models cleanly', () => {
-  assert.equal(resolveVoiceConfig('Sarah').voiceName, 'Kore');
-  assert.equal(resolveVoiceConfig('Dr. Elena Vance').voiceName, 'Zephyr');
-  assert.equal(resolveVoiceConfig('Marcus Reed').voiceName, 'Charon');
-  assert.equal(resolveVoiceConfig('David Chen').voiceName, 'Puck');
-  assert.equal(resolveVoiceConfig('Sarah', 'Fenrir').voiceName, 'Fenrir');
+test('resolveVoiceConfig maps interviewer personas to realistic Kokoro-82M, Microsoft & Gemini neural voices cleanly', () => {
+  const sarah = resolveVoiceConfig('Sarah');
+  assert.equal(sarah.voiceName, 'Kore');
+  assert.equal(sarah.kokoroVoiceId, 'af_heart');
+  assert.equal(sarah.edgeVoiceName, 'en-US-AvaMultilingualNeural');
+
+  const elena = resolveVoiceConfig('Dr. Elena Vance');
+  assert.equal(elena.voiceName, 'Zephyr');
+  assert.equal(elena.kokoroVoiceId, 'af_bella');
+  assert.equal(elena.edgeVoiceName, 'en-US-EmmaMultilingualNeural');
+
+  const marcus = resolveVoiceConfig('Marcus Reed');
+  assert.equal(marcus.voiceName, 'Charon');
+  assert.equal(marcus.kokoroVoiceId, 'am_michael');
+  assert.equal(marcus.edgeVoiceName, 'en-US-AndrewMultilingualNeural');
+
+  const david = resolveVoiceConfig('David Chen');
+  assert.equal(david.voiceName, 'Puck');
+  assert.equal(david.kokoroVoiceId, 'am_puck');
+  assert.equal(david.edgeVoiceName, 'en-US-BrianMultilingualNeural');
+
+  const fenrirOverride = resolveVoiceConfig('Sarah', 'Fenrir');
+  assert.equal(fenrirOverride.voiceName, 'Fenrir');
+  assert.equal(fenrirOverride.kokoroVoiceId, 'am_adam');
+  assert.equal(fenrirOverride.edgeVoiceName, 'en-US-SteffanNeural');
+
+  const edgeText = prepareNaturalSpeechText('Walk me through **P99** SLOs in this L6 JD.', 'kokoro-neural-tts');
+  assert.equal(edgeText.includes('<breath>'), false);
+  assert.match(edgeText, /p ninety nine/i);
+  assert.match(edgeText, /level 6/i);
+  assert.match(edgeText, /job description/i);
 });
 
 test('buildDeterministicEvaluationFromTranscript evaluates real spoken turns and preserves transcript evidence', () => {

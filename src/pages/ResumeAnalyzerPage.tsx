@@ -30,7 +30,7 @@ import { AnimatedCounter } from '../components/common/AnimatedCounter';
 
 export const ResumeAnalyzerPage: React.FC = () => {
   const { user } = useAuth();
-  const { profile, resumeAnalysis, jobDescriptionText, analyzeResumeAndJD, updateInterviewSetup } = useApp();
+  const { profile, resumeAnalysis, jobDescriptionText, interviewSetup, analyzeResumeAndJD, updateInterviewSetup } = useApp();
   const { showToast } = useToast();
   const navigate = useNavigate();
 
@@ -138,8 +138,8 @@ export const ResumeAnalyzerPage: React.FC = () => {
 
   const handleStartInterviewWithRole = () => {
     updateInterviewSetup({
-      targetRole: 'Senior Frontend Engineer',
-      targetCompany: 'Stripe',
+      targetRole: interviewSetup.targetRole || user?.targetRole || 'Senior Frontend Engineer',
+      targetCompany: interviewSetup.targetCompany || user?.targetCompany || 'Stripe',
       interviewType: 'technical',
     });
     showToast({
@@ -266,10 +266,10 @@ export const ResumeAnalyzerPage: React.FC = () => {
         <div className="hidden lg:flex items-center gap-3 px-3 text-xs text-[#565e74]">
           <span className="flex items-center gap-1.5">
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-            ATS Index: <strong className="text-[#0b1c30]"><AnimatedCounter value={92} suffix="/100" /></strong>
+            ATS Index: <strong className="text-[#0b1c30]"><AnimatedCounter value={resumeAnalysis.atsScore} suffix="/100" /></strong>
           </span>
           <span className="text-[#c7c4d8]">•</span>
-          <span className="text-[#3525cd] font-medium">Model: Gemini 2.5 Flash Embedding</span>
+          <span className="text-[#3525cd] font-medium">Neural Resume Alignment</span>
         </div>
       </div>
 
@@ -473,7 +473,9 @@ export const ResumeAnalyzerPage: React.FC = () => {
                   <Briefcase className="w-5 h-5 text-[#3525cd]" />
                   <h3 className="font-heading text-base font-bold text-[#0b1c30]">Target Job Description</h3>
                 </div>
-                <span className="text-xs text-[#565e74]">Target: Senior Frontend Engineer @ Stripe</span>
+                <span className="text-xs text-[#565e74]">
+                  Target: {interviewSetup.targetRole || 'Senior Frontend Engineer'} @ {interviewSetup.targetCompany || 'Stripe'}
+                </span>
               </div>
 
               <div className="relative">
@@ -636,7 +638,7 @@ export const ResumeAnalyzerPage: React.FC = () => {
                   keywordFilter === 'present' ? 'bg-[#4f46e5] text-white shadow-sm' : 'text-[#565e74]'
                 }`}
               >
-                Present (6)
+                Present ({keywordData.filter((k) => k.status === 'present').length})
               </button>
               <button
                 type="button"
@@ -645,7 +647,7 @@ export const ResumeAnalyzerPage: React.FC = () => {
                   keywordFilter === 'missing' ? 'bg-[#4f46e5] text-white shadow-sm' : 'text-[#565e74]'
                 }`}
               >
-                Gaps (3)
+                Gaps ({keywordData.filter((k) => k.status === 'missing').length})
               </button>
             </div>
           </div>

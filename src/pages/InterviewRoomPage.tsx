@@ -672,8 +672,14 @@ export const InterviewRoomPage: React.FC = () => {
                   <p className="text-xs text-[#565e74] truncate">
                     {getVoiceToneLabel(interviewSetup.aiPersona, selectedVoice)}
                   </p>
-                  <p className="text-[11px] text-[#777587] truncate mt-0.5">
-                    {voiceProvider === 'gemini-neural-tts' ? 'Neural Human Voice Agent' : 'Natural Browser Voice'}
+                  <p className="text-[11px] text-[#3525cd] font-medium truncate mt-0.5">
+                    {voiceProvider === 'kokoro-neural-tts'
+                      ? 'Human Neural Voice Agent · Kokoro-82M Studio'
+                      : voiceProvider === 'edge-neural-tts'
+                      ? 'Human Neural Voice Agent · Studio Audio'
+                      : voiceProvider === 'gemini-neural-tts'
+                      ? 'Human Neural Voice Agent · Gemini'
+                      : 'Natural Browser Voice'}
                   </p>
                 </div>
               </div>

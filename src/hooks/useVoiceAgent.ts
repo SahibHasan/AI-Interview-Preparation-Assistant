@@ -37,7 +37,7 @@ export interface SpeakOptions {
 export const useVoiceAgent = () => {
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [isSynthesizing, setIsSynthesizing] = useState(false);
-  const [voiceProvider, setVoiceProvider] = useState<'gemini-neural-tts' | 'neural-browser'>('gemini-neural-tts');
+  const [voiceProvider, setVoiceProvider] = useState<'kokoro-neural-tts' | 'edge-neural-tts' | 'gemini-neural-tts' | 'neural-browser'>('kokoro-neural-tts');
   const [activeVoiceName, setActiveVoiceName] = useState<string>('Kore');
   const [audioBlocked, setAudioBlocked] = useState(false);
 
@@ -157,6 +157,26 @@ export const useVoiceAgent = () => {
     []
   );
 
+  const fetchTtsAudioChunk = useCallback(
+    async (chunkText: string, persona?: string, voiceOverride?: string) => {
+      const res = await fetch('/api/ai/tts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: chunkText, persona, voiceOverride }),
+      });
+      if (!res.ok) return null;
+      const data = await res.json();
+      if (data.voiceName) setActiveVoiceName(data.voiceName);
+      if (!data.audioBase64 && data.quotaLimited) {
+        ttsCooldownUntilRef.current = Date.now() + 5 * 60 * 1000;
+      } else if (data.audioBase64) {
+        ttsCooldownUntilRef.current = 0;
+      }
+      return data;
+    },
+    []
+  );
+
   const speak = useCallback(
     async ({ text, persona, voiceOverride, onEnd }: SpeakOptions) => {
       if (!text.trim()) return;
@@ -170,57 +190,85 @@ export const useVoiceAgent = () => {
         return;
       }
 
+      const chunks = splitIntoNaturalSpeechChunks(text);
+      if (chunks.length === 0) {
+        onEnd?.();
+        return;
+      }
+
       setIsSynthesizing(true);
 
       try {
-        const res = await fetch('/api/ai/tts', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ text, persona, voiceOverride }),
-        });
+        let nextPromise: Promise<any> | null = fetchTtsAudioChunk(chunks[0], persona, voiceOverride);
 
-        if (speechGenerationRef.current !== myGen) return;
+        for (let idx = 0; idx < chunks.length; idx++) {
+          if (speechGenerationRef.current !== myGen) return;
 
-        if (res.ok) {
-          const data = await res.json();
-          if (data.voiceName) setActiveVoiceName(data.voiceName);
-          if (data.quotaLimited) {
-            ttsCooldownUntilRef.current = Date.now() + 5 * 60 * 1000;
+          const data = await nextPromise;
+          if (speechGenerationRef.current !== myGen) return;
+
+          if (!data || !data.audioBase64) {
+            setIsSynthesizing(false);
+            const remaining = chunks.slice(idx).join(' ');
+            speakWithBrowserVoice(remaining, persona, voiceOverride, onEnd, myGen);
+            return;
           }
 
-          if (data.audioBase64) {
-            setVoiceProvider('gemini-neural-tts');
-            setIsSynthesizing(false);
+          // Prefetch next chunk in parallel while current human voice chunk plays aloud
+          nextPromise =
+            idx + 1 < chunks.length
+              ? fetchTtsAudioChunk(chunks[idx + 1], persona, voiceOverride).catch(() => null)
+              : null;
 
+          const resolvedProvider =
+            data.provider === 'kokoro-neural-tts'
+              ? 'kokoro-neural-tts'
+              : data.provider === 'gemini-neural-tts'
+              ? 'gemini-neural-tts'
+              : 'edge-neural-tts';
+          setVoiceProvider(resolvedProvider);
+          setIsSynthesizing(false);
+
+          const playedOk = await new Promise<'ok' | 'blocked' | 'error' | 'cancelled'>((resolve) => {
             const audio = new Audio(`data:${data.mimeType || 'audio/wav'};base64,${data.audioBase64}`);
             audioElRef.current = audio;
 
             audio.onended = () => {
-              if (speechGenerationRef.current === myGen) {
-                setIsSpeaking(false);
-                audioElRef.current = null;
-                onEnd?.();
-              }
+              if (audioElRef.current === audio) audioElRef.current = null;
+              resolve(speechGenerationRef.current === myGen ? 'ok' : 'cancelled');
             };
             audio.onerror = () => {
-              if (speechGenerationRef.current === myGen) {
-                audioElRef.current = null;
-                speakWithBrowserVoice(text, persona, voiceOverride, onEnd, myGen);
-              }
+              if (audioElRef.current === audio) audioElRef.current = null;
+              resolve('error');
             };
 
-            try {
-              setIsSpeaking(true);
-              await audio.play();
-              return;
-            } catch {
-              // Browser autoplay policy blocked un-gestured playback; expose clean one-click resume
-              setIsSpeaking(false);
-              setAudioBlocked(true);
-              return;
-            }
+            setIsSpeaking(true);
+            audio.play().catch(() => {
+              if (audioElRef.current === audio) audioElRef.current = null;
+              resolve('blocked');
+            });
+          });
+
+          if (speechGenerationRef.current !== myGen || playedOk === 'cancelled') {
+            return;
+          }
+          if (playedOk === 'blocked') {
+            setIsSpeaking(false);
+            setAudioBlocked(true);
+            return;
+          }
+          if (playedOk === 'error') {
+            const remaining = chunks.slice(idx).join(' ');
+            speakWithBrowserVoice(remaining, persona, voiceOverride, onEnd, myGen);
+            return;
           }
         }
+
+        if (speechGenerationRef.current === myGen) {
+          setIsSpeaking(false);
+          onEnd?.();
+        }
+        return;
       } catch {
         // Fallback smoothly to best available browser natural voice
       }
@@ -229,7 +277,7 @@ export const useVoiceAgent = () => {
       setIsSynthesizing(false);
       speakWithBrowserVoice(text, persona, voiceOverride, onEnd, myGen);
     },
-    [stopSpeaking, speakWithBrowserVoice]
+    [stopSpeaking, speakWithBrowserVoice, fetchTtsAudioChunk]
   );
 
   const replayLastSpeech = useCallback(() => {

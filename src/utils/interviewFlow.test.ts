@@ -43,7 +43,7 @@ test('splitIntoNaturalSpeechChunks groups long prompts into conversational sente
 });
 
 test('getVoiceToneLabel returns human-readable voice agent labels', () => {
-  assert.equal(getVoiceToneLabel('Sarah'), 'Kore · Warm Executive');
-  assert.equal(getVoiceToneLabel('Marcus Reed'), 'Charon · Grounded Director');
-  assert.equal(getVoiceToneLabel('Sarah', 'Zephyr'), 'Zephyr · Crisp Analytical');
+  assert.equal(getVoiceToneLabel('Sarah'), 'Kore · Warm Executive (Ava)');
+  assert.equal(getVoiceToneLabel('Marcus Reed'), 'Charon · Grounded Director (Andrew)');
+  assert.equal(getVoiceToneLabel('Sarah', 'Zephyr'), 'Zephyr · Crisp Analytical (Emma)');
 });

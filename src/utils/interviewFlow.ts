@@ -33,11 +33,11 @@ export interface VoiceOption {
 }
 
 export const INTERVIEWER_VOICE_OPTIONS: VoiceOption[] = [
-  { id: 'Kore', label: 'Kore · Warm Executive', description: 'Calm, articulate female voice' },
-  { id: 'Zephyr', label: 'Zephyr · Crisp Analytical', description: 'Measured, bright female voice' },
-  { id: 'Charon', label: 'Charon · Grounded Director', description: 'Deep, steady male voice' },
-  { id: 'Puck', label: 'Puck · Collaborative Lead', description: 'Friendly, expressive male voice' },
-  { id: 'Fenrir', label: 'Fenrir · Bar-Raiser', description: 'Incisive, confident male voice' },
+  { id: 'Kore', label: 'Kore · Warm Executive (Ava)', description: 'Calm, natural human female voice' },
+  { id: 'Zephyr', label: 'Zephyr · Crisp Analytical (Emma)', description: 'Measured, articulate human female voice' },
+  { id: 'Charon', label: 'Charon · Grounded Director (Andrew)', description: 'Warm, steady human male baritone' },
+  { id: 'Puck', label: 'Puck · Collaborative Lead (Brian)', description: 'Friendly, expressive human male voice' },
+  { id: 'Fenrir', label: 'Fenrir · Bar-Raiser (Steffan)', description: 'Confident, incisive human male voice' },
 ];
 
 export function isCandidateReadyConfirmation(spokenText: string): boolean {
@@ -191,14 +191,14 @@ export function getVoiceToneLabel(personaName?: string, voiceOverride?: string):
   }
   switch (personaName) {
     case 'Dr. Elena Vance':
-      return 'Zephyr · Crisp Analytical';
+      return 'Zephyr · Crisp Analytical (Emma)';
     case 'Marcus Reed':
-      return 'Charon · Grounded Director';
+      return 'Charon · Grounded Director (Andrew)';
     case 'David Chen':
-      return 'Puck · Collaborative Lead';
+      return 'Puck · Collaborative Lead (Brian)';
     case 'Sarah':
     default:
-      return 'Kore · Warm Executive';
+      return 'Kore · Warm Executive (Ava)';
   }
 }
 

@@ -1,4 +1,6 @@
 import { GoogleGenAI, ThinkingLevel, Type } from '@google/genai';
+import { Communicate } from '@travisvn/edge-tts';
+import { KokoroTTS } from 'kokoro-js';
 
 export type PersonaName = 'Sarah' | 'Dr. Elena Vance' | 'Marcus Reed' | 'David Chen';
 export type PrebuiltVoiceName = 'Kore' | 'Zephyr' | 'Charon' | 'Puck' | 'Fenrir';
@@ -6,41 +8,97 @@ export type PrebuiltVoiceName = 'Kore' | 'Zephyr' | 'Charon' | 'Puck' | 'Fenrir'
 export interface VoicePersonaConfig {
   persona: PersonaName;
   voiceName: PrebuiltVoiceName;
+  kokoroVoiceId: 'af_heart' | 'af_bella' | 'am_michael' | 'am_puck' | 'am_adam';
+  kokoroSpeed: number;
+  edgeVoiceName: string;
+  edgeRate: string;
+  edgePitch: string;
   roleTitle: string;
   toneLabel: string;
   speechStyle: string;
 }
 
+export const EDGE_VOICE_PROFILES: Record<
+  PrebuiltVoiceName,
+  {
+    kokoroVoiceId: 'af_heart' | 'af_bella' | 'am_michael' | 'am_puck' | 'am_adam';
+    kokoroSpeed: number;
+    edgeVoiceName: string;
+    edgeRate: string;
+    edgePitch: string;
+  }
+> = {
+  Kore: {
+    kokoroVoiceId: 'af_heart',
+    kokoroSpeed: 0.99,
+    edgeVoiceName: 'en-US-AvaMultilingualNeural',
+    edgeRate: '-4%',
+    edgePitch: '+0Hz',
+  },
+  Zephyr: {
+    kokoroVoiceId: 'af_bella',
+    kokoroSpeed: 1.0,
+    edgeVoiceName: 'en-US-EmmaMultilingualNeural',
+    edgeRate: '-3%',
+    edgePitch: '+0Hz',
+  },
+  Charon: {
+    kokoroVoiceId: 'am_michael',
+    kokoroSpeed: 0.98,
+    edgeVoiceName: 'en-US-AndrewMultilingualNeural',
+    edgeRate: '-4%',
+    edgePitch: '-2Hz',
+  },
+  Puck: {
+    kokoroVoiceId: 'am_puck',
+    kokoroSpeed: 1.01,
+    edgeVoiceName: 'en-US-BrianMultilingualNeural',
+    edgeRate: '-3%',
+    edgePitch: '+0Hz',
+  },
+  Fenrir: {
+    kokoroVoiceId: 'am_adam',
+    kokoroSpeed: 0.99,
+    edgeVoiceName: 'en-US-SteffanNeural',
+    edgeRate: '-4%',
+    edgePitch: '-2Hz',
+  },
+};
+
 export const VOICE_PERSONAS: Record<PersonaName, VoicePersonaConfig> = {
   Sarah: {
     persona: 'Sarah',
     voiceName: 'Kore',
+    ...EDGE_VOICE_PROFILES.Kore,
     roleTitle: 'Principal Systems Architect & Bar Raiser',
-    toneLabel: 'Kore · Warm Executive',
+    toneLabel: 'Kore · Warm Executive (Ava Neural)',
     speechStyle:
       'Authentic Principal Systems Architect speaking live in a 1-on-1 engineering interview; warm, conversational human cadence with natural micro-pauses, empathetic listening tone, never robotic or announcer-like.',
   },
   'Dr. Elena Vance': {
     persona: 'Dr. Elena Vance',
     voiceName: 'Zephyr',
+    ...EDGE_VOICE_PROFILES.Zephyr,
     roleTitle: 'AI Infrastructure Lead',
-    toneLabel: 'Zephyr · Crisp Analytical',
+    toneLabel: 'Zephyr · Crisp Analytical (Emma Neural)',
     speechStyle:
       'Real Staff Infrastructure Lead conducting a thoughtful technical interview; crisp, unhurried conversational inflection, genuinely curious and composed human voice.',
   },
   'Marcus Reed': {
     persona: 'Marcus Reed',
     voiceName: 'Charon',
+    ...EDGE_VOICE_PROFILES.Charon,
     roleTitle: 'Engineering Director',
-    toneLabel: 'Charon · Grounded Executive',
+    toneLabel: 'Charon · Grounded Executive (Andrew Neural)',
     speechStyle:
       'Seasoned Engineering Director speaking naturally in a live panel; calm baritone warmth, steady conversational rhythm, authentic executive composure.',
   },
   'David Chen': {
     persona: 'David Chen',
     voiceName: 'Puck',
+    ...EDGE_VOICE_PROFILES.Puck,
     roleTitle: 'Staff Frontend Lead',
-    toneLabel: 'Puck · Collaborative Lead',
+    toneLabel: 'Puck · Collaborative Lead (Brian Neural)',
     speechStyle:
       'Collaborative Staff Engineer having a natural peer-level architecture chat; engaging, clear, friendly human pacing and expressive emphasis.',
   },
@@ -220,9 +278,11 @@ export function resolveVoiceConfig(personaName?: string, voiceOverride?: string)
   const base = VOICE_PERSONAS[(personaName as PersonaName) || 'Sarah'] || VOICE_PERSONAS.Sarah;
   const validVoices: PrebuiltVoiceName[] = ['Kore', 'Zephyr', 'Charon', 'Puck', 'Fenrir'];
   if (voiceOverride && validVoices.includes(voiceOverride as PrebuiltVoiceName)) {
+    const chosen = voiceOverride as PrebuiltVoiceName;
     return {
       ...base,
-      voiceName: voiceOverride as PrebuiltVoiceName,
+      voiceName: chosen,
+      ...EDGE_VOICE_PROFILES[chosen],
     };
   }
   return base;
@@ -746,21 +806,133 @@ Rules:
   return buildDeterministicTurnResponse(input);
 }
 
-function prepareNaturalSpeechText(text: string, model: string): string {
+export function prepareNaturalSpeechText(text: string, model: string): string {
   const cleaned = (text || '')
     .replace(/[*_`#]/g, '')
+    .replace(/<\/?[a-z]+>/gi, ' ')
     .replace(/\s+/g, ' ')
     .replace(/\bL([4-7])\b/g, 'level $1')
     .replace(/\bP99\b/gi, 'p ninety nine')
+    .replace(/\bP95\b/gi, 'p ninety five')
     .replace(/\bJD\b/g, 'job description')
+    .replace(/\bSLOs?\b/g, 'service level objectives')
+    .replace(/\bSLIs?\b/g, 'service level indicators')
     .trim();
   if (model === 'gemini-3.8-flash-tts') {
-    // Insert subtle breath before transitions for natural human cadence
+    // Insert subtle breath before transitions for Gemini 3.8 Flash TTS natural cadence
     return cleaned
       .replace(/\. (Let's|So |Now |Whenever you're ready|Before we move)/g, '. <breath> $1')
       .trim();
   }
+  // For Microsoft Edge Neural voices, clean punctuation creates natural conversational breathing without tag words
   return cleaned;
+}
+
+let kokoroEnginePromise: Promise<KokoroTTS | null> | null = null;
+let kokoroSynthQueue: Promise<unknown> = Promise.resolve();
+
+async function getKokoroEngine(): Promise<KokoroTTS | null> {
+  if (!kokoroEnginePromise) {
+    kokoroEnginePromise = KokoroTTS.from_pretrained('onnx-community/Kokoro-82M-v1.0-ONNX', {
+      dtype: 'q4',
+      device: 'cpu',
+    }).catch((err) => {
+      console.log('[AI Voice Agent] Kokoro-82M initialization deferred:', (err as Error)?.message || err);
+      kokoroEnginePromise = null;
+      return null;
+    });
+  }
+  return kokoroEnginePromise;
+}
+
+export function warmNeuralVoiceEngine(): void {
+  void getKokoroEngine().then((engine) => {
+    if (engine) {
+      console.log('[AI Voice Agent] Kokoro-82M human neural voice engine warm and ready.');
+    }
+  });
+}
+
+async function synthesizeKokoroNeuralAudio(params: {
+  text: string;
+  voiceCfg: VoicePersonaConfig;
+  timeoutMs?: number;
+}): Promise<string | null> {
+  const timeoutMs = params.timeoutMs ?? 24000;
+  const spokenScript = prepareNaturalSpeechText(params.text, 'kokoro-neural-tts');
+  if (!spokenScript) return null;
+
+  const runTask = async (): Promise<string | null> => {
+    const engine = await getKokoroEngine();
+    if (!engine) return null;
+
+    const audio = await Promise.race([
+      engine.generate(spokenScript, {
+        voice: params.voiceCfg.kokoroVoiceId,
+        speed: params.voiceCfg.kokoroSpeed,
+      }),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error('Kokoro neural voice synthesis timeout')), timeoutMs)
+      ),
+    ]);
+
+    const wavBuffer = Buffer.from(audio.toWav());
+    if (wavBuffer.length < 256) return null;
+    return wavBuffer.toString('base64');
+  };
+
+  // Serialize ONNX CPU synthesis cleanly so concurrent requests never contend
+  const queued = kokoroSynthQueue.then(runTask, runTask);
+  kokoroSynthQueue = queued.catch(() => null);
+
+  try {
+    return await queued;
+  } catch (err) {
+    console.log(
+      `[AI Voice Agent] Kokoro-82M voice (${params.voiceCfg.kokoroVoiceId}) fallback (${(err as Error)?.message || 'unavailable'}).`
+    );
+    return null;
+  }
+}
+
+async function synthesizeEdgeNeuralAudio(params: {
+  text: string;
+  voiceCfg: VoicePersonaConfig;
+  timeoutMs?: number;
+}): Promise<string | null> {
+  const timeoutMs = params.timeoutMs ?? 3500;
+  const spokenScript = prepareNaturalSpeechText(params.text, 'edge-neural-tts');
+  if (!spokenScript) return null;
+
+  try {
+    const communicate = new Communicate(spokenScript, {
+      voice: params.voiceCfg.edgeVoiceName,
+      rate: params.voiceCfg.edgeRate,
+      pitch: params.voiceCfg.edgePitch,
+      connectionTimeout: timeoutMs,
+    });
+
+    const audioChunks: Buffer[] = [];
+    await Promise.race([
+      (async () => {
+        for await (const chunk of communicate.stream()) {
+          if (chunk.type === 'audio' && chunk.data) {
+            audioChunks.push(chunk.data);
+          }
+        }
+      })(),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error('Edge neural voice stream timeout')), timeoutMs)
+      ),
+    ]);
+
+    if (audioChunks.length === 0) return null;
+    const combined = Buffer.concat(audioChunks);
+    if (combined.length < 128) return null;
+    return combined.toString('base64');
+  } catch {
+    return null;
+  }
 }
 
 export async function synthesizeSpeechAudio(params: {
@@ -771,28 +943,94 @@ export async function synthesizeSpeechAudio(params: {
   audioBase64: string | null;
   mimeType: string;
   voiceName: PrebuiltVoiceName;
-  provider: 'gemini-neural-tts' | 'browser-fallback';
+  neuralVoiceId?: string;
+  provider: 'kokoro-neural-tts' | 'edge-neural-tts' | 'gemini-neural-tts' | 'browser-fallback';
   quotaLimited?: boolean;
 }> {
   const voiceCfg = resolveVoiceConfig(params.persona, params.voiceOverride);
-  const ai = getGeminiClient();
   const cleanText = (params.text || '').replace(/[*_`#]/g, '').trim();
 
-  if (!ai || !cleanText) {
+  if (!cleanText) {
     return {
       audioBase64: null,
       mimeType: 'audio/wav',
       voiceName: voiceCfg.voiceName,
+      neuralVoiceId: voiceCfg.kokoroVoiceId,
       provider: 'browser-fallback',
     };
   }
 
-  const cacheKey = `${voiceCfg.voiceName}:${cleanText}`;
+  const cacheKey = `${voiceCfg.voiceName}:${voiceCfg.kokoroVoiceId}:${cleanText}`;
   const cachedAudio = ttsAudioCache.get(cacheKey);
   if (cachedAudio) {
     return {
       ...cachedAudio,
-      provider: 'gemini-neural-tts',
+      neuralVoiceId: cachedAudio.mimeType === 'audio/mpeg' ? voiceCfg.edgeVoiceName : voiceCfg.kokoroVoiceId,
+      provider: cachedAudio.mimeType === 'audio/mpeg' ? 'edge-neural-tts' : 'kokoro-neural-tts',
+    };
+  }
+
+  // Tier 1: Kokoro-82M Neural Voice Agent (in-process human prosody, 24kHz WAV, zero cloud API limits)
+  const kokoroBase64 = await synthesizeKokoroNeuralAudio({
+    text: cleanText,
+    voiceCfg,
+    timeoutMs: 24000,
+  });
+
+  if (kokoroBase64) {
+    if (ttsAudioCache.size >= 40) {
+      const oldest = ttsAudioCache.keys().next().value;
+      if (oldest) ttsAudioCache.delete(oldest);
+    }
+    ttsAudioCache.set(cacheKey, {
+      audioBase64: kokoroBase64,
+      mimeType: 'audio/wav',
+      voiceName: voiceCfg.voiceName,
+    });
+    return {
+      audioBase64: kokoroBase64,
+      mimeType: 'audio/wav',
+      voiceName: voiceCfg.voiceName,
+      neuralVoiceId: voiceCfg.kokoroVoiceId,
+      provider: 'kokoro-neural-tts',
+    };
+  }
+
+  // Tier 2: Microsoft Multilingual Human Neural Voice Agent
+  const edgeBase64 = await synthesizeEdgeNeuralAudio({
+    text: cleanText,
+    voiceCfg,
+    timeoutMs: 3500,
+  });
+
+  if (edgeBase64) {
+    if (ttsAudioCache.size >= 40) {
+      const oldest = ttsAudioCache.keys().next().value;
+      if (oldest) ttsAudioCache.delete(oldest);
+    }
+    ttsAudioCache.set(cacheKey, {
+      audioBase64: edgeBase64,
+      mimeType: 'audio/mpeg',
+      voiceName: voiceCfg.voiceName,
+    });
+    return {
+      audioBase64: edgeBase64,
+      mimeType: 'audio/mpeg',
+      voiceName: voiceCfg.voiceName,
+      neuralVoiceId: voiceCfg.edgeVoiceName,
+      provider: 'edge-neural-tts',
+    };
+  }
+
+  // Tier 2: Gemini Neural TTS (if configured and within quota)
+  const ai = getGeminiClient();
+  if (!ai) {
+    return {
+      audioBase64: null,
+      mimeType: 'audio/wav',
+      voiceName: voiceCfg.voiceName,
+      neuralVoiceId: voiceCfg.edgeVoiceName,
+      provider: 'browser-fallback',
     };
   }
 
@@ -851,6 +1089,7 @@ export async function synthesizeSpeechAudio(params: {
           audioBase64,
           mimeType: 'audio/wav',
           voiceName: voiceCfg.voiceName,
+          neuralVoiceId: voiceCfg.voiceName,
           provider: 'gemini-neural-tts',
         };
       }
@@ -868,6 +1107,7 @@ export async function synthesizeSpeechAudio(params: {
     audioBase64: null,
     mimeType: 'audio/wav',
     voiceName: voiceCfg.voiceName,
+    neuralVoiceId: voiceCfg.edgeVoiceName,
     provider: 'browser-fallback',
     quotaLimited: sawQuota,
   };

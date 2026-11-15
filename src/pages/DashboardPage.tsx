@@ -281,7 +281,10 @@ export const DashboardPage: React.FC = () => {
                     <AnimatedCounter value={resumeAnalysis.matchAnalysis.overallMatchPercentage} suffix="%" />
                   </span>
                 )}
-                <span className="text-xs text-[#3525cd] font-semibold">18/21 Skills</span>
+                <span className="text-xs text-[#3525cd] font-semibold">
+                  {resumeAnalysis.matchAnalysis.matchedSkills.length}/
+                  {resumeAnalysis.matchAnalysis.matchedSkills.length + resumeAnalysis.matchAnalysis.missingSkills.length} Skills
+                </span>
               </div>
             </div>
             <div className="w-10 h-10 rounded-xl bg-[#eff4ff] flex items-center justify-center text-[#3525cd]">
@@ -498,7 +501,7 @@ export const DashboardPage: React.FC = () => {
                 <p className="text-xs text-[#464555]">Derived from Stripe Job Description &amp; your mock answer telemetry</p>
               </div>
               <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-red-50 text-red-700 border border-red-200">
-                3 Actionable Gaps
+                {resumeAnalysis.matchAnalysis.missingSkills.length} Actionable Gaps
               </span>
             </div>
 
@@ -545,13 +548,23 @@ export const DashboardPage: React.FC = () => {
             <div className="flex items-center gap-3 mb-4">
               <img
                 src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=256"
-                alt="Sarah"
+                alt={interviewSetup.aiPersona}
                 className="w-12 h-12 rounded-full object-cover ring-2 ring-[#e5eeff]"
               />
               <div>
                 <h4 className="font-heading text-sm font-bold text-[#0b1c30]">{interviewSetup.aiPersona}</h4>
-                <p className="text-xs text-[#464555]">Principal Architect &amp; Hiring Bar Raiser</p>
-                <span className="text-[10px] text-[#3525cd] font-medium">Stripe L6 Calibration Engine</span>
+                <p className="text-xs text-[#464555]">
+                  {interviewSetup.aiPersona === 'Dr. Elena Vance'
+                    ? 'AI Infrastructure Lead'
+                    : interviewSetup.aiPersona === 'Marcus Reed'
+                    ? 'Engineering Director'
+                    : interviewSetup.aiPersona === 'David Chen'
+                    ? 'Staff Frontend Lead'
+                    : 'Principal Architect & Bar Raiser'}
+                </p>
+                <span className="text-[10px] text-[#3525cd] font-medium">
+                  {interviewSetup.targetCompany} Calibration Engine · Neural Voice
+                </span>
               </div>
             </div>
 
@@ -580,7 +593,9 @@ export const DashboardPage: React.FC = () => {
                 <FileSearch className="w-4 h-4 text-[#4f46e5]" />
                 <div className="text-left">
                   <div className="text-xs font-semibold text-[#0b1c30]">Resume &amp; JD Match</div>
-                  <div className="text-[11px] text-[#565e74]">Match score: 84% (ATS Ready)</div>
+                  <div className="text-[11px] text-[#565e74]">
+                    Match score: {resumeAnalysis.matchAnalysis.overallMatchPercentage}% (ATS Ready)
+                  </div>
                 </div>
               </div>
               <ChevronRight className="w-4 h-4 text-[#777587] group-hover:text-[#4f46e5] group-hover:translate-x-0.5 transition-all" />

@@ -42,6 +42,7 @@ import {
   synthesizeSpeechAudio,
   transcribeSpokenAudio,
   generateTranscriptEvaluationReport,
+  warmNeuralVoiceEngine,
 } from './server/aiInterviewer';
 
 let serverSupabase: SupabaseClient | null = null;
@@ -1436,6 +1437,7 @@ async function startServer() {
 
   app.listen(PORT, '0.0.0.0', () => {
     console.log(`[PrepPilot Server] Enclave live on http://0.0.0.0:${PORT}`);
+    warmNeuralVoiceEngine();
   });
 }
 

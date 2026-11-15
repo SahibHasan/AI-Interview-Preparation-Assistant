@@ -31,9 +31,10 @@ import {
 
 export const ProfileSettingsPage: React.FC = () => {
   const { user, updateUserMetrics, updateAvatar } = useAuth();
-  const { profile, updateProfile, resetInterviewSession } = useApp();
+  const { profile, updateProfile, updateInterviewSetup, resetInterviewSession } = useApp();
   const { showToast } = useToast();
   const avatarInputRef = useRef<HTMLInputElement>(null);
+  const testAudioRef = useRef<HTMLAudioElement | null>(null);
 
   const [activeTab, setActiveTab] = useState<'general' | 'track' | 'ai' | 'devices' | 'security'>('general');
 
@@ -147,6 +148,12 @@ export const ProfileSettingsPage: React.FC = () => {
         targetRole,
       });
 
+      updateInterviewSetup({
+        aiPersona,
+        targetCompany,
+        targetRole,
+      });
+
       setIsSaving(false);
       showToast({
         title: 'Profile & Calibration Updated',
@@ -182,10 +189,39 @@ export const ProfileSettingsPage: React.FC = () => {
     });
   };
 
-  const handleTestAudio = () => {
+  const handleTestAudio = async () => {
+    const sampleText = `Hi, I'm ${aiPersona}. Your human neural interview voice is calibrated and ready for your live session.`;
+    try {
+      if (testAudioRef.current) {
+        testAudioRef.current.pause();
+        testAudioRef.current = null;
+      }
+      const res = await fetch('/api/ai/tts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: sampleText, persona: aiPersona }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (data.audioBase64) {
+          const audio = new Audio(`data:${data.mimeType || 'audio/mpeg'};base64,${data.audioBase64}`);
+          testAudioRef.current = audio;
+          await audio.play();
+          showToast({
+            title: 'Human Neural Voice Active',
+            message: `Playing ${data.neuralVoiceId || data.voiceName} neural voice calibration sample.`,
+            type: 'success',
+          });
+          return;
+        }
+      }
+    } catch {
+      // Fallback below if network audio is unavailable
+    }
+
     if ('speechSynthesis' in window) {
       window.speechSynthesis.cancel();
-      const utterance = new SpeechSynthesisUtterance('PrepPilot AI voice synthesis calibration check. Audio telemetry active.');
+      const utterance = new SpeechSynthesisUtterance(sampleText);
       window.speechSynthesis.speak(utterance);
       showToast({
         title: 'Audio Check Playing',
@@ -492,7 +528,7 @@ export const ProfileSettingsPage: React.FC = () => {
                     Calibrated Rubric: {targetCompany} Bar Standard
                   </h4>
                   <p className="text-[11px] text-[#565e74]">
-                    Weighted: Technical Depth (35%), Tradeoff Analysis (25%), Decomposition (25%), Communication (15%).
+                    Weighted: Technical Depth (35%), Tradeoff Analysis (25%), Communication (20%), Decomposition (20%).
                   </p>
                 </div>
               </div>

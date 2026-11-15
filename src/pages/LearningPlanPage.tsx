@@ -234,7 +234,7 @@ export const LearningPlanPage: React.FC = () => {
                   : 'text-[#565e74] hover:text-[#0b1c30] hover:bg-[#eff4ff]'
               }`}
             >
-              {f === 'all' ? 'All Modules (5)' : `${f} Priority`}
+              {f === 'all' ? `All Modules (${(learningPlan.modules || []).length})` : `${f} Priority`}
             </button>
           ))}
         </div>
