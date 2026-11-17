@@ -57,6 +57,16 @@ export function formatAuthProviderLabel(provider?: 'email' | 'google' | 'github'
   }
 }
 
+export function getDefaultAvatarUrl(name: string = 'Candidate'): string {
+  const parts = String(name || 'Candidate').trim().split(/\s+/).filter(Boolean);
+  const initials =
+    parts.length >= 2
+      ? `${parts[0][0]}${parts[parts.length - 1][0]}`.toUpperCase()
+      : (parts[0] || 'C').slice(0, 2).toUpperCase();
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128"><rect width="128" height="128" rx="64" fill="#4f46e5"/><text x="50%" y="53%" dominant-baseline="middle" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="48" font-weight="700" fill="#ffffff">${initials}</text></svg>`;
+  return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
+}
+
 /**
  * Compresses & crops/fits an uploaded image File into a compact square-friendly Data URL
  * suitable for persistent database storage.

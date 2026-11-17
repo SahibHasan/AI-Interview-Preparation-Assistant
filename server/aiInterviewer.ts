@@ -342,6 +342,10 @@ function buildQuestionForSection(params: {
   const { input, recentWork, resumeHighlight, matchedSkill, criticalGap, jdHighlights, level } = params;
 
   if (sLower.includes('resume')) {
+    const hasResumeDetail = Boolean(
+      (input.resumeSummary?.experiences && input.resumeSummary.experiences.length > 0) ||
+        (input.resumeSummary?.rawText && input.resumeSummary.rawText.trim().length > 25)
+    );
     const cleanHighlight =
       resumeHighlight.length <= 165
         ? resumeHighlight.replace(/[.,;:\s]+$/, '')
@@ -349,9 +353,11 @@ function buildQuestionForSection(params: {
     return {
       title: params.section.sectionName,
       category: params.section.category,
-      focusSource: 'resume',
+      focusSource: hasResumeDetail ? 'resume' : 'role-calibration',
       rationale: params.section.rationale,
-      questionText: `Looking at your background in ${recentWork}, walk me through the hardest technical problem or bottleneck you owned—specifically around "${cleanHighlight}"—and the measurable impact you delivered.`,
+      questionText: hasResumeDetail
+        ? `Looking at your background in ${recentWork}, walk me through the hardest technical problem or bottleneck you owned—specifically around "${cleanHighlight}"—and the measurable impact you delivered.`
+        : `Walk me through the most challenging ${input.targetRole} project or production bottleneck you've owned recently—specifically how you structured the architecture, navigated tradeoffs, and measured impact.`,
       contextOrConstraint: `Focus on your individual architecture decisions, alternatives you rejected, and concrete outcomes for ${input.targetCompany}.`,
       assessmentRule: params.section.assessmentCriteria.join(' • '),
       rubric: [
@@ -430,19 +436,131 @@ function buildQuestionForSection(params: {
     };
   }
 
-  if (sLower.includes('conflict') || sLower.includes('consensus') || sLower.includes('leadership') || sLower.includes('culture') || sLower.includes('ambiguity')) {
+  if (sLower.includes('kubernetes') || sLower.includes('terraform') || sLower.includes('ci/cd') || sLower.includes('sre') || sLower.includes('linux')) {
+    return {
+      title: params.section.sectionName,
+      category: params.section.category,
+      focusSource: params.section.focusSource,
+      rationale: params.section.rationale,
+      questionText: `In a ${input.targetRole} role at ${input.targetCompany}, imagine a zero-downtime Kubernetes deployment causes P99 latency to spike 4x and pods begin OOMKilling under burst load. How do you diagnose root cause, isolate blast radius, and design CI/CD & Terraform safeguards to prevent recurrence?`,
+      contextOrConstraint: `Cover readiness probes, HPA/pod resource limits, canary rollback triggers, and Terraform state safety.`,
+      assessmentRule: params.section.assessmentCriteria.join(' • '),
+      rubric: [
+        { criterion: 'Production Triage & Telemetry', weight: 40, description: 'Pinpoints metrics, logs, and resource constraints systematically' },
+        { criterion: 'Deployment & Rollback Safety', weight: 35, description: 'Designs canary gates, readiness checks, and instant rollbacks' },
+        { criterion: 'Infrastructure Automation', weight: 25, description: 'Explains IaC drift protection and least-privilege controls' },
+      ],
+    };
+  }
+
+  if (sLower.includes('mobile') || sLower.includes('offline sync')) {
+    return {
+      title: params.section.sectionName,
+      category: params.section.category,
+      focusSource: params.section.focusSource,
+      rationale: params.section.rationale,
+      questionText: `For a ${input.targetRole} loop at ${input.targetCompany}, how would you architect offline-first local storage (SQLite) with background sync and smooth 60fps UI rendering when a user submits multiple actions on a flaky cellular connection?`,
+      contextOrConstraint: `Address main-thread frame budgets, idempotency tokens, conflict resolution, and lifecycle cleanup.`,
+      assessmentRule: params.section.assessmentCriteria.join(' • '),
+      rubric: [
+        { criterion: 'Offline Queue & Sync Integrity', weight: 40, description: 'Handles retries, ordering, and duplicate-safe reconciliation' },
+        { criterion: 'UI Thread & Memory Discipline', weight: 35, description: 'Protects main thread and prevents retain-cycle leaks' },
+        { criterion: 'App Store Rollout Safety', weight: 25, description: 'Uses schema migrations and remote kill switches cleanly' },
+      ],
+    };
+  }
+
+  if (sLower.includes('test pyramid') || sLower.includes('automation')) {
+    return {
+      title: params.section.sectionName,
+      category: params.section.category,
+      focusSource: params.section.focusSource,
+      rationale: params.section.rationale,
+      questionText: `As a ${input.targetRole} at ${input.targetCompany}, suppose your E2E regression suite takes 55 minutes and fails 12% of the time due to flaky async UI states. How do you restructure the test pyramid, design deterministic fixtures, and integrate fast quality gates into CI/CD?`,
+      contextOrConstraint: `Compare unit/contract/API vs E2E coverage, parallel sharding, and SQL test data isolation.`,
+      assessmentRule: params.section.assessmentCriteria.join(' • '),
+      rubric: [
+        { criterion: 'Deterministic Test Architecture', weight: 40, description: 'Eliminates static sleeps, shared mutable state, and flaky locators' },
+        { criterion: 'Test Pyramid & Risk Coverage', weight: 35, description: 'Pushes checks to fast API/contract layers while keeping critical E2E' },
+        { criterion: 'CI Parallelism & Triage', weight: 25, description: 'Cuts feedback loop time with sharding and artifact telemetry' },
+      ],
+    };
+  }
+
+  if (sLower.includes('owasp') || sLower.includes('appsec') || sLower.includes('threat modeling') || sLower.includes('kms')) {
+    return {
+      title: params.section.sectionName,
+      category: params.section.category,
+      focusSource: params.section.focusSource,
+      rationale: params.section.rationale,
+      questionText: `From a ${input.targetRole} perspective at ${input.targetCompany}, if you are reviewing a new multi-tenant OAuth2 + API service before launch, what critical threat vectors (token replay, SSRF, broken tenant isolation, SQLi) do you audit first and what defense-in-depth controls do you enforce?`,
+      contextOrConstraint: `Discuss least-privilege IAM, short-lived tokens, tenant boundary enforcement, and containment playbooks.`,
+      assessmentRule: params.section.assessmentCriteria.join(' • '),
+      rubric: [
+        { criterion: 'Threat Modeling & OWASP Depth', weight: 40, description: 'Identifies realistic exploit chains and tenant-isolation invariants' },
+        { criterion: 'Defense-in-Depth Architecture', weight: 35, description: 'Applies secure defaults across auth, database queries, and secrets' },
+        { criterion: 'Detection & Containment Speed', weight: 25, description: 'Designs tamper-evident audit logs and fast token revocation' },
+      ],
+    };
+  }
+
+  if (sLower.includes('people leadership') || sLower.includes('engineering management') || sLower.includes('tech debt governance')) {
     return {
       title: params.section.sectionName,
       category: params.section.category,
       focusSource: 'role-calibration',
       rationale: params.section.rationale,
-      questionText: `Tell me about a time you had a significant technical disagreement with an engineering peer or product lead right before a major launch. How did you structure your case, drive consensus, and measure the outcome?`,
-      contextOrConstraint: `Use Situation, Task, Action, Result (STAR) framing with objective data and personal accountability.`,
+      questionText: `As an ${input.targetRole} at ${input.targetCompany}, tell me how you would balance an urgent Q3 product commitment against rising platform tech debt and two senior engineers disagreeing on architectural direction.`,
+      contextOrConstraint: `Include concrete coaching signals, roadmap negotiation with Product, and measurable engineering health KPIs.`,
+      assessmentRule: params.section.assessmentCriteria.join(' • '),
+      rubric: [
+        { criterion: 'Strategic Prioritization', weight: 40, description: 'Negotiates scope and tech-debt paydown with business clarity' },
+        { criterion: 'People Coaching & Resolution', weight: 35, description: 'Aligns engineers constructively while empowering ownership' },
+        { criterion: 'Operational & Delivery Metrics', weight: 25, description: 'Tracks DORA/reliability/velocity outcomes objectively' },
+      ],
+    };
+  }
+
+  if (sLower.includes('career trajectory') || sLower.includes('values') || sLower.includes('workstyle') || sLower.includes('role expectations') || sLower.includes('failure recovery') || sLower.includes('mentorship') || sLower.includes('conflict') || sLower.includes('consensus') || sLower.includes('leadership') || sLower.includes('culture') || sLower.includes('ambiguity')) {
+    const behavioralPrompt = sLower.includes('career trajectory')
+      ? `Walk me through your career journey so far—why are you targeting this ${input.targetRole} role at ${input.targetCompany} right now, and what kind of team environment brings out your best work?`
+      : sLower.includes('failure recovery')
+      ? `Tell me about a high-stakes production outage or critical delivery miss you were directly involved in. What steps did you take first, how did you communicate with stakeholders, and what systemic guardrails did you put in place afterward?`
+      : sLower.includes('ambiguity')
+      ? `Describe a project where requirements were unclear or shifted midway before a deadline. How did you scope what mattered most, align stakeholders, and deliver a reliable result?`
+      : sLower.includes('mentorship') || sLower.includes('growth mindset')
+      ? `Share a concrete example of how you helped elevate a teammate or raised the engineering bar on your team, as well as an area you are actively strengthening right now.`
+      : `Tell me about a time you had a significant technical or product disagreement with a peer or lead right before a major launch. How did you structure your case, drive consensus, and measure the outcome?`;
+
+    return {
+      title: params.section.sectionName,
+      category: params.section.category,
+      focusSource: 'role-calibration',
+      rationale: params.section.rationale,
+      questionText: behavioralPrompt,
+      contextOrConstraint: `Use Situation, Task, Action, Result (STAR) framing with specific personal actions and measurable outcomes.`,
       assessmentRule: params.section.assessmentCriteria.join(' • '),
       rubric: [
         { criterion: 'Structured STAR Delivery', weight: 35, description: 'Clear context, personal action, and measurable business outcome' },
-        { criterion: 'Evidence-Driven Influence', weight: 40, description: 'Relies on prototypes, latency/risk data, and stakeholder empathy' },
-        { criterion: 'Retrospective Learning', weight: 25, description: 'Reflects candidly on what could have been improved' },
+        { criterion: 'Ownership & Evidence-Driven Influence', weight: 40, description: 'Relies on objective data, accountability, and stakeholder empathy' },
+        { criterion: 'Retrospective Learning', weight: 25, description: 'Reflects candidly on tradeoffs and long-term improvements' },
+      ],
+    };
+  }
+
+  if (sLower.includes('high-level distributed') || sLower.includes('system design') || sLower.includes('data modeling, storage')) {
+    return {
+      title: params.section.sectionName,
+      category: params.section.category,
+      focusSource: 'jd',
+      rationale: params.section.rationale,
+      questionText: `Let's design a core distributed system for ${input.targetCompany} (${input.targetRole} track). Imagine architecting a multi-tenant notification & ledger webhook platform handling 50,000 events/sec with strict at-least-once delivery, per-tenant rate limiting, and zero duplicate side effects. How would you design the APIs, storage partitioning, queueing, and failure recovery?`,
+      contextOrConstraint: `Cover capacity estimation, database schema & sharding, Redis/Kafka backpressure, and idempotency keys.`,
+      assessmentRule: params.section.assessmentCriteria.join(' • '),
+      rubric: [
+        { criterion: 'Component Topology & API Contracts', weight: 35, description: 'Clear separation of ingestion, queueing, workers, and storage' },
+        { criterion: 'Partitioning, Caching & Consistency', weight: 35, description: 'Handles hot partitions, idempotent writes, and replication lag' },
+        { criterion: 'Fault Tolerance & Backpressure', weight: 30, description: 'Isolates slow tenants with DLQs, circuit breakers, and SLIs' },
       ],
     };
   }
@@ -469,7 +587,7 @@ function buildQuestionForSection(params: {
     category: params.section.category,
     focusSource: 'jd',
     rationale: params.section.rationale || `Targets ${criticalGap} & ${jdHighlights[0] || matchedSkill} at ${level} bar.`,
-    questionText: `Suppose ${input.targetCompany} experiences a sudden 10x traffic surge combined with intermittent downstream timeouts on a critical workflow (${criticalGap}). How do you architect caching, backpressure, observability, and safe rollback mechanisms to protect P99 latency and data integrity?`,
+    questionText: `Suppose ${input.targetCompany} experiences a sudden 10x traffic surge combined with intermittent downstream timeouts on a critical ${input.targetRole} workflow (${criticalGap}). How do you architect caching, backpressure, observability, and safe rollback mechanisms to protect P99 latency and data integrity?`,
     contextOrConstraint: `Target ${level} bar: discuss circuit breakers, idempotent retries, distributed tracing, and graceful degradation.`,
     assessmentRule: params.section.assessmentCriteria.join(' • '),
     rubric: [
@@ -487,12 +605,19 @@ export function buildDeterministicInterviewPlan(input: PlanInput): InterviewPlan
   const count = Math.max(3, Math.min(5, input.questionCount || 4));
 
   const exp = input.resumeSummary?.experiences?.[0];
+  const hasUploadedResume = Boolean(
+    exp ||
+      (input.resumeSummary?.rawText && input.resumeSummary.rawText.trim().length > 25) ||
+      (input.resumeSummary?.skills && input.resumeSummary.skills.length > 0)
+  );
   const recentWork = exp
     ? `${exp.role} work at ${exp.company}`
-    : input.resumeSummary?.headline || 'recent engineering architecture';
+    : hasUploadedResume
+    ? `${input.resumeSummary?.headline || input.targetRole} background`
+    : `${input.targetRole} track`;
   const resumeHighlight =
     exp?.bulletPoints?.[0] ||
-    `scalable ${input.targetRole} systems using ${(input.resumeSummary?.skills || ['TypeScript', 'SQL', 'OOP']).slice(0, 3).join(', ')}`;
+    `scalable ${input.targetRole} systems using ${(input.resumeSummary?.skills && input.resumeSummary.skills.length > 0 ? input.resumeSummary.skills : ['TypeScript', 'SQL', 'OOP']).slice(0, 3).join(', ')}`;
   const criticalGap =
     input.resumeSummary?.missingSkills?.[0] || 'edge-case fault tolerance and scaling optimization';
   const matchedSkill =
@@ -551,8 +676,25 @@ export function buildDeterministicInterviewPlan(input: PlanInput): InterviewPlan
     evaluationRubric: item.rubric,
   }));
 
+  const interviewTypeLabel =
+    input.interviewType === 'behavioral'
+      ? 'Behavioral & Leadership'
+      : input.interviewType === 'system-design'
+      ? 'Distributed System Design'
+      : input.interviewType === 'hr-cultural'
+      ? 'HR & Cultural Values'
+      : 'Technical & Core CS';
+  const rubricSummaryPhrase =
+    input.interviewType === 'behavioral' || input.interviewType === 'hr-cultural'
+      ? 'STAR clarity, ownership, measurable outcomes, and collaboration'
+      : 'technical depth, tradeoffs, problem decomposition, and clarity';
+
+  const contextReviewSentence = hasUploadedResume
+    ? `I've reviewed your uploaded resume—including your ${recentWork}—alongside the ${input.targetCompany} job description.`
+    : `I've calibrated this session for your ${input.targetRole} track alongside the ${input.targetCompany} job bar.`;
+
   const topicPreview = topicOrder.map((t) => `${t.order}. ${t.title}`).join(', ');
-  const greetingOverview = `Hi ${firstName}, welcome to your live ${input.targetRole} interview for ${input.targetCompany}. I'm ${input.aiPersona}, ${personaCfg.roleTitle}. I've analyzed your uploaded resume—including your ${recentWork}—alongside the ${input.targetCompany} job description. To evaluate you fairly across every required pillar for this role, I divided our ${level} loop into ${topicOrder.length} structured sections: ${topicPreview}. I'll ask conversational follow-ups based on your spoken answers and grade strictly on technical depth, tradeoffs, problem decomposition, and clarity. Whenever you're ready to begin section one, just say you're ready.`;
+  const greetingOverview = `Hi ${firstName}, welcome to your live ${interviewTypeLabel} interview for ${input.targetRole} at ${input.targetCompany}. I'm ${input.aiPersona}, ${personaCfg.roleTitle}. ${contextReviewSentence} To evaluate you fairly across every required pillar for this role, I divided our ${level} loop into ${topicOrder.length} structured sections: ${topicPreview}. I'll ask conversational follow-ups based on your spoken answers and grade strictly on ${rubricSummaryPhrase}. Whenever you're ready to begin section one, just say you're ready.`;
 
   return {
     greetingOverview,
@@ -574,6 +716,7 @@ function buildPlanCacheKey(input: PlanInput): string {
     input.questionCount,
     input.aiPersona,
     (input.resumeSummary?.headline || '').slice(0, 80),
+    (input.resumeSummary?.skills || []).slice(0, 8).join(','),
     (input.resumeSummary?.rawText || '').slice(0, 120),
     (input.jobDescriptionText || '').slice(0, 160),
   ]);
@@ -783,6 +926,7 @@ export interface RespondTurnInput {
   candidateName?: string;
   targetRole: string;
   targetCompany: string;
+  interviewType?: string;
   aiPersona: string;
   currentTopic: PlannedTopicItem;
   currentQuestion: PlannedInterviewQuestion;
@@ -805,46 +949,67 @@ export function buildDeterministicTurnResponse(input: RespondTurnInput): Respond
   const spoken = input.candidateSpokenText.trim();
   const words = spoken.split(/\s+/).filter(Boolean);
   const lower = spoken.toLowerCase();
+  const type = (input.interviewType || 'technical').toLowerCase();
+  const isPeopleRound = type === 'behavioral' || type === 'hr-cultural';
 
-  // Extract a concrete technical keyword from what the candidate actually said to personalize the real-time follow-up
-  const notableTerms = [
-    'cache',
-    'redis',
-    'idempotency',
-    'latency',
-    'retry',
-    'queue',
-    'websocket',
-    'database',
-    'sql',
-    'index',
-    'b-tree',
-    'join',
-    'acid',
-    'deadlock',
-    'hashmap',
-    'heap',
-    'tree',
-    'graph',
-    'complexity',
-    'solid',
-    'interface',
-    'polymorphism',
-    'encapsulation',
-    'inheritance',
-    'react',
-    'state',
-    'timeout',
-    'consensus',
-    'failover',
-    'metrics',
-    'monitoring',
-    'team',
-    'tradeoff',
-    'rollback',
-    'shard',
-    'partition',
-  ];
+  // Extract a concrete keyword from what the candidate actually said to personalize the real-time follow-up
+  const notableTerms = isPeopleRound
+    ? [
+        'team',
+        'stakeholder',
+        'deadline',
+        'conflict',
+        'launch',
+        'outage',
+        'incident',
+        'mentor',
+        'feedback',
+        'product',
+        'priority',
+        'tradeoff',
+        'alignment',
+        'ownership',
+        'customer',
+      ]
+    : [
+        'cache',
+        'redis',
+        'idempotency',
+        'latency',
+        'retry',
+        'queue',
+        'websocket',
+        'database',
+        'sql',
+        'index',
+        'b-tree',
+        'join',
+        'acid',
+        'deadlock',
+        'hashmap',
+        'heap',
+        'tree',
+        'graph',
+        'complexity',
+        'solid',
+        'interface',
+        'polymorphism',
+        'encapsulation',
+        'inheritance',
+        'react',
+        'state',
+        'timeout',
+        'consensus',
+        'failover',
+        'metrics',
+        'monitoring',
+        'kubernetes',
+        'terraform',
+        'tradeoff',
+        'rollback',
+        'shard',
+        'partition',
+      ];
   const matchedTerm = notableTerms.find((t) => lower.includes(t));
 
   // Trigger at least 1 crisp adaptive follow-up per topic in real time based on candidate answer
@@ -852,17 +1017,30 @@ export function buildDeterministicTurnResponse(input: RespondTurnInput): Respond
     let followUpQ = '';
     let triggerReason = '';
 
-    if (words.length < 18) {
+    if (isPeopleRound) {
+      if (words.length < 18) {
+        triggerReason = 'Response was brief — probing concrete STAR actions and measurable outcome';
+        followUpQ = matchedTerm
+          ? `Thanks for sharing that. Looking specifically at the ${matchedTerm} part you mentioned, what action did you personally own, and how did you measure the final result?`
+          : `Thanks for sharing that overview. To help me evaluate ${input.currentTopic.title}, what specific step did you personally take, and what changed as a measurable result?`;
+      } else if (matchedTerm) {
+        triggerReason = `Real-time STAR follow-up on candidate's mention of "${matchedTerm}"`;
+        followUpQ = `I appreciate the context on ${matchedTerm}. Looking back at that situation at ${input.targetCompany} bar, what was the hardest tradeoff you navigated with stakeholders, and what would you approach differently next time?`;
+      } else {
+        triggerReason = `Adaptive behavioral follow-up calibrated to ${input.currentTopic.category}`;
+        followUpQ = `That gives good context. Before we move on, what concrete signal or metric showed your approach worked, and what did you take away from the experience?`;
+      }
+    } else if (words.length < 18) {
       triggerReason = 'Response was concise — probing concrete implementation details and failure edge cases';
       followUpQ = matchedTerm
         ? `Thanks for sharing that overview. You touched on ${matchedTerm}—could you walk me through the exact failure mode you'd handle if ${matchedTerm} degrades under heavy concurrent load?`
         : `Got it. Let's go one layer deeper on ${input.currentTopic.title}: what specific bottleneck or edge case would fail first in production, and how would you mitigate it?`;
     } else if (matchedTerm) {
       triggerReason = `Real-time deep dive on candidate's mention of "${matchedTerm}"`;
-      followUpQ = `That's a solid point about ${matchedTerm}. If a network partition hits right in the middle of that ${matchedTerm} operation at ${input.targetCompany} scale, how do you prevent inconsistent state or cascading retries?`;
+      followUpQ = `That's a solid point about ${matchedTerm}. If a sudden failure or contention spike hits right in the middle of that ${matchedTerm} path at ${input.targetCompany} scale, how do you protect correctness and latency?`;
     } else {
       triggerReason = `Adaptive bar-raiser probe calibrated to ${input.currentTopic.category}`;
-      followUpQ = `Appreciate how you structured that answer. One quick follow-up before we move on: if latency tripled unexpectedly on that critical path, what tradeoff would you adjust first and why?`;
+      followUpQ = `Appreciate how you structured that answer. One quick follow-up before we move on: if scale grew 10x unexpectedly on that critical path, what bottleneck or tradeoff would you revisit first and why?`;
     }
 
     return {
@@ -875,7 +1053,7 @@ export function buildDeterministicTurnResponse(input: RespondTurnInput): Respond
   }
 
   if (input.nextTopic && input.nextQuestion) {
-    const transition = `Thanks for walking through those tradeoffs clearly—that gives me a strong signal on ${input.currentTopic.category}. Let's move to topic ${input.nextTopic.order} in our plan, ${input.nextTopic.title}. ${input.nextQuestion.questionText}`;
+    const transition = `Thanks for walking through that clearly—that gives me a strong signal on ${input.currentTopic.category}. Let's move to topic ${input.nextTopic.order} in our plan, ${input.nextTopic.title}. ${input.nextQuestion.questionText}`;
     return {
       action: 'next_topic',
       spokenResponse: transition,
@@ -901,7 +1079,7 @@ export async function generateAdaptiveTurnResponse(input: RespondTurnInput): Pro
     const mustAdvance = input.followUpCountForTopic >= 1;
     const hasNext = Boolean(input.nextTopic && input.nextQuestion);
 
-    const prompt = `You are ${input.aiPersona}, interviewing ${input.candidateName || 'the candidate'} for "${input.targetRole}" at "${input.targetCompany}".
+    const prompt = `You are ${input.aiPersona}, interviewing ${input.candidateName || 'the candidate'} for "${input.targetRole}" at "${input.targetCompany}" (round type: ${input.interviewType || 'technical'}).
 This is a purely VERBAL interview. Respond concisely in natural spoken human dialogue (2 to 4 sentences max, no markdown, no bullets).
 
 Current Topic (#${input.currentTopic.order}): ${input.currentTopic.title} (${input.currentTopic.category})
@@ -912,6 +1090,7 @@ Recent conversation:
 ${(input.recentTranscript || []).slice(-4).map((m) => `${m.speaker}: ${m.text}`).join('\n')}
 
 Rules:
+- Stay strictly aligned to the "${input.interviewType || 'technical'}" round and "${input.targetRole}" role.
 - If Follow-ups already asked == 0, set action="follow_up" and ask ONE sharp, specific follow-up question referencing concrete details from the candidate's spoken answer above.
 - If Follow-ups already asked >= 1:
   ${

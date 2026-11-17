@@ -27,7 +27,7 @@ interface SidebarProps {
 
 export const Sidebar: React.FC<SidebarProps> = ({ mobileOpen, onCloseMobile }) => {
   const { user, logout } = useAuth();
-  const { learningPlan } = useApp();
+  const { learningPlan, interviewSetup, sessionHistory } = useApp();
   const { showToast } = useToast();
   const navigate = useNavigate();
 
@@ -51,7 +51,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ mobileOpen, onCloseMobile }) =
     navigate('/login');
   };
 
-  const readinessScore = user?.readinessScore ?? 78;
+  const readinessScore = user?.readinessScore ?? (sessionHistory.length > 0 ? sessionHistory[0].score : 0);
 
   const sidebarContent = (
     <aside className="h-full w-72 bg-[#0f172a] text-[#ffffff] flex flex-col justify-between shadow-[0_1px_8px_rgba(0,0,0,0.06)] border-r border-[#1e293b] select-none">
@@ -162,8 +162,12 @@ export const Sidebar: React.FC<SidebarProps> = ({ mobileOpen, onCloseMobile }) =
             />
           </div>
           <div className="flex items-center justify-between mt-2 text-[11px] text-[#94a3b8]">
-            <span className="truncate">{user?.targetRole || 'Senior Staff'}</span>
-            <span className="text-[#c3c0ff] font-medium">{learningPlan.completionPercentage}% plan</span>
+            <span className="truncate">
+              {interviewSetup.targetRole || user?.targetRole || 'Software Developer'}
+            </span>
+            <span className="text-[#c3c0ff] font-medium shrink-0 ml-2">
+              {learningPlan.completionPercentage}% plan
+            </span>
           </div>
         </NavLink>
 

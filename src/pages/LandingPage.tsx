@@ -31,20 +31,17 @@ export const LandingPage: React.FC = () => {
       <main className="w-full pt-20">
         {/* HERO SECTION */}
         <section className="relative w-full overflow-hidden bg-[#f8f9ff] py-12 lg:py-24">
-          {/* Ambient decorative glow */}
-          <div className="absolute -top-36 left-1/2 -translate-x-1/2 w-[900px] h-[480px] bg-gradient-to-b from-[#3525cd]/10 via-[#dae2fd]/30 to-transparent blur-3xl pointer-events-none rounded-full" />
-
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div className="flex flex-col items-center text-center max-w-4xl mx-auto">
-              {/* Announcement Pill */}
-              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#dae2fd]/60 border border-[#c7c4d8]/40 shadow-sm mb-6 backdrop-blur-md">
-                <span className="w-2 h-2 rounded-full bg-[#4f46e5] animate-pulse" />
+              {/* Announcement Banner */}
+              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-lg bg-[#dae2fd]/60 border border-[#c7c4d8]/50 shadow-xs mb-6">
+                <span className="w-2 h-2 rounded-full bg-[#4f46e5]" />
                 <span className="text-xs text-[#3525cd] font-semibold tracking-wide uppercase">
                   Copilot v2.4 Release
                 </span>
                 <span className="text-[#777587] text-xs">•</span>
                 <span className="text-xs text-[#0b1c30] font-medium">
-                  Live Biomarker Pacing & Rubric Scoring
+                  Neural Voice Coaching &amp; Rubric Scoring
                 </span>
                 <ChevronRight className="w-3.5 h-3.5 text-[#3525cd]" />
               </div>
@@ -118,8 +115,8 @@ export const LandingPage: React.FC = () => {
                   </div>
 
                   <div className="flex items-center gap-3">
-                    <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#ffdad6] text-[#93000a] text-xs font-semibold">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#ba1a1a] animate-ping" />
+                    <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-[#ffdad6] text-[#93000a] text-xs font-semibold">
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#ba1a1a]" />
                       LIVE REC • 18:24
                     </span>
                   </div>
@@ -171,7 +168,7 @@ export const LandingPage: React.FC = () => {
                       {/* Live Voice Visualizer Bar */}
                       <div className="p-3 rounded-lg bg-white/90 border border-[#e2e8f0] shadow-sm flex items-center justify-between gap-3">
                         <div className="flex items-center gap-2 min-w-0">
-                          <span className="w-2.5 h-2.5 rounded-full bg-[#4f46e5] animate-pulse shrink-0" />
+                          <span className="w-2.5 h-2.5 rounded-full bg-[#4f46e5] shrink-0" />
                           <span className="text-xs font-medium text-[#0b1c30] truncate">
                             Candidate Audio Stream (You)
                           </span>
@@ -179,14 +176,14 @@ export const LandingPage: React.FC = () => {
 
                         {/* Minimal Waveform Bars */}
                         <div className="flex items-center gap-1 h-6 shrink-0">
-                          <span className="w-1 h-3 bg-[#4f46e5] rounded-full animate-pulse" />
-                          <span className="w-1 h-5 bg-[#4f46e5] rounded-full animate-pulse" />
-                          <span className="w-1 h-2 bg-[#4f46e5] rounded-full animate-pulse" />
-                          <span className="w-1 h-6 bg-[#4f46e5] rounded-full animate-pulse" />
-                          <span className="w-1 h-4 bg-[#4f46e5] rounded-full animate-pulse" />
-                          <span className="w-1 h-5 bg-[#4f46e5] rounded-full animate-pulse" />
-                          <span className="w-1 h-2 bg-[#4f46e5] rounded-full animate-pulse" />
-                          <span className="w-1 h-4 bg-[#4f46e5] rounded-full animate-pulse" />
+                          <span className="w-1 h-3 bg-[#4f46e5] rounded-full" />
+                          <span className="w-1 h-5 bg-[#4f46e5] rounded-full" />
+                          <span className="w-1 h-2 bg-[#4f46e5] rounded-full" />
+                          <span className="w-1 h-6 bg-[#4f46e5] rounded-full" />
+                          <span className="w-1 h-4 bg-[#4f46e5] rounded-full" />
+                          <span className="w-1 h-5 bg-[#4f46e5] rounded-full" />
+                          <span className="w-1 h-2 bg-[#4f46e5] rounded-full" />
+                          <span className="w-1 h-4 bg-[#4f46e5] rounded-full" />
                         </div>
                       </div>
                     </div>
@@ -519,7 +516,7 @@ export const LandingPage: React.FC = () => {
             </div>
 
             <div className="my-5 p-6 rounded-xl bg-[#0f172a] text-white flex flex-col items-center justify-center text-center gap-4 min-h-[260px]">
-              <div className="w-16 h-16 rounded-full bg-[#4f46e5]/20 text-[#c3c0ff] flex items-center justify-center border border-[#4f46e5]/40 animate-pulse">
+              <div className="w-16 h-16 rounded-full bg-[#4f46e5]/20 text-[#c3c0ff] flex items-center justify-center border border-[#4f46e5]/40">
                 <PlayCircle className="w-8 h-8" />
               </div>
               <div>

@@ -35,6 +35,7 @@ import {
   getVoiceToneLabel,
   formatClockTimestamp,
 } from '../utils/interviewFlow';
+import { INTERVIEW_TYPE_LABELS } from '../utils/roleCatalog';
 import { InterviewQuestion } from '../types';
 
 export const InterviewRoomPage: React.FC = () => {
@@ -99,7 +100,6 @@ export const InterviewRoomPage: React.FC = () => {
 
   const transcriptViewportRef = useRef<HTMLDivElement>(null);
   const transcriptRef = useRef<TranscriptEntry[]>([]);
-  const initializedPlanRef = useRef(false);
 
   const currentTopic: PlannedTopic | undefined = plannedTopics[activeQuestionIndex];
   const currentQuestion: InterviewQuestion | undefined = questions[activeQuestionIndex] || questions[0];
@@ -156,18 +156,35 @@ export const InterviewRoomPage: React.FC = () => {
     [voiceMuted, speak, interviewSetup.aiPersona, selectedVoice]
   );
 
-  // Step 1 on Mount: AI reviews Job Role, JD, and Resume -> prepares ordered topics -> greets candidate + gives smart overview -> asks if ready
+  // Step 1 on Mount / Setup Change: AI reviews Job Role, Interview Type, JD, and Resume -> prepares ordered topics -> greets candidate + gives smart overview -> asks if ready
   useEffect(() => {
-    if (initializedPlanRef.current) return;
-    initializedPlanRef.current = true;
-
+    const controller = new AbortController();
     let cancelled = false;
+
     async function initializePlannedInterview() {
       setPhase('planning');
+      setPlannedTopics([]);
+      transcriptRef.current = [];
+      setTranscript([]);
+      setFollowUpCounts({});
+      setPrimaryAnswersByIdx({});
+      setFollowUpMetaByIdx({});
+
+      const activeSkills =
+        resumeAnalysis.parsedProfile?.skills && resumeAnalysis.parsedProfile.skills.length > 0
+          ? resumeAnalysis.parsedProfile.skills
+          : profile.skills;
+      const activeExperiences =
+        resumeAnalysis.parsedProfile?.extractedExperiences &&
+        resumeAnalysis.parsedProfile.extractedExperiences.length > 0
+          ? resumeAnalysis.parsedProfile.extractedExperiences
+          : profile.extractedExperiences;
+
       try {
         const res = await fetch('/api/ai/interview/plan', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
+          signal: controller.signal,
           body: JSON.stringify({
             candidateName: user?.name || profile.fullName || 'Candidate',
             targetRole: interviewSetup.targetRole,
@@ -177,9 +194,9 @@ export const InterviewRoomPage: React.FC = () => {
             questionCount: interviewSetup.questionCount || 4,
             aiPersona: interviewSetup.aiPersona,
             resumeSummary: {
-              headline: profile.headline,
-              skills: profile.skills,
-              experiences: profile.extractedExperiences,
+              headline: resumeAnalysis.parsedProfile?.headline || profile.headline,
+              skills: activeSkills,
+              experiences: activeExperiences,
               matchedSkills: resumeAnalysis.matchAnalysis.matchedSkills.map((s) => s.skill),
               missingSkills: resumeAnalysis.matchAnalysis.missingSkills.map((s) => s.skill),
               suggestedFocusAreas: resumeAnalysis.matchAnalysis.suggestedFocusAreas,
@@ -193,7 +210,7 @@ export const InterviewRoomPage: React.FC = () => {
         const data = await res.json();
         const plan = data?.plan;
 
-        if (plan?.topicOrder && plan?.questions) {
+        if (!cancelled && plan?.topicOrder && plan?.questions) {
           setPlannedTopics(plan.topicOrder);
           setPlannedQuestions(plan.questions);
           setPhase('greeting-ready-check');
@@ -210,9 +227,11 @@ export const InterviewRoomPage: React.FC = () => {
           setTranscript([greetingEntry]);
 
           speakAsInterviewer(plan.greetingOverview);
+        } else if (!cancelled) {
+          setPhase('greeting-ready-check');
         }
-      } catch (err) {
-        if (!cancelled) {
+      } catch (err: any) {
+        if (!cancelled && err?.name !== 'AbortError') {
           console.error('[InterviewRoom] Plan initialization error:', err);
           setPhase('greeting-ready-check');
         }
@@ -222,9 +241,17 @@ export const InterviewRoomPage: React.FC = () => {
     void initializePlannedInterview();
     return () => {
       cancelled = true;
+      controller.abort();
       stopSpeaking();
     };
-  }, []);
+  }, [
+    interviewSetup.targetRole,
+    interviewSetup.targetCompany,
+    interviewSetup.interviewType,
+    interviewSetup.difficulty,
+    interviewSetup.questionCount,
+    interviewSetup.aiPersona,
+  ]);
 
   // Live session timer
   useEffect(() => {
@@ -425,6 +452,7 @@ export const InterviewRoomPage: React.FC = () => {
           candidateName: user?.name || profile.fullName || 'Candidate',
           targetRole: interviewSetup.targetRole,
           targetCompany: interviewSetup.targetCompany,
+          interviewType: interviewSetup.interviewType,
           aiPersona: interviewSetup.aiPersona,
           currentTopic: topic,
           currentQuestion: q,
@@ -579,16 +607,21 @@ export const InterviewRoomPage: React.FC = () => {
       {/* Top Session Header */}
       <div className="bg-white border border-[#e2e8f0] shadow-sm rounded-xl px-5 py-4 flex flex-col xl:flex-row xl:items-center justify-between gap-4">
         <div className="flex items-center gap-3.5 min-w-0 flex-1">
-          <div className="w-2.5 h-2.5 rounded-full bg-[#4f46e5] animate-pulse shrink-0" />
+          <div className="w-2.5 h-2.5 rounded-full bg-[#4f46e5] shrink-0" />
           <div className="min-w-0 text-left">
             <div className="flex items-center gap-2 text-xs text-[#565e74] flex-wrap">
-              <span className="font-bold text-[#3525cd] uppercase tracking-wider">Verbal AI Interview</span>
+              <span className="font-bold text-[#3525cd] uppercase tracking-wider">
+                {INTERVIEW_TYPE_LABELS[interviewSetup.interviewType]}
+              </span>
               <span aria-hidden="true">·</span>
               <span>
-                {interviewSetup.targetCompany} · {interviewSetup.difficulty === 'senior-staff' ? 'L6 Staff Track' : interviewSetup.difficulty}
+                {interviewSetup.targetCompany} · {interviewSetup.difficulty === 'senior-staff' ? 'Senior / Staff' : interviewSetup.difficulty}
               </span>
             </div>
-            <h1 className="font-heading text-base sm:text-lg font-bold text-[#0b1c30] leading-snug mt-0.5">
+            <h1
+              data-testid="live-session-role-heading"
+              className="font-heading text-base sm:text-lg font-bold text-[#0b1c30] leading-snug mt-0.5"
+            >
               {interviewSetup.targetRole} — Spoken Loop with {interviewSetup.aiPersona}
             </h1>
           </div>
@@ -927,108 +960,15 @@ export const InterviewRoomPage: React.FC = () => {
             )}
           </div>
 
-          {/* Planned Interview Order Card (Built from Job Role + JD + Resume) */}
-          <div className="bg-white rounded-xl p-5 border border-[#e2e8f0] shadow-sm text-left">
-            <div className="flex items-center justify-between pb-3 border-b border-[#e2e8f0] mb-3">
-              <div className="flex items-center gap-2">
-                <ListOrdered className="w-4 h-4 text-[#3525cd]" />
-                <div>
-                  <h3 className="font-heading text-sm font-bold text-[#0b1c30]">
-                    Planned Interview Topic Order
-                  </h3>
-                  <p className="text-[11px] text-[#565e74]">
-                    Curated from {interviewSetup.targetRole} JD &amp; your resume
-                  </p>
-                </div>
-              </div>
-              <span className="text-[11px] font-semibold text-[#3525cd] whitespace-nowrap shrink-0">
-                {plannedTopics.length} Topics
-              </span>
-            </div>
-
-            {phase === 'planning' ? (
-              <div className="space-y-2.5 py-2">
-                {[1, 2, 3].map((i) => (
-                  <div key={i} className="h-12 rounded-lg bg-[#eff4ff] animate-pulse" />
-                ))}
-              </div>
-            ) : (
-              <div className="space-y-2">
-                {plannedTopics.map((topic, idx) => {
-                  const isActive =
-                    phase !== 'greeting-ready-check' &&
-                    phase !== 'completed' &&
-                    idx === activeQuestionIndex;
-                  const isDone =
-                    phase === 'completed' ||
-                    (phase !== 'greeting-ready-check' && idx < activeQuestionIndex);
-                  const followUps = followUpCounts[idx] || 0;
-
-                  return (
-                    <div
-                      key={topic.id}
-                      className={`p-3 rounded-lg border transition-all duration-200 ${
-                        isActive
-                          ? 'bg-[#eff4ff] border-[#4f46e5] shadow-xs'
-                          : isDone
-                          ? 'bg-[#f8f9ff] border-[#e2e8f0] opacity-80'
-                          : 'bg-white border-[#e2e8f0]'
-                      }`}
-                    >
-                      <div className="flex items-start justify-between gap-2">
-                        <div className="flex items-start gap-2.5 min-w-0">
-                          <span
-                            className={`w-5 h-5 rounded-md text-[11px] font-bold flex items-center justify-center shrink-0 mt-0.5 ${
-                              isDone
-                                ? 'bg-emerald-600 text-white'
-                                : isActive
-                                ? 'bg-[#4f46e5] text-white'
-                                : 'bg-[#e5eeff] text-[#3525cd]'
-                            }`}
-                          >
-                            {isDone ? <CheckCircle2 className="w-3.5 h-3.5" /> : topic.order}
-                          </span>
-                          <div className="min-w-0">
-                            {topic.sectionName && (
-                              <span className="inline-block text-[10px] font-bold uppercase tracking-wider text-[#3525cd] bg-[#eff4ff] px-1.5 py-0.5 rounded mb-1">
-                                {topic.sectionName}
-                              </span>
-                            )}
-                            <div className="text-xs font-bold text-[#0b1c30] leading-snug">
-                              {topic.title}
-                            </div>
-                            <div className="text-[11px] text-[#565e74] mt-0.5 leading-relaxed">
-                              {topic.rationale}
-                            </div>
-                          </div>
-                        </div>
-
-                        <span className="text-[10px] font-semibold text-[#565e74] whitespace-nowrap shrink-0">
-                          {isDone
-                            ? 'Completed'
-                            : isActive && followUps > 0
-                            ? 'Follow-up'
-                            : isActive
-                            ? 'Active'
-                            : 'Queued'}
-                        </span>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            )}
-          </div>
-
           {/* Active Topic Rubric Focus (shown once questioning begins) */}
           <AnimatePresence mode="wait">
             {phase !== 'greeting-ready-check' && phase !== 'planning' && currentQuestion && (
               <motion.div
                 key={currentQuestion.id}
-                initial={{ opacity: 0, y: 8 }}
+                initial={{ opacity: 0, y: 6 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -6 }}
-                transition={{ duration: 0.22 }}
+                exit={{ opacity: 0, y: -4 }}
+                transition={{ duration: 0.14 }}
                 className="bg-white rounded-xl p-5 border border-[#e2e8f0] shadow-sm text-left space-y-3"
               >
                 <div className="flex items-center justify-between text-xs">
@@ -1073,7 +1013,7 @@ export const InterviewRoomPage: React.FC = () => {
           </AnimatePresence>
         </div>
 
-        {/* RIGHT PANEL (7 cols): Verbal Console + Fixed-Height Scrollable Transcript Window */}
+        {/* RIGHT PANEL (7 cols): Fixed-Height Scrollable Transcript Window + Planned Topic Order */}
         <div className="lg:col-span-7 flex flex-col gap-5">
           <div className="bg-white rounded-xl border border-[#e2e8f0] shadow-sm flex flex-col overflow-hidden text-left">
             {/* Transcript Window Header Bar with Top / Bottom Scroll Controls */}
@@ -1200,6 +1140,105 @@ export const InterviewRoomPage: React.FC = () => {
                 {transcript.filter((t) => t.speaker === 'candidate' && t.kind === 'response').length} spoken replies recorded
               </span>
             </div>
+          </div>
+
+          {/* Planned Interview Topic Order Card (Built live on session start from Job Role + JD + Resume) */}
+          <div
+            data-testid="planned-topic-order-card"
+            className="bg-white rounded-xl p-5 border border-[#e2e8f0] shadow-sm text-left"
+          >
+            <div className="flex items-center justify-between pb-3 border-b border-[#e2e8f0] mb-3">
+              <div className="flex items-center gap-2">
+                <ListOrdered className="w-4 h-4 text-[#3525cd]" />
+                <div>
+                  <h3 className="font-heading text-sm font-bold text-[#0b1c30]">
+                    Planned Interview Topic Order
+                  </h3>
+                  <p className="text-[11px] text-[#565e74]">
+                    Curated live from {interviewSetup.targetRole} track, JD &amp; resume
+                  </p>
+                </div>
+              </div>
+              <span className="text-[11px] font-semibold text-[#3525cd] whitespace-nowrap shrink-0">
+                {plannedTopics.length} Topics
+              </span>
+            </div>
+
+            {phase === 'planning' ? (
+              <div className="space-y-2.5 py-2">
+                {[1, 2, 3].map((i) => (
+                  <div key={i} className="h-12 rounded-lg bg-[#eff4ff] animate-pulse" />
+                ))}
+              </div>
+            ) : (
+              <div className="space-y-2">
+                {plannedTopics.map((topic, idx) => {
+                  const isActive =
+                    phase !== 'greeting-ready-check' &&
+                    phase !== 'completed' &&
+                    idx === activeQuestionIndex;
+                  const isDone =
+                    phase === 'completed' ||
+                    (phase !== 'greeting-ready-check' && idx < activeQuestionIndex);
+                  const followUps = followUpCounts[idx] || 0;
+                  const showDistinctSectionBadge =
+                    Boolean(topic.sectionName) &&
+                    topic.sectionName!.trim().toLowerCase() !== topic.title.trim().toLowerCase();
+
+                  return (
+                    <div
+                      key={topic.id}
+                      className={`p-3 rounded-lg border transition-all duration-200 ${
+                        isActive
+                          ? 'bg-[#eff4ff] border-[#4f46e5] shadow-xs'
+                          : isDone
+                          ? 'bg-[#f8f9ff] border-[#e2e8f0] opacity-80'
+                          : 'bg-white border-[#e2e8f0]'
+                      }`}
+                    >
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="flex items-start gap-2.5 min-w-0">
+                          <span
+                            className={`w-5 h-5 rounded-md text-[11px] font-bold flex items-center justify-center shrink-0 mt-0.5 ${
+                              isDone
+                                ? 'bg-emerald-600 text-white'
+                                : isActive
+                                ? 'bg-[#4f46e5] text-white'
+                                : 'bg-[#e5eeff] text-[#3525cd]'
+                            }`}
+                          >
+                            {isDone ? <CheckCircle2 className="w-3.5 h-3.5" /> : topic.order}
+                          </span>
+                          <div className="min-w-0">
+                            {showDistinctSectionBadge && (
+                              <span className="inline-block text-[10px] font-bold uppercase tracking-wider text-[#3525cd] bg-[#eff4ff] px-1.5 py-0.5 rounded mb-1">
+                                {topic.sectionName}
+                              </span>
+                            )}
+                            <div className="text-xs font-bold text-[#0b1c30] leading-snug">
+                              {topic.title}
+                            </div>
+                            <div className="text-[11px] text-[#565e74] mt-0.5 leading-relaxed">
+                              {topic.rationale}
+                            </div>
+                          </div>
+                        </div>
+
+                        <span className="text-[10px] font-semibold text-[#565e74] whitespace-nowrap shrink-0">
+                          {isDone
+                            ? 'Completed'
+                            : isActive && followUps > 0
+                            ? 'Follow-up'
+                            : isActive
+                            ? 'Active'
+                            : 'Queued'}
+                        </span>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
           </div>
         </div>
       </div>

@@ -15,7 +15,9 @@ import {
   ExternalLink,
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import { useApp } from '../../context/AppContext';
 import { useToast } from '../../context/ToastContext';
+import { getDefaultAvatarUrl } from '../../utils/avatar';
 
 interface TopHeaderProps {
   onToggleMobileMenu: () => void;
@@ -32,41 +34,47 @@ interface NotificationItem {
 
 export const TopHeader: React.FC<TopHeaderProps> = ({ onToggleMobileMenu }) => {
   const { user, logout } = useAuth();
+  const { interviewSetup, sessionHistory, resumeAnalysis } = useApp();
   const { showToast } = useToast();
   const location = useLocation();
   const navigate = useNavigate();
 
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
-  const [notifications, setNotifications] = useState<NotificationItem[]>([
-    {
-      id: 'notif_1',
-      title: 'Stripe L6 Calibration Updated',
-      description: 'Your Distributed Consensus & Raft telemetry score is 89/100.',
-      time: '12m ago',
-      read: false,
-      link: '/evaluation-reports',
-    },
-    {
-      id: 'notif_2',
-      title: 'Resume ATS Alignment: 92/100',
-      description: 'Senior Frontend keywords matched 84% against Stripe core requirements.',
-      time: '2h ago',
-      read: false,
-      link: '/resume-job-match',
-    },
-    {
-      id: 'notif_3',
-      title: 'Upcoming Mock Session',
-      description: 'Tomorrow at 10:00 AM: System Design & Edge Cache Architecture.',
-      time: '1d ago',
-      read: true,
-      link: '/learning-plan',
-    },
-  ]);
+  const [readIds, setReadIds] = useState<string[]>([]);
 
   const notifRef = useRef<HTMLDivElement>(null);
   const profileRef = useRef<HTMLDivElement>(null);
+
+  const notifications: NotificationItem[] = React.useMemo(() => {
+    const items: NotificationItem[] = [];
+    if (sessionHistory.length > 0) {
+      const latest = sessionHistory[0];
+      items.push({
+        id: `session_${latest.id}`,
+        title: `${latest.title} Scored`,
+        description: `Latest evaluation: ${latest.score}/100 · ${latest.company}.`,
+        time: latest.date,
+        read: readIds.includes(`session_${latest.id}`),
+        link: `/evaluation-reports?sessionId=${encodeURIComponent(latest.id)}`,
+      });
+    }
+    if (
+      resumeAnalysis?.fileName &&
+      resumeAnalysis.fileName !== 'No resume uploaded yet' &&
+      (resumeAnalysis.wordCount || 0) > 0
+    ) {
+      items.push({
+        id: `resume_${resumeAnalysis.id || resumeAnalysis.fileName}`,
+        title: `Resume ATS Score: ${resumeAnalysis.atsScore}/100`,
+        description: `${resumeAnalysis.fileName} matched ${resumeAnalysis.matchAnalysis.overallMatchPercentage}% against target JD.`,
+        time: 'Synced',
+        read: readIds.includes(`resume_${resumeAnalysis.id || resumeAnalysis.fileName}`),
+        link: '/resume-job-match',
+      });
+    }
+    return items;
+  }, [sessionHistory, resumeAnalysis, readIds]);
 
   // Close menus when clicking outside
   useEffect(() => {
@@ -85,7 +93,7 @@ export const TopHeader: React.FC<TopHeaderProps> = ({ onToggleMobileMenu }) => {
   const unreadCount = notifications.filter((n) => !n.read).length;
 
   const markAllAsRead = () => {
-    setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
+    setReadIds(notifications.map((n) => n.id));
     showToast({
       title: 'Notifications Cleared',
       message: 'All notifications marked as read.',
@@ -127,7 +135,7 @@ export const TopHeader: React.FC<TopHeaderProps> = ({ onToggleMobileMenu }) => {
   };
 
   return (
-    <header className="sticky top-0 z-30 h-16 bg-[#f8f9ff]/90 backdrop-blur-xl border-b border-[#e2e8f0] flex items-center justify-between px-4 sm:px-6 shadow-[0_1px_4px_rgba(15,23,42,0.03)] select-none">
+    <header className="sticky top-0 z-30 h-16 bg-[#f8f9ff]/95 backdrop-blur-sm border-b border-[#e2e8f0] flex items-center justify-between px-4 sm:px-6 shadow-[0_1px_4px_rgba(15,23,42,0.03)] select-none">
       {/* Left: Mobile Toggle + Breadcrumb */}
       <div className="flex items-center gap-3">
         <button
@@ -138,40 +146,42 @@ export const TopHeader: React.FC<TopHeaderProps> = ({ onToggleMobileMenu }) => {
           <Menu className="w-5 h-5" />
         </button>
 
-        <div className="flex items-center gap-1.5 text-xs text-[#565e74]">
+        <div className="flex items-center gap-1.5 text-xs text-[#565e74] min-w-0">
           <Link
             to="/dashboard"
-            className="hover:text-[#0b1c30] transition-colors font-medium focus-visible:underline"
+            className="hidden sm:inline hover:text-[#0b1c30] transition-colors font-medium focus-visible:underline"
           >
             Platform
           </Link>
-          <ChevronRight className="w-3.5 h-3.5 text-[#777587]" />
-          <span className="font-semibold text-[#0b1c30] truncate max-w-[180px] sm:max-w-none">
+          <ChevronRight className="hidden sm:inline w-3.5 h-3.5 text-[#777587] shrink-0" />
+          <span className="font-semibold text-[#0b1c30] truncate max-w-[155px] sm:max-w-none">
             {getPageTitle(location.pathname)}
           </span>
         </div>
       </div>
 
       {/* Right: Quick Action, Target Badge, Notifications, User */}
-      <div className="flex items-center gap-2 sm:gap-3">
-        {/* Target role pill (hidden on small screens) */}
+      <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+        {/* Target role indicator (hidden on small screens) */}
         <Link
-          to="/profile-settings"
-          className="hidden xl:flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#e5eeff] text-[#3525cd] text-xs font-semibold hover:bg-[#dce9ff] transition-colors"
-          title="Click to adjust target calibration"
+          to="/interview-setup"
+          data-testid="header-target-role-badge"
+          className="hidden xl:flex items-center gap-1.5 px-3 py-1 rounded-lg bg-[#e5eeff] text-[#3525cd] text-xs font-semibold hover:bg-[#dce9ff] transition-colors"
+          title="Click to adjust target role & interview setup"
         >
           <Sparkles className="w-3.5 h-3.5" />
           <span>
-            {user?.targetCompany || 'Stripe'} • {user?.targetRole || 'Senior Staff'}
+            {interviewSetup.targetCompany || user?.targetCompany || 'Stripe'} •{' '}
+            {interviewSetup.targetRole || user?.targetRole || 'Software Developer'}
           </span>
         </Link>
 
         {/* Start Mock Interview Button */}
         <Link
           to="/interview-setup"
-          className="flex items-center gap-1.5 bg-[#4f46e5] hover:bg-[#3525cd] text-white px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all shadow-sm active:scale-95 focus-visible:ring-2 focus-visible:ring-[#4f46e5] focus-visible:outline-none"
+          className="flex items-center gap-1.5 bg-[#4f46e5] hover:bg-[#3525cd] text-white px-3 sm:px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all shadow-sm active:scale-95 whitespace-nowrap shrink-0 focus-visible:ring-2 focus-visible:ring-[#4f46e5] focus-visible:outline-none"
         >
-          <Play className="w-3.5 h-3.5 fill-current" />
+          <Play className="w-3.5 h-3.5 fill-current shrink-0" />
           <span className="hidden sm:inline">Start Mock Interview</span>
           <span className="sm:hidden">Start Mock</span>
         </Link>
@@ -190,7 +200,7 @@ export const TopHeader: React.FC<TopHeaderProps> = ({ onToggleMobileMenu }) => {
           >
             <Bell className="w-4 h-4" />
             {unreadCount > 0 && (
-              <span className="absolute top-1 right-1 w-2 h-2 bg-[#3525cd] rounded-full ring-2 ring-white animate-pulse" />
+              <span className="absolute top-1 right-1 w-2 h-2 bg-[#3525cd] rounded-full ring-2 ring-white" />
             )}
           </button>
 
@@ -198,10 +208,10 @@ export const TopHeader: React.FC<TopHeaderProps> = ({ onToggleMobileMenu }) => {
           <AnimatePresence>
             {notificationsOpen && (
               <motion.div
-                initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                initial={{ opacity: 0, y: 6, scale: 0.97 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: 8, scale: 0.95 }}
-                transition={{ duration: 0.15 }}
+                exit={{ opacity: 0, y: 4, scale: 0.97 }}
+                transition={{ duration: 0.14 }}
                 className="absolute right-0 mt-2 w-80 sm:w-96 bg-white rounded-xl shadow-xl border border-[#e2e8f0] p-4 text-left z-50"
               >
                 <div className="flex items-center justify-between pb-3 border-b border-[#e2e8f0]">
@@ -210,7 +220,7 @@ export const TopHeader: React.FC<TopHeaderProps> = ({ onToggleMobileMenu }) => {
                       Session Alerts
                     </span>
                     {unreadCount > 0 && (
-                      <span className="px-1.5 py-0.5 rounded-full bg-[#eff4ff] text-[#3525cd] text-[10px] font-bold">
+                      <span className="px-1.5 py-0.5 rounded-md bg-[#eff4ff] text-[#3525cd] text-[10px] font-bold">
                         {unreadCount} new
                       </span>
                     )}
@@ -227,24 +237,30 @@ export const TopHeader: React.FC<TopHeaderProps> = ({ onToggleMobileMenu }) => {
                 </div>
 
                 <div className="divide-y divide-[#f1f5f9] max-h-72 overflow-y-auto">
-                  {notifications.map((item) => (
-                    <Link
-                      key={item.id}
-                      to={item.link}
-                      onClick={() => setNotificationsOpen(false)}
-                      className={`block p-3 rounded-lg hover:bg-[#f8f9ff] transition-colors ${
-                        !item.read ? 'bg-[#eff4ff]/40' : ''
-                      }`}
-                    >
-                      <div className="flex items-start justify-between gap-2">
-                        <span className="text-xs font-bold text-[#0b1c30]">{item.title}</span>
-                        <span className="text-[10px] text-[#777587] shrink-0">{item.time}</span>
-                      </div>
-                      <p className="text-[11px] text-[#565e74] mt-1 leading-relaxed">
-                        {item.description}
-                      </p>
-                    </Link>
-                  ))}
+                  {notifications.length === 0 ? (
+                    <div className="p-4 text-center text-xs text-[#565e74]">
+                      No new alerts yet. Complete a mock interview or resume scan to see updates here.
+                    </div>
+                  ) : (
+                    notifications.map((item) => (
+                      <Link
+                        key={item.id}
+                        to={item.link}
+                        onClick={() => setNotificationsOpen(false)}
+                        className={`block p-3 rounded-lg hover:bg-[#f8f9ff] transition-colors ${
+                          !item.read ? 'bg-[#eff4ff]/40' : ''
+                        }`}
+                      >
+                        <div className="flex items-start justify-between gap-2">
+                          <span className="text-xs font-bold text-[#0b1c30]">{item.title}</span>
+                          <span className="text-[10px] text-[#777587] shrink-0">{item.time}</span>
+                        </div>
+                        <p className="text-[11px] text-[#565e74] mt-1 leading-relaxed">
+                          {item.description}
+                        </p>
+                      </Link>
+                    ))
+                  )}
                 </div>
 
                 <div className="pt-2 border-t border-[#e2e8f0] text-center">
@@ -274,11 +290,8 @@ export const TopHeader: React.FC<TopHeaderProps> = ({ onToggleMobileMenu }) => {
           >
             <div className="relative">
               <img
-                src={
-                  user?.avatarUrl ||
-                  'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=256'
-                }
-                alt={user?.name || 'User'}
+                src={user?.avatarUrl || getDefaultAvatarUrl(user?.name || 'Candidate')}
+                alt={user?.name || 'Candidate'}
                 className="w-8 h-8 rounded-full object-cover ring-2 ring-[#e2e8f0] group-hover:ring-[#4f46e5] transition-all"
               />
               <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-500 rounded-full ring-2 ring-white" />
@@ -289,15 +302,15 @@ export const TopHeader: React.FC<TopHeaderProps> = ({ onToggleMobileMenu }) => {
           <AnimatePresence>
             {profileMenuOpen && (
               <motion.div
-                initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                initial={{ opacity: 0, y: 6, scale: 0.97 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: 8, scale: 0.95 }}
-                transition={{ duration: 0.15 }}
+                exit={{ opacity: 0, y: 4, scale: 0.97 }}
+                transition={{ duration: 0.14 }}
                 className="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-xl border border-[#e2e8f0] p-2 text-left z-50"
               >
                 <div className="px-3 py-2 border-b border-[#f1f5f9]">
-                  <div className="text-xs font-bold text-[#0b1c30] truncate">{user?.name || 'Alex Morgan'}</div>
-                  <div className="text-[11px] text-[#565e74] truncate">{user?.email || 'alex.morgan@example.com'}</div>
+                  <div className="text-xs font-bold text-[#0b1c30] truncate">{user?.name || 'Candidate'}</div>
+                  <div className="text-[11px] text-[#565e74] truncate">{user?.email || 'Signed in'}</div>
                 </div>
 
                 <div className="py-1">

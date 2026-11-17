@@ -12,7 +12,6 @@ import {
 import {
   sampleCandidateProfile,
   sampleResumeAnalysis,
-  sampleInterviewQuestions,
   sampleEvaluationReport,
   sampleLearningPlan,
   sampleSessionHistory,
@@ -110,16 +109,90 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 const getAppStateKey = (userId?: string | null) =>
   `preppilot_app_state_v2_${userId || 'guest'}`;
 
+const createEmptyCandidateProfile = (u: {
+  id: string;
+  email: string;
+  name: string;
+  avatarUrl?: string;
+  targetRole?: string;
+}): CandidateProfile => ({
+  id: `prof_${u.id}`,
+  userId: u.id,
+  fullName: u.name || 'Candidate',
+  headline: u.targetRole || 'Software Developer',
+  location: 'Remote / Open to Relocation',
+  yearsOfExperience: 2,
+  education: {
+    degree: '',
+    institution: '',
+    graduationYear: new Date().getFullYear(),
+  },
+  skills: [],
+  extractedExperiences: [],
+  preferences: {
+    aiInterviewerPersona: 'Sarah',
+    interviewerStyle: 'bar-raiser',
+    speechTranscriptionEnabled: true,
+    voiceFeedbackEnabled: true,
+    cameraEnabled: false,
+  },
+});
+
+const createEmptyResumeAnalysis = (targetRole: string): ResumeAnalysis => ({
+  id: 'analysis_pending',
+  fileName: 'No resume uploaded yet',
+  fileSizeKb: 0,
+  uploadedAt: 'Not uploaded',
+  atsScore: 0,
+  wordCount: 0,
+  rawText: '',
+  atsBreakdown: {
+    keywordAlignment: 0,
+    technicalDepth: 0,
+    quantifiedImpact: 0,
+    sectionCompleteness: 0,
+  },
+  parsedProfile: {
+    fullName: '',
+    headline: targetRole || 'Software Developer',
+    location: '',
+    yearsOfExperience: 0,
+    education: { degree: '', institution: '', graduationYear: new Date().getFullYear() },
+    skills: [],
+    extractedExperiences: [],
+  },
+  matchAnalysis: {
+    overallMatchPercentage: 0,
+    matchedSkills: [],
+    missingSkills: [],
+    inferredStrengths: [],
+    suggestedFocusAreas: [],
+  },
+  keywordAnalysis: [],
+  levelingFit: [],
+  compensationBand: 'Upload resume to calibrate',
+  detectedRoleSections: [],
+});
+
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { user, updateUserMetrics } = useAuth();
 
-  const [profile, setProfile] = useState<CandidateProfile>(sampleCandidateProfile);
-  const [resumeAnalysis, setResumeAnalysis] = useState<ResumeAnalysis>(sampleResumeAnalysis);
+  const [profile, setProfile] = useState<CandidateProfile>(() =>
+    createEmptyCandidateProfile({
+      id: 'guest',
+      email: '',
+      name: 'Candidate',
+      targetRole: 'Software Developer',
+    })
+  );
+  const [resumeAnalysis, setResumeAnalysis] = useState<ResumeAnalysis>(() =>
+    createEmptyResumeAnalysis('Software Developer')
+  );
   const [jobDescriptionText, setJobDescriptionText] = useState<string>(sampleJobDescriptionText);
   const [isLoadingDbData, setIsLoadingDbData] = useState<boolean>(false);
 
   const [interviewSetup, setInterviewSetup] = useState<InterviewSetupState>(() => ({
-    targetRole: user?.targetRole || 'Senior Frontend Engineer',
+    targetRole: user?.targetRole || 'Software Developer',
     targetCompany: user?.targetCompany || 'Stripe',
     interviewType: 'technical',
     difficulty: 'senior-staff',
@@ -129,7 +202,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     aiPersona: 'Sarah',
   }));
 
-  const [questions, setQuestions] = useState<InterviewQuestion[]>(sampleInterviewQuestions);
+  const [questions, setQuestions] = useState<InterviewQuestion[]>([]);
   const [activeQuestionIndex, setActiveQuestionIndex] = useState<number>(0);
   const [answers, setAnswers] = useState<CandidateAnswer[]>([]);
 
@@ -174,9 +247,20 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
     async function loadData() {
       if (!user?.id) {
+        setProfile(
+          createEmptyCandidateProfile({
+            id: 'guest',
+            email: '',
+            name: 'Candidate',
+            targetRole: 'Software Developer',
+          })
+        );
+        setResumeAnalysis(createEmptyResumeAnalysis('Software Developer'));
         setSavedReports([]);
         setActiveReport(null);
         setSessionHistory([]);
+        setQuestions([]);
+        setActiveQuestionIndex(0);
         setAnswers([]);
         setIsLoadingDbData(false);
         return;
@@ -187,19 +271,36 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       // Sync target role/company defaults from authenticated user profile
       setInterviewSetup((prev) => ({
         ...prev,
-        targetRole: user.targetRole || prev.targetRole,
-        targetCompany: user.targetCompany || prev.targetCompany,
+        targetRole: user.targetRole || 'Software Developer',
+        targetCompany: user.targetCompany || prev.targetCompany || 'Stripe',
       }));
 
       // Reset cleanly before hydrating this user's records so previous account data never flashes
-      setProfile({
-        ...sampleCandidateProfile,
-        id: user.id,
-        userId: user.id,
-        email: user.email,
-        fullName: user.name,
-        avatarUrl: user.avatarUrl,
-      });
+      setProfile(
+        isDemoAlex
+          ? {
+              ...sampleCandidateProfile,
+              id: user.id,
+              userId: user.id,
+              email: user.email,
+              fullName: user.name,
+              headline: sampleCandidateProfile.headline,
+              avatarUrl: user.avatarUrl,
+            }
+          : {
+              ...createEmptyCandidateProfile(user),
+              email: user.email,
+              avatarUrl: user.avatarUrl,
+            }
+      );
+      setResumeAnalysis(
+        isDemoAlex
+          ? sampleResumeAnalysis
+          : createEmptyResumeAnalysis(user.targetRole || 'Software Developer')
+      );
+      setQuestions([]);
+      setActiveQuestionIndex(0);
+      setAnswers([]);
       setSavedReports(isDemoAlex ? [sampleEvaluationReport] : []);
       setActiveReport(isDemoAlex ? sampleEvaluationReport : null);
       setSessionHistory(isDemoAlex ? sampleSessionHistory : []);
@@ -689,6 +790,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   const resetInterviewSession = () => {
+    setQuestions([]);
     setActiveQuestionIndex(0);
     setAnswers([]);
   };

@@ -235,61 +235,61 @@ export class EnclaveDatabase {
     }
 
     const now = new Date().toISOString();
-    let existing = this.state.userAccounts[normalized];
+    const existing = this.state.userAccounts[normalized];
 
-    if (existing) {
-      if (existing.passwordHash) {
-        if (!input.password || !verifyPassword(input.password, existing.passwordHash)) {
-          return { ok: false, status: 401, error: 'Invalid email or password.' };
-        }
-      } else if (input.password && input.password !== 'oauth-session') {
-        existing.passwordHash = hashPassword(input.password);
-      }
-      existing.lastLoginAt = now;
-      existing.updatedAt = now;
-      this.state.userAccounts[normalized] = existing;
-      this.save();
-      return { ok: true, user: this.sanitizeUser(existing) };
+    if (!existing) {
+      return {
+        ok: false,
+        status: 401,
+        error: 'No account found with this email. Please check your spelling or create an account first.',
+      };
     }
 
-    // First-time login with a new email in offline/demo enclave creates persistent account
-    const userId = crypto.randomUUID();
-    const fullName =
-      normalized.split('@')[0]?.replace(/[._-]/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase()) ||
-      'Alex Morgan';
+    if (existing.passwordHash) {
+      if (!input.password || !verifyPassword(input.password, existing.passwordHash)) {
+        return { ok: false, status: 401, error: 'Incorrect password. Please try again or reset your password.' };
+      }
+    } else if (existing.authProvider !== 'email') {
+      return {
+        ok: false,
+        status: 401,
+        error: `This account was created with ${existing.authProvider === 'google' ? 'Google' : 'GitHub'}. Sign in with that provider or use Forgot Password to set an email password.`,
+      };
+    } else if (input.password && input.password !== 'oauth-session') {
+      existing.passwordHash = hashPassword(input.password);
+    }
 
-    existing = {
-      id: userId,
-      email: normalized,
-      passwordHash: input.password ? hashPassword(input.password) : undefined,
-      authProvider: 'email',
-      fullName,
-      avatarUrl: DEFAULT_AVATAR_URL,
-      targetRole: 'Senior Frontend Engineer',
-      targetCompany: 'Stripe',
-      emailVerified: true,
-      lastLoginAt: now,
-      createdAt: now,
-      updatedAt: now,
-    };
-
+    existing.lastLoginAt = now;
+    existing.updatedAt = now;
     this.state.userAccounts[normalized] = existing;
-    this.state.profiles[userId] = {
-      id: userId,
-      userId,
-      email: normalized,
-      fullName,
-      avatarUrl: DEFAULT_AVATAR_URL,
-      authProvider: 'email',
-      targetRole: 'Senior Frontend Engineer',
-      targetCompany: 'Stripe',
-      experienceLevel: 'senior-staff',
-      readinessScore: 78,
-      streakDays: 5,
-    };
     this.save();
-
     return { ok: true, user: this.sanitizeUser(existing) };
+  }
+
+  public resetPassword(input: {
+    email: string;
+    newPassword: string;
+  }): { ok: true } | { ok: false; status: number; error: string } {
+    const normalized = String(input.email || '').trim().toLowerCase();
+    if (!normalized || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalized)) {
+      return { ok: false, status: 400, error: 'Please enter a valid account email address.' };
+    }
+    if (!input.newPassword || input.newPassword.length < 6) {
+      return { ok: false, status: 400, error: 'New password must be at least 6 characters.' };
+    }
+    const existing = this.state.userAccounts[normalized];
+    if (!existing) {
+      return {
+        ok: false,
+        status: 404,
+        error: 'No account exists for that email address. Create a new account instead.',
+      };
+    }
+    existing.passwordHash = hashPassword(input.newPassword);
+    existing.updatedAt = new Date().toISOString();
+    this.state.userAccounts[normalized] = existing;
+    this.save();
+    return { ok: true };
   }
 
   public authenticateOAuthUser(input: {
@@ -299,7 +299,13 @@ export class EnclaveDatabase {
     avatarUrl?: string;
     providerSubject?: string;
   }) {
-    const normalized = String(input.email || `${input.provider}.candidate@example.com`).trim().toLowerCase();
+    const rawEmail = String(input.email || '').trim().toLowerCase();
+    if (!rawEmail) {
+      throw new Error(`Please provide your ${input.provider === 'google' ? 'Google email' : 'GitHub email or username'} to sign in.`);
+    }
+    const normalized = rawEmail.includes('@')
+      ? rawEmail
+      : `${rawEmail.replace(/^@+/, '').replace(/[^a-z0-9._-]/g, '')}@users.noreply.github.com`;
     const now = new Date().toISOString();
     let existing = this.state.userAccounts[normalized];
 
@@ -308,6 +314,9 @@ export class EnclaveDatabase {
       existing.updatedAt = now;
       if (!existing.authProvider) {
         existing.authProvider = input.provider;
+      }
+      if (input.name?.trim() && (!existing.fullName || existing.fullName === 'Candidate')) {
+        existing.fullName = input.name.trim();
       }
       // Keep any user-uploaded avatar; only fill if currently blank or default
       if (
@@ -331,14 +340,11 @@ export class EnclaveDatabase {
     }
 
     const userId = crypto.randomUUID();
+    const localHandle = normalized.split('@')[0] || 'Candidate';
     const defaultName =
       input.name?.trim() ||
-      (normalized === `${input.provider}.candidate@example.com`
-        ? input.provider === 'google'
-          ? 'Alex Morgan (Google)'
-          : 'Alex Morgan (GitHub)'
-        : normalized.split('@')[0]?.replace(/[._-]/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase()) ||
-          'Candidate');
+      localHandle.replace(/[._-]/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase()) ||
+      'Candidate';
     const avatarUrl = input.avatarUrl || DEFAULT_AVATAR_URL;
 
     existing = {
@@ -348,7 +354,7 @@ export class EnclaveDatabase {
       providerSubject: input.providerSubject || `${input.provider}:${normalized}`,
       fullName: defaultName,
       avatarUrl,
-      targetRole: 'Senior Frontend Engineer',
+      targetRole: 'Software Developer',
       targetCompany: 'Stripe',
       emailVerified: true,
       lastLoginAt: now,
@@ -364,11 +370,11 @@ export class EnclaveDatabase {
       fullName: defaultName,
       avatarUrl,
       authProvider: input.provider,
-      targetRole: 'Senior Frontend Engineer',
+      targetRole: 'Software Developer',
       targetCompany: 'Stripe',
-      experienceLevel: 'senior-staff',
-      readinessScore: 78,
-      streakDays: 5,
+      experienceLevel: 'mid',
+      readinessScore: 68,
+      streakDays: 1,
     };
     this.save();
 

@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import {
-  Calendar,
   PlusCircle,
   TrendingUp,
   Video,
@@ -68,16 +67,19 @@ export const DashboardPage: React.FC = () => {
     }, 600);
   };
 
+  const activeRole = interviewSetup.targetRole || user?.targetRole || 'Software Developer';
+  const activeCompany = interviewSetup.targetCompany || user?.targetCompany || 'Stripe';
+
   const handleLaunchSpotlightDrill = () => {
     updateInterviewSetup({
-      targetRole: 'Senior Frontend Engineer',
-      targetCompany: 'Stripe',
+      targetRole: activeRole,
+      targetCompany: activeCompany,
       interviewType: 'system-design',
       difficulty: 'senior-staff',
     });
     showToast({
       title: 'Drill Configured',
-      message: 'Launching Distributed Cache Architecture mock session...',
+      message: `Launching Distributed Cache Architecture mock for ${activeRole}...`,
       type: 'info',
     });
     navigate('/live-session');
@@ -95,12 +97,14 @@ export const DashboardPage: React.FC = () => {
         <div className="flex flex-col gap-1 text-left">
           <div className="flex items-center gap-3 flex-wrap">
             <h1 className="font-heading text-2xl sm:text-3xl font-bold text-[#0b1c30] tracking-tight">
-              Welcome back, {user?.name || 'Alex Morgan'}
+              Welcome back, {user?.name || 'Candidate'}
             </h1>
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#eff4ff] text-[#3525cd] text-xs font-semibold border border-[#c7c4d8]/40 shadow-sm">
-              <span className="w-2 h-2 rounded-full bg-[#3525cd] animate-pulse" />
-              Target: {user?.targetRole || 'Senior Frontend Engineer'} @ {user?.targetCompany || 'Stripe'}
-            </span>
+            <Link
+              to="/interview-setup"
+              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-[#eff4ff] text-[#3525cd] text-xs font-semibold border border-[#c7c4d8]/50 hover:bg-[#e5eeff] transition-colors"
+            >
+              <span>Target: {activeRole} @ {activeCompany}</span>
+            </Link>
           </div>
           <p className="text-sm text-[#464555]">
             Your executive AI coach has updated your benchmark metrics based on recent mock interview assessments.
@@ -117,7 +121,7 @@ export const DashboardPage: React.FC = () => {
                 dateRange === 'loop' ? 'bg-[#4f46e5] text-white shadow-sm' : 'hover:text-[#0b1c30]'
               }`}
             >
-              Stripe Loop
+              {activeCompany} Loop
             </button>
             <button
               onClick={() => setDateRange('30d')}
@@ -212,8 +216,8 @@ export const DashboardPage: React.FC = () => {
           </div>
 
           <div className="mt-4 pt-3 bg-[#eff4ff]/60 rounded-lg px-2.5 py-1.5 flex items-center justify-between text-[#464555] text-xs">
-            <span>Benchmark: Stripe L5/L6</span>
-            <span className="text-[#0b1c30] font-semibold">Tier 1 Target</span>
+            <span>Benchmark: {activeCompany} Bar</span>
+            <span className="text-[#0b1c30] font-semibold">Target Active</span>
           </div>
         </motion.div>
 
@@ -302,7 +306,7 @@ export const DashboardPage: React.FC = () => {
               />
             </div>
             <span className="text-[11px] text-[#464555] mt-1.5 block">
-              Aligned to Stripe Core Bar
+              Aligned to {activeRole} Bar
             </span>
           </div>
         </motion.div>
@@ -323,7 +327,7 @@ export const DashboardPage: React.FC = () => {
                 <span className="font-heading text-3xl font-bold text-[#0b1c30]">
                   <AnimatedCounter value={user?.streakDays || 5} suffix=" Days" />
                 </span>
-                <Flame className="w-4 h-4 text-orange-500 fill-orange-500 animate-bounce" />
+                <Flame className="w-4 h-4 text-orange-500 fill-orange-500" />
               </div>
             </div>
             <div className="w-10 h-10 rounded-xl bg-orange-50 flex items-center justify-center text-orange-600">
@@ -338,32 +342,25 @@ export const DashboardPage: React.FC = () => {
         </motion.div>
       </div>
 
-      {/* Primary Recommendation Spotlight Hero Card (matching Stitch) */}
-      <motion.div
-        initial={{ opacity: 0, scale: 0.99 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.3 }}
-        className="relative overflow-hidden bg-white rounded-2xl p-6 border border-[#e2e8f0] shadow-sm text-left hover:border-[#cbd5e1] transition-all"
-      >
-        <div className="absolute -right-12 -top-12 w-64 h-64 bg-[#e2dfff] rounded-full blur-3xl opacity-40 pointer-events-none" />
-
-        <div className="relative z-10 flex flex-col xl:flex-row xl:items-center justify-between gap-6">
+      {/* Primary Recommendation Spotlight Hero Card */}
+      <div className="bg-white rounded-2xl p-6 border border-[#e2e8f0] shadow-sm text-left hover:border-[#cbd5e1] transition-colors">
+        <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-6">
           <div className="flex items-start gap-4 max-w-3xl">
             <div className="w-14 h-14 rounded-2xl bg-[#3525cd] text-white flex items-center justify-center shrink-0 shadow-sm">
               <Bot className="w-7 h-7" />
             </div>
             <div className="flex flex-col gap-1">
               <div className="flex items-center gap-2 flex-wrap">
-                <span className="px-2.5 py-0.5 rounded-full bg-[#eff4ff] text-[#3525cd] text-[11px] font-bold tracking-wide uppercase">
+                <span className="px-2.5 py-0.5 rounded-md bg-[#eff4ff] text-[#3525cd] text-[11px] font-bold tracking-wide uppercase">
                   AI Recommendation Priority #1
                 </span>
                 <span className="text-[#464555] text-xs">Estimated time: 45 mins</span>
               </div>
               <h2 className="font-heading text-xl font-bold text-[#0b1c30] tracking-tight">
-                System Design Mock: Distributed Cache Architecture &amp; Client Caching
+                System Design Mock: Distributed Cache Architecture &amp; Reliability
               </h2>
               <p className="text-sm text-[#464555] leading-relaxed">
-                Stripe frontend assessments evaluate how client state interfaces with CDNs, Redis clusters, and optimistic updates. Your System Design score (68%) is your primary delta to achieving offer probability.
+                {activeCompany} {activeRole} interviews evaluate how services interface with distributed caches, storage tiers, and failure recovery under load.
               </p>
             </div>
           </div>
@@ -385,7 +382,7 @@ export const DashboardPage: React.FC = () => {
             </button>
           </div>
         </div>
-      </motion.div>
+      </div>
 
       {/* Main Dual Grid: Recent Sessions + Action Sidebar */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start text-left">
@@ -498,7 +495,7 @@ export const DashboardPage: React.FC = () => {
             <div className="flex items-center justify-between pb-4 border-b border-[#e2e8f0] mb-4">
               <div>
                 <h3 className="font-heading text-lg font-bold text-[#0b1c30]">Critical Skill Gaps Identified</h3>
-                <p className="text-xs text-[#464555]">Derived from Stripe Job Description &amp; your mock answer telemetry</p>
+                <p className="text-xs text-[#464555]">Derived from {activeCompany} {activeRole} Job Description &amp; your resume telemetry</p>
               </div>
               <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-red-50 text-red-700 border border-red-200">
                 {resumeAnalysis.matchAnalysis.missingSkills.length} Actionable Gaps

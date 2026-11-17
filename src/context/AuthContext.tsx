@@ -2,15 +2,22 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { User } from '../types';
 import { initialUser } from '../data/mockData';
 import { isSupabaseConfigured, getProfileFromDb, upsertProfileInDb, uploadAvatarInDb, isValidUuid } from '../lib/supabase';
+import { rememberOAuthAccount } from '../components/common/OAuthAccountModal';
+
+interface OAuthInput {
+  email: string;
+  name?: string;
+}
 
 interface AuthContextType {
   user: User | null;
   isAuthenticated: boolean;
   isLoading: boolean;
   isSupabaseConnected: boolean;
-  login: (email: string, password?: string) => Promise<boolean>;
-  loginWithOAuth: (provider: 'google' | 'github', emailOverride?: string) => Promise<boolean>;
-  register: (name: string, email: string, password?: string, targetRole?: string, targetCompany?: string) => Promise<boolean>;
+  login: (email: string, password: string) => Promise<boolean>;
+  loginWithOAuth: (provider: 'google' | 'github', accountInfo: OAuthInput | string) => Promise<boolean>;
+  register: (name: string, email: string, password: string, targetRole?: string, targetCompany?: string) => Promise<boolean>;
+  resetPassword: (email: string, newPassword: string) => Promise<void>;
   logout: () => Promise<void>;
   updateUserMetrics: (updates: Partial<User>) => Promise<void>;
   updateAvatar: (avatarUrl: string) => Promise<string | null>;
@@ -22,13 +29,26 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 const AUTH_STORAGE_KEY = 'preppilot_auth_user';
 const AUTH_LOGGED_OUT_KEY = 'preppilot_logged_out';
 
+const DUMMY_OAUTH_EMAILS = new Set([
+  'google.candidate@example.com',
+  'github.candidate@example.com',
+]);
+
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(() => {
     try {
       if (typeof window !== 'undefined') {
-        if (localStorage.getItem(AUTH_LOGGED_OUT_KEY) === 'true') return null;
+        const loggedOut = localStorage.getItem(AUTH_LOGGED_OUT_KEY);
+        if (loggedOut === 'true' || loggedOut === '1') return null;
         const stored = localStorage.getItem(AUTH_STORAGE_KEY);
-        if (stored) return JSON.parse(stored) as User;
+        if (stored) {
+          const parsed = JSON.parse(stored) as User;
+          if (parsed?.email && DUMMY_OAUTH_EMAILS.has(parsed.email.toLowerCase())) {
+            localStorage.removeItem(AUTH_STORAGE_KEY);
+            return null;
+          }
+          return parsed;
+        }
       }
     } catch {
       // Ignore storage errors in sandboxed contexts
@@ -54,7 +74,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         overrides?.name ||
         authUser?.email?.split('@')[0] ||
         'Candidate',
-      email: authUser?.email || overrides?.email || 'candidate@preppilot.ai',
+      email: authUser?.email || overrides?.email || '',
       avatarUrl:
         rawProfile?.avatarUrl ||
         rawProfile?.avatar_url ||
@@ -74,30 +94,30 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         authUser?.targetRole ||
         meta.target_role ||
         overrides?.targetRole ||
-        initialUser.targetRole,
+        'Software Developer',
       targetCompany:
         rawProfile?.targetCompany ||
         rawProfile?.target_company ||
         authUser?.targetCompany ||
         meta.target_company ||
         overrides?.targetCompany ||
-        initialUser.targetCompany,
+        'Stripe',
       experienceLevel:
         rawProfile?.experienceLevel ||
         rawProfile?.experience_level ||
         overrides?.experienceLevel ||
-        'senior-staff',
+        'mid',
       readinessScore: Number(
         rawProfile?.readinessScore ??
         rawProfile?.readiness_score ??
         overrides?.readinessScore ??
-        78
+        68
       ),
       streakDays: Number(
         rawProfile?.streakDays ??
         rawProfile?.streak_days ??
         overrides?.streakDays ??
-        5
+        1
       ),
     };
 
@@ -108,18 +128,30 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     } catch {
       // Ignore storage errors in sandboxed contexts
     }
+    return mappedUser;
   };
 
-  // Initialize Auth state from cached session & protected server profile
+  // Initialize Auth state strictly from active stored session (never auto-login guests)
   const initializeAuth = async () => {
     setIsLoading(true);
     const configured = isSupabaseConfigured();
     setIsSupabaseConnected(configured);
 
     try {
+      const loggedOut = localStorage.getItem(AUTH_LOGGED_OUT_KEY);
+      if (loggedOut === 'true' || loggedOut === '1') {
+        setUser(null);
+        return;
+      }
+
       const stored = localStorage.getItem(AUTH_STORAGE_KEY);
       if (stored) {
         const parsedUser: User = JSON.parse(stored);
+        if (parsedUser?.email && DUMMY_OAUTH_EMAILS.has(parsedUser.email.toLowerCase())) {
+          localStorage.removeItem(AUTH_STORAGE_KEY);
+          setUser(null);
+          return;
+        }
         setUser(parsedUser);
 
         if (configured && isValidUuid(parsedUser.id)) {
@@ -142,190 +174,137 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           }
         }
       } else {
-        const explicitlyLoggedOut = localStorage.getItem(AUTH_LOGGED_OUT_KEY) === '1';
-        if (explicitlyLoggedOut) {
-          setUser(null);
-        } else {
-          setUser(initialUser);
-          localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(initialUser));
-        }
+        setUser(null);
       }
     } catch {
-      setUser(initialUser);
+      setUser(null);
     } finally {
       setIsLoading(false);
     }
   };
 
   useEffect(() => {
-    initializeAuth();
+    void initializeAuth();
   }, []);
 
-  const login = async (email: string, password = 'password123'): Promise<boolean> => {
+  const login = async (email: string, password: string): Promise<boolean> => {
     setIsLoading(true);
-
     try {
       const res = await fetch('/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email: email.trim(), password }),
       });
 
       const json = await res.json().catch(() => ({}));
-
-      if (!res.ok) {
-        throw new Error(json?.error || 'Failed to authenticate. Please check your credentials.');
+      if (!res.ok || !json?.user) {
+        throw new Error(json?.error || 'Invalid email or password.');
       }
 
-      if (json?.user) {
-        await mapServerAuthUser(json.user, { email });
-        setIsLoading(false);
-        return true;
-      }
-    } catch (err: any) {
-      if (err instanceof Error && err.message && !err.message.toLowerCase().includes('fetch')) {
-        setIsLoading(false);
-        throw err;
-      }
-      console.warn('Auth endpoint unavailable, falling back to local session:', err);
+      await mapServerAuthUser(json.user, { email: email.trim().toLowerCase() });
+      return true;
+    } finally {
+      setIsLoading(false);
     }
-
-    // Fallback local mode
-    const loggedInUser: User = {
-      ...initialUser,
-      id: `usr_${Date.now()}`,
-      email,
-      authProvider: 'email',
-      name: email.split('@')[0].replace('.', ' ').replace(/^\w/, (c) => c.toUpperCase()) || 'Alex Morgan',
-    };
-    setUser(loggedInUser);
-    try {
-      localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(loggedInUser));
-    } catch {}
-    setIsLoading(false);
-    return true;
   };
 
-  const loginWithOAuth = async (provider: 'google' | 'github', emailOverride?: string): Promise<boolean> => {
-    setIsLoading(true);
-    const trimmedOverride = typeof emailOverride === 'string' ? emailOverride.trim() : '';
-    const providerEmail = trimmedOverride || `${provider}.candidate@example.com`;
-    const defaultName =
-      trimmedOverride
-        ? trimmedOverride.split('@')[0].replace(/[._-]/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())
-        : provider === 'google'
-          ? 'Alex Morgan (Google)'
-          : 'Alex Morgan (GitHub)';
+  const loginWithOAuth = async (
+    provider: 'google' | 'github',
+    accountInfo: OAuthInput | string
+  ): Promise<boolean> => {
+    const email = (typeof accountInfo === 'string' ? accountInfo : accountInfo?.email || '').trim().toLowerCase();
+    const name = typeof accountInfo === 'string' ? undefined : accountInfo?.name?.trim();
+    if (!email) {
+      throw new Error(`Please provide your ${provider === 'google' ? 'Google email' : 'GitHub email or username'} to continue.`);
+    }
 
+    setIsLoading(true);
     try {
       const res = await fetch('/api/auth/oauth', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ provider, email: trimmedOverride || undefined }),
+        body: JSON.stringify({ provider, email, name }),
       });
       const json = await res.json().catch(() => ({}));
-      if (!res.ok) {
+      if (!res.ok || !json?.user) {
         throw new Error(json?.error || `Failed to sign in with ${provider}.`);
       }
-      if (json?.user) {
-        await mapServerAuthUser(json.user, {
-          email: providerEmail,
-          name: json.user.name || defaultName,
-          authProvider: provider,
-        });
-        setIsLoading(false);
-        return true;
-      }
-    } catch (err: any) {
-      if (err instanceof Error && err.message && !err.message.toLowerCase().includes('fetch')) {
-        setIsLoading(false);
-        throw err;
-      }
-    }
 
-    const loggedInUser: User = {
-      ...initialUser,
-      id: `oauth_${provider}_${Date.now()}`,
-      email: providerEmail,
-      authProvider: provider,
-      name: defaultName,
-    };
-    setUser(loggedInUser);
-    try {
-      localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(loggedInUser));
-    } catch {}
-    setIsLoading(false);
-    return true;
+      const mapped = await mapServerAuthUser(json.user, {
+        email: json.user.email || email,
+        name: json.user.name || name,
+        authProvider: provider,
+      });
+
+      rememberOAuthAccount({
+        provider,
+        email: mapped.email,
+        name: mapped.name,
+      });
+      return true;
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const register = async (
     name: string,
     email: string,
-    password = 'password123',
-    targetRole = 'Senior Frontend Engineer',
+    password: string,
+    targetRole = 'Software Developer',
     targetCompany = 'Stripe'
   ): Promise<boolean> => {
     setIsLoading(true);
-
     try {
       const res = await fetch('/api/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, password, targetRole, targetCompany }),
+        body: JSON.stringify({
+          name: name.trim(),
+          email: email.trim().toLowerCase(),
+          password,
+          targetRole: targetRole.trim() || 'Software Developer',
+          targetCompany: targetCompany.trim() || 'Stripe',
+        }),
       });
 
       const json = await res.json().catch(() => ({}));
-
-      if (!res.ok) {
+      if (!res.ok || !json?.user) {
         throw new Error(json?.error || 'Failed to create account. Please try again.');
       }
 
-      if (json?.user) {
-        await mapServerAuthUser(json.user, {
-          name,
-          email,
-          authProvider: 'email',
-          targetRole: targetRole || 'Software Engineer',
-          targetCompany: targetCompany || 'Stripe',
-          readinessScore: 65,
-          streakDays: 1,
-        });
-        setIsLoading(false);
-        return true;
-      }
-    } catch (err: any) {
-      if (err instanceof Error && err.message && !err.message.toLowerCase().includes('fetch')) {
-        setIsLoading(false);
-        throw err;
-      }
-      console.warn('Register endpoint unavailable, falling back to local session:', err);
+      await mapServerAuthUser(json.user, {
+        name: name.trim(),
+        email: email.trim().toLowerCase(),
+        authProvider: 'email',
+        targetRole: targetRole.trim() || 'Software Developer',
+        targetCompany: targetCompany.trim() || 'Stripe',
+        readinessScore: 65,
+        streakDays: 1,
+      });
+      return true;
+    } finally {
+      setIsLoading(false);
     }
+  };
 
-    // Fallback simulation
-    const newUser: User = {
-      ...initialUser,
-      id: `usr_${Date.now()}`,
-      name,
-      email,
-      authProvider: 'email',
-      targetRole: targetRole || 'Software Engineer',
-      targetCompany: targetCompany || 'Stripe',
-      readinessScore: 65,
-      streakDays: 1,
-    };
-    setUser(newUser);
-    try {
-      localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(newUser));
-    } catch {}
-    setIsLoading(false);
-    return true;
+  const resetPassword = async (email: string, newPassword: string): Promise<void> => {
+    const res = await fetch('/api/auth/reset-password', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: email.trim().toLowerCase(), newPassword }),
+    });
+    const json = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      throw new Error(json?.error || 'Failed to reset password.');
+    }
   };
 
   const logout = async () => {
     setUser(null);
     try {
       localStorage.removeItem(AUTH_STORAGE_KEY);
-      localStorage.setItem(AUTH_LOGGED_OUT_KEY, '1');
+      localStorage.setItem(AUTH_LOGGED_OUT_KEY, 'true');
     } catch {}
   };
 
@@ -378,6 +357,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         login,
         loginWithOAuth,
         register,
+        resetPassword,
         logout,
         updateUserMetrics,
         updateAvatar,

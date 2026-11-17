@@ -1,4 +1,5 @@
 import express, { Request, Response } from 'express';
+import http from 'http';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
@@ -1324,6 +1325,19 @@ app.post('/api/auth/login', async (req: Request, res: Response) => {
   }
 });
 
+// Auth: Reset / Set Password
+app.post('/api/auth/reset-password', async (req: Request, res: Response) => {
+  const { email, newPassword } = req.body || {};
+  const result = enclaveDb.resetPassword({
+    email: typeof email === 'string' ? email : '',
+    newPassword: typeof newPassword === 'string' ? newPassword : '',
+  });
+  if (!result.ok) {
+    return res.status(result.status).json({ error: result.error });
+  }
+  return res.json({ success: true });
+});
+
 // Auth: OAuth (Google / Gmail & GitHub Server-Side Account Linkage)
 app.post('/api/auth/oauth', async (req: Request, res: Response) => {
   const { provider, email, name, avatarUrl } = req.body || {};
@@ -1331,7 +1345,19 @@ app.post('/api/auth/oauth', async (req: Request, res: Response) => {
     return res.status(400).json({ error: 'Unsupported OAuth provider. Use Google or GitHub.' });
   }
 
-  const user = enclaveDb.authenticateOAuthUser({ provider, email, name, avatarUrl });
+  const trimmedEmail = typeof email === 'string' ? email.trim() : '';
+  if (!trimmedEmail) {
+    return res.status(400).json({
+      error: `Please enter your ${provider === 'google' ? 'Google email' : 'GitHub email or username'} to continue.`,
+    });
+  }
+
+  let user;
+  try {
+    user = enclaveDb.authenticateOAuthUser({ provider, email: trimmedEmail, name, avatarUrl });
+  } catch (err: any) {
+    return res.status(400).json({ error: err?.message || 'OAuth authentication failed.' });
+  }
 
   if (serverSupabase && cloudReachable) {
     try {
@@ -1453,18 +1479,23 @@ app.post('/api/ai/transcribe', async (req: Request, res: Response) => {
 // ==============================================================================
 async function startServer() {
   const isDev = process.env.NODE_ENV !== 'production';
+  const httpServer = http.createServer(app);
+  const isHmrDisabled = process.env.DISABLE_HMR === 'true' || Boolean(process.env.K_SERVICE);
 
   if (isDev) {
     const { createServer: createViteServer } = await import('vite');
     const vite = await createViteServer({
       server: {
         middlewareMode: true,
-        hmr: process.env.DISABLE_HMR !== 'true',
+        hmr: isHmrDisabled ? false : { server: httpServer },
+        watch: isHmrDisabled ? null : {},
       },
       appType: 'spa',
     });
     app.use(vite.middlewares);
-    console.log('[PrepPilot Server] Vite dev middleware mounted on port ' + PORT);
+    console.log(
+      `[PrepPilot Server] Vite dev middleware mounted on port ${PORT} (HMR ${isHmrDisabled ? 'disabled' : 'attached to HTTP server'}).`
+    );
   } else {
     const distPath = path.resolve(__dirname, 'dist');
     app.use(express.static(distPath));
@@ -1476,7 +1507,7 @@ async function startServer() {
 
   await verifyCloudReachability();
 
-  app.listen(PORT, '0.0.0.0', () => {
+  httpServer.listen(PORT, '0.0.0.0', () => {
     console.log(`[PrepPilot Server] Enclave live on http://0.0.0.0:${PORT}`);
     warmNeuralVoiceEngine();
   });

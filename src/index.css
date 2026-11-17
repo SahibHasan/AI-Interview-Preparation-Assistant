@@ -149,7 +149,6 @@ html {
   font-family: var(--font-sans);
   color: var(--color-on-surface);
   background-color: var(--color-background);
-  scroll-behavior: smooth;
   scroll-padding-top: 84px;
 }
 

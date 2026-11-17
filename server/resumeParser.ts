@@ -604,7 +604,7 @@ export function buildRoleInterviewSectionsAndRules(params: {
   sections: InterviewSectionPlan[];
   assessmentRules: AssessmentRule[];
 } {
-  const roleLower = (params.targetRole || 'Software Engineer').toLowerCase();
+  const roleLower = (params.targetRole || 'Software Developer').toLowerCase();
   const jdLower = (params.jobDescriptionText || '').toLowerCase();
   const type = (params.interviewType || 'technical').toLowerCase();
   const count = Math.max(3, Math.min(5, params.questionCount || 5));
@@ -615,20 +615,89 @@ export function buildRoleInterviewSectionsAndRules(params: {
   const topMatched = params.matchedSkills?.[0] || params.resumeSkills?.[0] || 'Core Engineering Stack';
   const topGap = params.missingSkills?.[0] || 'Edge-Case Fault Tolerance & Optimization';
 
-  const isBehavioralOnly = type === 'behavioral' || type === 'hr-cultural';
+  const isBehavioral = type === 'behavioral';
+  const isHrCultural = type === 'hr-cultural';
+  const isSystemDesign = type === 'system-design';
+
   const isFrontendFocus =
-    !isBehavioralOnly &&
     (roleLower.includes('frontend') || roleLower.includes('ui engineer') || roleLower.includes('react')) &&
     !roleLower.includes('full stack') &&
     !roleLower.includes('fullstack');
+  const isBackendFocus =
+    roleLower.includes('backend') || roleLower.includes('distributed') || roleLower.includes('api engineer');
+  const isDevOpsFocus =
+    roleLower.includes('devops') || roleLower.includes('cloud') || roleLower.includes('sre') || roleLower.includes('site reliability');
+  const isMobileFocus =
+    roleLower.includes('mobile') || roleLower.includes('ios') || roleLower.includes('android');
+  const isQaFocus =
+    roleLower.includes('qa') || roleLower.includes('sdet') || roleLower.includes('automation') || roleLower.includes('test engineer');
+  const isSecurityFocus =
+    roleLower.includes('security') || roleLower.includes('cyber');
+  const isEmFocus =
+    roleLower.includes('engineering manager') || roleLower.includes('tech lead manager');
   const isProductFocus =
-    roleLower.includes('product manager') || roleLower.includes('pm');
+    roleLower.includes('product manager') || roleLower === 'pm';
   const isDataFocus =
-    roleLower.includes('data') || roleLower.includes('machine learning') || roleLower.includes('ml ');
+    roleLower.includes('data') || roleLower.includes('machine learning') || roleLower.includes('ml ') || roleLower.includes('ai engineer');
 
   let catalog: Omit<InterviewSectionPlan, 'id' | 'order'>[] = [];
 
-  if (isBehavioralOnly) {
+  if (isHrCultural) {
+    catalog = [
+      {
+        sectionName: 'Career Trajectory & Role Motivation',
+        category: 'HR & Cultural Fit',
+        focusSource: 'resume',
+        weightPercentage: 25,
+        topicsCovered: [topExp, `Why ${company}`, `${params.targetRole} mission alignment`],
+        rationale: `Assesses long-term motivation and alignment with ${company}'s ${params.targetRole} scope.`,
+        assessmentCriteria: [
+          'Connects past milestones coherently to this role',
+          'Shows genuine research into product and engineering culture',
+        ],
+      },
+      {
+        sectionName: 'Team Collaboration & Operating Values',
+        category: 'Culture Alignment',
+        focusSource: 'role-calibration',
+        weightPercentage: 25,
+        topicsCovered: ['Cross-functional communication', 'Feedback receptivity', 'Ownership mindset'],
+        rationale: `Evaluates day-to-day collaboration habits and cultural synergy at ${company}.`,
+        assessmentCriteria: [
+          'Shares concrete examples of constructive feedback and peer support',
+        ],
+      },
+      {
+        sectionName: 'Adaptability, Deadlines & Workstyle',
+        category: 'Behavioral STAR',
+        focusSource: 'jd',
+        weightPercentage: 20,
+        topicsCovered: ['Shifting priorities', 'Workload transparency', 'Stakeholder updates'],
+        rationale: 'Tests composure and transparent communication when priorities evolve.',
+        assessmentCriteria: [
+          'Communicates risks early and negotiates scope thoughtfully',
+        ],
+      },
+      {
+        sectionName: 'Growth Mindset & Coaching Experience',
+        category: 'Leadership Bar',
+        focusSource: 'role-calibration',
+        weightPercentage: 15,
+        topicsCovered: ['Skill upskilling', 'Mentorship', topGap],
+        rationale: 'Checks continuous learning habits and how the candidate raises team capability.',
+        assessmentCriteria: ['Demonstrates reflective self-awareness and clear learning goals'],
+      },
+      {
+        sectionName: 'Role Expectations & Long-Term Impact',
+        category: 'Alignment',
+        focusSource: 'jd',
+        weightPercentage: 15,
+        topicsCovered: ['90-day onboarding priorities', 'Success metrics', 'Team expectations'],
+        rationale: 'Ensures mutual clarity on expectations, autonomy, and career growth.',
+        assessmentCriteria: ['Articulates thoughtful 90-day contribution goals'],
+      },
+    ];
+  } else if (isBehavioral) {
     catalog = [
       {
         sectionName: 'Resume Ownership & Measurable Impact (STAR)',
@@ -678,7 +747,7 @@ export function buildRoleInterviewSectionsAndRules(params: {
         ],
       },
       {
-        sectionName: 'Culture Alignment & Mentorship Growth',
+        sectionName: 'Mentorship, Standards & Engineering Bar',
         category: 'Leadership Bar',
         focusSource: 'role-calibration',
         weightPercentage: 15,
@@ -687,6 +756,58 @@ export function buildRoleInterviewSectionsAndRules(params: {
         assessmentCriteria: [
           'Gives specific examples of elevating team velocity or engineering standards',
         ],
+      },
+    ];
+  } else if (isSystemDesign) {
+    catalog = [
+      {
+        sectionName: `Resume Architecture Walkthrough (${params.targetRole})`,
+        category: 'Architecture Deep-Dive',
+        focusSource: 'resume',
+        weightPercentage: 20,
+        topicsCovered: [topExp, topMatched, 'Scale constraints & bottlenecks'],
+        rationale: `Grounds the design session in the largest real system you owned in ${topExp}.`,
+        assessmentCriteria: ['Clarifies traffic load, SLA targets, and architectural evolution'],
+      },
+      {
+        sectionName: isFrontendFocus
+          ? 'Client State, Caching & Edge Synchronization Architecture'
+          : 'High-Level Distributed System & API Architecture',
+        category: 'System Design',
+        focusSource: 'jd',
+        weightPercentage: 25,
+        topicsCovered: isFrontendFocus
+          ? ['Normalized cache & optimistic UI', 'CDN invalidation', 'Real-time WebSocket streams']
+          : ['Load balancing & API Gateway', 'Stateless services', 'Rate limiting & idempotency'],
+        rationale: `Evaluates end-to-end component topology and scaling strategy for ${params.targetRole} at ${company}.`,
+        assessmentCriteria: ['Defines clean API contracts, capacity estimates, and core component boundaries'],
+      },
+      {
+        sectionName: 'Data Modeling, Storage Partitioning & Caching Tiers',
+        category: 'Data & Storage Design',
+        focusSource: 'role-calibration',
+        weightPercentage: 20,
+        topicsCovered: ['SQL vs NoSQL selection', 'Sharding & replication', 'Redis cache eviction & write-through'],
+        rationale: 'Assesses storage engine tradeoffs, indexing at scale, and cache consistency.',
+        assessmentCriteria: ['Handles hot keys, replication lag, and consistency models explicitly'],
+      },
+      {
+        sectionName: 'Resilience, Queues & Failure Recovery',
+        category: 'Fault Tolerance',
+        focusSource: 'jd',
+        weightPercentage: 20,
+        topicsCovered: [topGap, 'Circuit breakers & backpressure', 'Dead-letter queues & multi-region failover'],
+        rationale: `Probes graceful degradation and zero-data-loss invariants under partial outage.`,
+        assessmentCriteria: ['Prevents cascading retries and quantifies recovery time/point objectives'],
+      },
+      {
+        sectionName: 'Observability, Telemetry & Safe Rollouts',
+        category: 'Production Readiness',
+        focusSource: 'role-calibration',
+        weightPercentage: 15,
+        topicsCovered: ['SLIs / SLOs & P99 alerts', 'Distributed tracing', 'Canary & rollback automation'],
+        rationale: 'Validates operational maturity for shipping distributed changes safely.',
+        assessmentCriteria: ['Defines actionable metrics and automated rollback triggers'],
       },
     ];
   } else if (isProductFocus) {
@@ -737,7 +858,295 @@ export function buildRoleInterviewSectionsAndRules(params: {
         assessmentCriteria: ['Structured STAR response backed by customer evidence'],
       },
     ];
-  } else if (isFrontendFocus && type !== 'system-design') {
+  } else if (isEmFocus) {
+    catalog = [
+      {
+        sectionName: 'Resume Org Delivery & Team Scaling Deep-Dive',
+        category: 'Engineering Management',
+        focusSource: 'resume',
+        weightPercentage: 25,
+        topicsCovered: [topExp, 'Roadmap execution', 'Cross-team dependencies'],
+        rationale: `Explores engineering delivery leadership and org impact in ${topExp}.`,
+        assessmentCriteria: ['Balances delivery predictability with technical quality'],
+      },
+      {
+        sectionName: 'People Leadership, Coaching & Performance',
+        category: 'People & Hiring',
+        focusSource: 'role-calibration',
+        weightPercentage: 25,
+        topicsCovered: ['1:1 coaching', 'Underperformance turnarounds', 'Hiring bar calibration'],
+        rationale: 'Assesses empathetic, high-standard people management.',
+        assessmentCriteria: ['Demonstrates actionable feedback and career sponsorship'],
+      },
+      {
+        sectionName: 'Architecture Tradeoffs & Tech Debt Governance',
+        category: 'Technical Strategy',
+        focusSource: 'jd',
+        weightPercentage: 20,
+        topicsCovered: ['Architecture reviews', 'Reliability budgets', topGap],
+        rationale: `Validates technical credibility guiding ${company} engineering squads.`,
+        assessmentCriteria: ['Aligns engineering investments directly with product outcomes'],
+      },
+      {
+        sectionName: 'Incident Command & Operational Excellence',
+        category: 'Execution & Reliability',
+        focusSource: 'jd',
+        weightPercentage: 15,
+        topicsCovered: ['On-call health', 'Blameless post-mortems', 'SLA enforcement'],
+        rationale: 'Tests operational leadership during high-severity production events.',
+        assessmentCriteria: ['Establishes psychological safety paired with rigorous action items'],
+      },
+      {
+        sectionName: 'Executive Stakeholder Alignment & Conflict',
+        category: 'Leadership STAR',
+        focusSource: 'role-calibration',
+        weightPercentage: 15,
+        topicsCovered: ['Scope negotiation', 'Executive tradeoffs'],
+        rationale: 'Evaluates strategic communication across Product, Design, and VP peers.',
+        assessmentCriteria: ['Clear STAR framing with quantified organizational outcomes'],
+      },
+    ];
+  } else if (isDevOpsFocus) {
+    catalog = [
+      {
+        sectionName: 'Resume Infrastructure & CI/CD Deep-Dive',
+        category: 'Resume Experience',
+        focusSource: 'resume',
+        weightPercentage: 20,
+        topicsCovered: [topExp, topMatched, 'Deployment velocity & MTTR'],
+        rationale: `Probes real cloud automation and reliability ownership from ${topExp}.`,
+        assessmentCriteria: ['Explains blast-radius reduction, IaC modularity, and real SLA impact'],
+      },
+      {
+        sectionName: 'Kubernetes, Containers & Cloud Networking',
+        category: 'Cloud & Orchestration',
+        focusSource: 'jd',
+        weightPercentage: 25,
+        topicsCovered: ['K8s scheduling & autoscaling', 'DNS/Ingress/TLS', 'Zero-downtime rollouts'],
+        rationale: `Tests core ${params.targetRole} infrastructure mechanics for ${company}.`,
+        assessmentCriteria: ['Diagnoses pod eviction, network policy, and resource contention cleanly'],
+      },
+      {
+        sectionName: 'CI/CD Pipelines, Terraform IaC & Security',
+        category: 'Automation & IaC',
+        focusSource: 'role-calibration',
+        weightPercentage: 20,
+        topicsCovered: ['Terraform state locking', 'GitOps & canary gates', 'Secrets & IAM least privilege'],
+        rationale: 'Evaluates reproducible infrastructure and supply-chain safety.',
+        assessmentCriteria: ['Handles state drift, rollback safety, and credential rotation cleanly'],
+      },
+      {
+        sectionName: 'Observability, Incident Response & SRE Metrics',
+        category: 'SRE & Monitoring',
+        focusSource: 'jd',
+        weightPercentage: 20,
+        topicsCovered: ['SLIs/SLOs & error budgets', 'Prometheus/OpenTelemetry', 'Load & latency debugging'],
+        rationale: 'Measures systematic incident triage and telemetry signal design.',
+        assessmentCriteria: ['Separates symptom alerts from root-cause metrics rapidly'],
+      },
+      {
+        sectionName: 'Linux Internals, Scripting & Database Reliability',
+        category: 'Systems & Scripting',
+        focusSource: 'role-calibration',
+        weightPercentage: 15,
+        topicsCovered: ['Process/disk/network troubleshooting', 'SQL connection pooling & backups', topGap],
+        rationale: 'Verifies OS/database troubleshooting under production pressure.',
+        assessmentCriteria: ['Uses systematic Linux diagnostics and safe failover runbooks'],
+      },
+    ];
+  } else if (isMobileFocus) {
+    catalog = [
+      {
+        sectionName: 'Resume Mobile App Architecture Deep-Dive',
+        category: 'Resume Experience',
+        focusSource: 'resume',
+        weightPercentage: 25,
+        topicsCovered: [topExp, topMatched, 'App startup, memory & crash-free rate'],
+        rationale: `Reviews real mobile shipping decisions and performance wins from ${topExp}.`,
+        assessmentCriteria: ['Quantifies startup latency, memory profiling, and release reliability'],
+      },
+      {
+        sectionName: 'Mobile Concurrency, UI Thread & Lifecycle',
+        category: 'Mobile Runtime',
+        focusSource: 'role-calibration',
+        weightPercentage: 25,
+        topicsCovered: ['Main-thread frame budget (60/120fps)', 'Coroutines / async tasks', 'Memory leaks'],
+        rationale: `Assesses runtime mastery for ${params.targetRole} apps.`,
+        assessmentCriteria: ['Prevents ANRs/main-thread stalls and retain cycles cleanly'],
+      },
+      {
+        sectionName: 'Offline Sync, Local Storage (SQLite) & Caching',
+        category: 'Data & Offline Architecture',
+        focusSource: 'jd',
+        weightPercentage: 20,
+        topicsCovered: ['Local SQLite / Room / CoreData', 'Optimistic mutations', 'Conflict resolution'],
+        rationale: 'Tests resilient data synchronization on unstable cellular networks.',
+        assessmentCriteria: ['Handles idempotency keys, background sync, and schema migrations'],
+      },
+      {
+        sectionName: 'DSA & Modular OOP App Design',
+        category: 'DSA & OOPs',
+        focusSource: 'role-calibration',
+        weightPercentage: 15,
+        topicsCovered: ['MVVM / Clean Architecture', 'Tree/Graph/Cache structures', 'Dependency injection'],
+        rationale: 'Evaluates clean architecture boundaries and algorithmic complexity.',
+        assessmentCriteria: ['Demonstrates testable viewmodels and optimal collection choices'],
+      },
+      {
+        sectionName: 'Release CI/CD, Telemetry & Crash Recovery',
+        category: 'Reliability & Tooling',
+        focusSource: 'jd',
+        weightPercentage: 15,
+        topicsCovered: ['Feature flags & staged rollouts', 'ANR/Crashlytics triage', topGap],
+        rationale: 'Probes safe mobile deployment when rollbacks are constrained by app stores.',
+        assessmentCriteria: ['Uses remote kill switches and backward-compatible API versioning'],
+      },
+    ];
+  } else if (isQaFocus) {
+    catalog = [
+      {
+        sectionName: 'Resume Test Strategy & Automation Deep-Dive',
+        category: 'Resume Experience',
+        focusSource: 'resume',
+        weightPercentage: 25,
+        topicsCovered: [topExp, topMatched, 'Flakiness reduction & release confidence'],
+        rationale: `Examines real test architecture and quality metrics you shipped in ${topExp}.`,
+        assessmentCriteria: ['Quantifies regression catch rate and CI pipeline speedup'],
+      },
+      {
+        sectionName: 'Test Pyramid, E2E Frameworks & API Testing',
+        category: 'Automation Architecture',
+        focusSource: 'jd',
+        weightPercentage: 25,
+        topicsCovered: ['Playwright/Selenium/Cypress design', 'Contract & API testing', 'Parallel sharding'],
+        rationale: `Evaluates scalable test automation architecture for ${company}.`,
+        assessmentCriteria: ['Eliminates brittle selectors/sleeps and designs deterministic fixtures'],
+      },
+      {
+        sectionName: 'DSA, OOPs & Framework Design Patterns',
+        category: 'Coding & OOPs',
+        focusSource: 'role-calibration',
+        weightPercentage: 20,
+        topicsCovered: ['Page Object / Screenplay patterns', 'Data-driven parsing', 'Complexity tradeoffs'],
+        rationale: 'Assesses clean software engineering craft within automation frameworks.',
+        assessmentCriteria: ['Writes maintainable abstractions with clear SOLID boundaries'],
+      },
+      {
+        sectionName: 'SQL Data Verification, Edge Cases & Concurrency',
+        category: 'SQL & Quality Engineering',
+        focusSource: 'jd',
+        weightPercentage: 15,
+        topicsCovered: ['SQL assertions & test data isolation', 'Race conditions', 'Boundary value testing'],
+        rationale: 'Tests ability to validate backend ledger/database integrity end-to-end.',
+        assessmentCriteria: ['Catches idempotency bugs, null states, and concurrency defects'],
+      },
+      {
+        sectionName: 'CI/CD Quality Gates, Load Testing & Triage',
+        category: 'Release Engineering',
+        focusSource: 'role-calibration',
+        weightPercentage: 15,
+        topicsCovered: ['Performance/load smoke checks', 'Root-cause triage', topGap],
+        rationale: 'Measures pragmatic risk-based release sign-off judgment.',
+        assessmentCriteria: ['Balances release speed with severity-calibrated blocking gates'],
+      },
+    ];
+  } else if (isSecurityFocus) {
+    catalog = [
+      {
+        sectionName: 'Resume Security Engineering Deep-Dive',
+        category: 'Resume Experience',
+        focusSource: 'resume',
+        weightPercentage: 20,
+        topicsCovered: [topExp, topMatched, 'Threat modeling & remediation'],
+        rationale: `Reviews high-impact vulnerabilities mitigated or security systems built in ${topExp}.`,
+        assessmentCriteria: ['Articulates threat vectors, blast radius, and measurable risk reduction'],
+      },
+      {
+        sectionName: 'Application Security, OWASP & Auth Architecture',
+        category: 'AppSec & Auth',
+        focusSource: 'jd',
+        weightPercentage: 25,
+        topicsCovered: ['OAuth2/OIDC/JWT security', 'SQLi / XSS / SSRF defense', 'Zero-trust RBAC'],
+        rationale: `Tests defensive engineering mastery for ${company}.`,
+        assessmentCriteria: ['Identifies subtle auth bypasses and enforces defense-in-depth controls'],
+      },
+      {
+        sectionName: 'Cloud Security, KMS & Secrets Management',
+        category: 'Cloud Infrastructure Security',
+        focusSource: 'role-calibration',
+        weightPercentage: 20,
+        topicsCovered: ['IAM least privilege', 'TLS/mTLS & key rotation', 'Container hardening'],
+        rationale: 'Evaluates cloud posture hardening and encryption key lifecycle.',
+        assessmentCriteria: ['Eliminates long-lived credentials and isolates workload blast radius'],
+      },
+      {
+        sectionName: 'Threat Modeling & Incident Forensics',
+        category: 'Detection & Response',
+        focusSource: 'jd',
+        weightPercentage: 20,
+        topicsCovered: ['Audit logging', 'Anomaly triage', 'Containment playbooks'],
+        rationale: 'Tests structured incident containment and post-incident hardening.',
+        assessmentCriteria: ['Prioritizes evidence preservation, token revocation, and root cause'],
+      },
+      {
+        sectionName: 'Secure Coding, SQL Safety & System Tradeoffs',
+        category: 'Secure Design',
+        focusSource: 'role-calibration',
+        weightPercentage: 15,
+        topicsCovered: ['Parameterized queries', 'Rate limiting & abuse prevention', topGap],
+        rationale: 'Checks pragmatic balance between strong security and developer/user friction.',
+        assessmentCriteria: ['Designs secure defaults developers cannot accidentally misuse'],
+      },
+    ];
+  } else if (isBackendFocus) {
+    catalog = [
+      {
+        sectionName: 'Resume & Backend Service Deep-Dive',
+        category: 'Resume Experience',
+        focusSource: 'resume',
+        weightPercentage: 20,
+        topicsCovered: [topExp, topMatched, 'Throughput, latency & reliability wins'],
+        rationale: `Verifies real backend ownership, API scale, and production debugging from ${topExp}.`,
+        assessmentCriteria: ['Explains individual service design choices and measurable P95/P99 gains'],
+      },
+      {
+        sectionName: 'SQL, DBMS Internals & Transactional Integrity',
+        category: 'SQL & Databases',
+        focusSource: 'jd',
+        weightPercentage: 25,
+        topicsCovered: ['Composite B-Tree indexing', 'ACID isolation & locking', 'Query plans & sharding'],
+        rationale: `Core ${params.targetRole} evaluation on relational performance and zero-corruption writes.`,
+        assessmentCriteria: ['Eliminates N+1 queries, deadlocks, and double-write race conditions'],
+      },
+      {
+        sectionName: 'DSA, Concurrency & OOPs Design',
+        category: 'DSA & OOPs',
+        focusSource: 'role-calibration',
+        weightPercentage: 20,
+        topicsCovered: ['Concurrent data structures', 'SOLID & clean service contracts', 'Big-O bounds'],
+        rationale: 'Tests algorithmic efficiency, thread safety, and extensible class architecture.',
+        assessmentCriteria: ['Selects optimal structures and explains thread-safe abstractions'],
+      },
+      {
+        sectionName: 'Distributed Systems, Caching & Async Queues',
+        category: 'Distributed Architecture',
+        focusSource: 'jd',
+        weightPercentage: 20,
+        topicsCovered: ['Redis caching & invalidation', 'Kafka/worker retries & DLQs', 'Idempotency keys'],
+        rationale: `Calibrated to ${company}'s distributed throughput and consistency requirements.`,
+        assessmentCriteria: ['Handles at-least-once delivery, backpressure, and outbox patterns cleanly'],
+      },
+      {
+        sectionName: 'API Reliability, Rate Limiting & Observability',
+        category: 'System Reliability',
+        focusSource: 'role-calibration',
+        weightPercentage: 15,
+        topicsCovered: [topGap, 'Circuit breakers & timeouts', 'Tracing & canary rollbacks'],
+        rationale: 'Probes defensive production habits under traffic spikes and downstream outages.',
+        assessmentCriteria: ['Defines SLIs, bounded retries, and graceful degradation paths'],
+      },
+    ];
+  } else if (isFrontendFocus) {
     catalog = [
       {
         sectionName: 'Resume & Frontend Architecture Deep-Dive',
@@ -834,8 +1243,8 @@ export function buildRoleInterviewSectionsAndRules(params: {
       },
     ];
   } else {
-    // Default / Software Developer / Software Engineer / Full-Stack / Backend / System Design
-    // Explicitly divided into Resume Deep-Dive, DSA, OOPs, SQL/DBMS, and System Architecture
+    // Default / Software Developer / Software Engineer / Full Stack Engineer
+    // Divided cleanly into Resume Deep-Dive, DSA, OOPs, SQL/DBMS, and System Architecture
     const hasSqlInJdOrSkills =
       jdLower.includes('sql') ||
       jdLower.includes('database') ||
