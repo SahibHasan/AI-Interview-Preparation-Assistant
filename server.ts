@@ -49,6 +49,7 @@ import {
   analyzeResumeAndJobDescription,
   buildRoleInterviewSectionsAndRules,
 } from './server/resumeParser';
+import { createNoOpViteClientScript } from './server/viteClientShim';
 
 let serverSupabase: SupabaseClient | null = null;
 let cloudReachable = false;
@@ -1483,6 +1484,14 @@ async function startServer() {
   const isHmrDisabled = process.env.DISABLE_HMR === 'true' || Boolean(process.env.K_SERVICE);
 
   if (isDev) {
+    if (isHmrDisabled) {
+      app.get('/@vite/client', (_req: Request, res: Response) => {
+        res.setHeader('Content-Type', 'application/javascript; charset=utf-8');
+        res.setHeader('Cache-Control', 'no-store');
+        res.send(createNoOpViteClientScript());
+      });
+    }
+
     const { createServer: createViteServer } = await import('vite');
     const vite = await createViteServer({
       server: {

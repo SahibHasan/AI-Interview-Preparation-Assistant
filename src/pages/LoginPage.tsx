@@ -105,11 +105,11 @@ export const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="bg-[#f8f9ff] min-h-screen flex flex-col justify-between antialiased">
+    <div className="glass-canvas min-h-screen flex flex-col justify-between antialiased">
       {/* Header */}
       <header className="w-full max-w-7xl mx-auto px-4 sm:px-6 py-6 flex items-center justify-between">
         <Link to="/" className="flex items-center gap-2.5 group">
-          <div className="w-9 h-9 rounded-lg bg-[#4f46e5] flex items-center justify-center text-white shadow-sm group-hover:bg-[#3525cd] transition-colors">
+          <div className="w-9 h-9 rounded-xl glass-btn-primary flex items-center justify-center text-white">
             <Plane className="w-5 h-5" />
           </div>
           <span className="font-heading text-lg font-bold text-[#0b1c30] tracking-tight">
@@ -117,7 +117,7 @@ export const LoginPage: React.FC = () => {
           </span>
         </Link>
 
-        <div className="flex items-center gap-1.5 text-[#565e74] text-xs font-semibold px-3 py-1.5 bg-[#eff4ff] rounded-lg border border-[#c7c4d8]/40">
+        <div className="flex items-center gap-1.5 text-[#565e74] text-xs font-semibold px-3 py-1.5 glass-pill-bar rounded-xl">
           <Shield className="w-3.5 h-3.5 text-[#00659a]" />
           <span>256-Bit SSL Enclave</span>
         </div>
@@ -127,9 +127,9 @@ export const LoginPage: React.FC = () => {
       <main className="flex-1 flex items-center justify-center w-full px-4 py-8">
         <div className="flex flex-col w-full items-center justify-center relative max-w-md">
           {/* Central Login Card */}
-          <div className="w-full bg-white rounded-2xl shadow-sm border border-[#e2e8f0] p-6 sm:p-8 flex flex-col relative z-10">
+          <div className="w-full glass-panel-elevated rounded-3xl p-6 sm:p-8 flex flex-col relative z-10">
             <div className="flex flex-col items-center text-center mb-6">
-              <div className="w-12 h-12 rounded-xl bg-[#4f46e5] text-white flex items-center justify-center shadow-sm mb-3">
+              <div className="w-12 h-12 rounded-2xl glass-btn-primary text-white flex items-center justify-center mb-3">
                 <Plane className="w-6 h-6" />
               </div>
               <h1 className="font-heading text-2xl font-bold text-[#0b1c30] tracking-tight">
@@ -141,13 +141,13 @@ export const LoginPage: React.FC = () => {
             </div>
 
             {statusNotice && (
-              <div className="mb-4 p-3 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-medium">
+              <div className="mb-4 p-3 rounded-xl bg-emerald-50/90 border border-emerald-200 text-emerald-800 text-xs font-medium">
                 {statusNotice}
               </div>
             )}
 
             {error && (
-              <div className="mb-4 p-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-xs">
+              <div className="mb-4 p-3 rounded-xl bg-red-50/90 border border-red-200 text-red-700 text-xs">
                 {error}
               </div>
             )}
@@ -158,7 +158,7 @@ export const LoginPage: React.FC = () => {
                 type="button"
                 onClick={() => setOauthModalProvider('google')}
                 disabled={loading}
-                className="flex items-center justify-center gap-2 py-2.5 px-3 bg-[#eff4ff] hover:bg-[#e5eeff] text-[#0b1c30] rounded-lg transition-colors text-xs font-semibold border border-[#c7c4d8]/50 shadow-xs"
+                className="flex items-center justify-center gap-2 py-2.5 px-3 glass-subcard hover:bg-white/85 text-[#0b1c30] rounded-xl transition-all text-xs font-semibold"
               >
                 <svg className="w-4 h-4" viewBox="0 0 24 24">
                   <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
@@ -173,7 +173,7 @@ export const LoginPage: React.FC = () => {
                 type="button"
                 onClick={() => setOauthModalProvider('github')}
                 disabled={loading}
-                className="flex items-center justify-center gap-2 py-2.5 px-3 bg-[#eff4ff] hover:bg-[#e5eeff] text-[#0b1c30] rounded-lg transition-colors text-xs font-semibold border border-[#c7c4d8]/50 shadow-xs"
+                className="flex items-center justify-center gap-2 py-2.5 px-3 glass-subcard hover:bg-white/85 text-[#0b1c30] rounded-xl transition-all text-xs font-semibold"
               >
                 <svg className="w-4 h-4 fill-current text-[#0b1c30]" viewBox="0 0 24 24">
                   <path fillRule="evenodd" clipRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
@@ -184,8 +184,8 @@ export const LoginPage: React.FC = () => {
 
             {/* Splitter */}
             <div className="relative flex items-center justify-center mb-6">
-              <div className="w-full h-px bg-[#e2e8f0]" />
-              <span className="absolute px-3 bg-white text-[11px] text-[#777587] uppercase tracking-wider font-semibold">
+              <div className="w-full h-px bg-slate-200/80" />
+              <span className="absolute px-3 bg-white/80 backdrop-blur-sm rounded-full text-[11px] text-[#777587] uppercase tracking-wider font-semibold">
                 or sign in with email
               </span>
             </div>
@@ -207,7 +207,7 @@ export const LoginPage: React.FC = () => {
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="you@example.com"
                     required
-                    className="w-full bg-[#eff4ff] text-[#0b1c30] placeholder:text-[#777587] text-sm pl-10 pr-4 py-2.5 rounded-lg border border-[#c7c4d8]/50 focus:outline-none focus:bg-white focus:ring-2 focus:ring-[#4f46e5] transition-colors"
+                    className="w-full glass-input text-[#0b1c30] placeholder:text-[#777587] text-sm pl-10 pr-4 py-2.5 rounded-xl focus:outline-none"
                   />
                 </div>
               </div>
@@ -240,7 +240,7 @@ export const LoginPage: React.FC = () => {
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="Enter your password"
                     required
-                    className="w-full bg-[#eff4ff] text-[#0b1c30] placeholder:text-[#777587] text-sm pl-10 pr-10 py-2.5 rounded-lg border border-[#c7c4d8]/50 focus:outline-none focus:bg-white focus:ring-2 focus:ring-[#4f46e5] transition-colors"
+                    className="w-full glass-input text-[#0b1c30] placeholder:text-[#777587] text-sm pl-10 pr-10 py-2.5 rounded-xl focus:outline-none"
                   />
                   <button
                     type="button"
@@ -256,7 +256,7 @@ export const LoginPage: React.FC = () => {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full mt-2 py-3 rounded-lg bg-[#4f46e5] hover:bg-[#3525cd] text-white font-semibold text-sm transition-colors shadow-sm flex items-center justify-center gap-2 disabled:opacity-70"
+                className="w-full mt-2 py-3 rounded-xl glass-btn-primary text-white font-semibold text-sm flex items-center justify-center gap-2 disabled:opacity-70"
               >
                 {loading ? (
                   <>
@@ -319,7 +319,7 @@ export const LoginPage: React.FC = () => {
           aria-modal="true"
           aria-labelledby="reset-pw-title"
         >
-          <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl border border-[#e2e8f0] text-left">
+          <div className="glass-panel-elevated rounded-2xl max-w-md w-full p-6 text-left">
             <div className="flex items-center justify-between pb-3 border-b border-[#e2e8f0] mb-4">
               <h2 id="reset-pw-title" className="font-heading text-base font-bold text-[#0b1c30]">
                 Reset Account Password

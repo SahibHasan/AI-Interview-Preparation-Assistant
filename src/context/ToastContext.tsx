@@ -68,13 +68,13 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
             const getBorderAndBg = () => {
               switch (toast.type) {
                 case 'success':
-                  return 'bg-white border-emerald-200 shadow-[0_8px_20px_rgba(5,150,105,0.12)]';
+                  return 'bg-white/88 backdrop-blur-xl border-emerald-200/80 shadow-[0_12px_32px_rgba(5,150,105,0.14),inset_0_1px_0_rgba(255,255,255,0.9)]';
                 case 'warning':
-                  return 'bg-white border-amber-200 shadow-[0_8px_20px_rgba(217,119,6,0.12)]';
+                  return 'bg-white/88 backdrop-blur-xl border-amber-200/80 shadow-[0_12px_32px_rgba(217,119,6,0.14),inset_0_1px_0_rgba(255,255,255,0.9)]';
                 case 'error':
-                  return 'bg-white border-red-200 shadow-[0_8px_20px_rgba(220,38,38,0.12)]';
+                  return 'bg-white/88 backdrop-blur-xl border-red-200/80 shadow-[0_12px_32px_rgba(220,38,38,0.14),inset_0_1px_0_rgba(255,255,255,0.9)]';
                 default:
-                  return 'bg-white border-[#c7d2fe] shadow-[0_8px_20px_rgba(79,70,229,0.12)]';
+                  return 'bg-white/88 backdrop-blur-xl border-white/90 shadow-[0_12px_32px_rgba(79,70,229,0.14),inset_0_1px_0_rgba(255,255,255,0.95)]';
               }
             };
 

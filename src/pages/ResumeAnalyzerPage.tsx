@@ -31,6 +31,7 @@ import { validateResumeFile, readFileAsBase64DataUrl, getAtsScoreBand } from '..
 import { downloadResumeAnalysisPDF, downloadResumeAnalysisDOCX } from '../utils/pdfExport';
 import { getDefaultAvatarUrl } from '../utils/avatar';
 import { INTERVIEW_ROLE_OPTIONS, CUSTOM_ROLE_VALUE, isPresetRole } from '../utils/roleCatalog';
+import { GlassTiltCard3D } from '../components/common/MotionPrimitives';
 
 export const ResumeAnalyzerPage: React.FC = () => {
   const { user } = useAuth();
@@ -329,7 +330,7 @@ export const ResumeAnalyzerPage: React.FC = () => {
   return (
     <div className="flex flex-col w-full gap-6 pb-12 antialiased">
       {/* Top Banner / Intelligence Header */}
-      <div className="relative overflow-hidden bg-white rounded-xl p-6 border border-[#e2e8f0] shadow-sm flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+      <div className="relative overflow-hidden glass-panel-elevated rounded-2xl p-6 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
         <div className="flex flex-col gap-1 max-w-3xl z-10 text-left">
           <div className="flex items-center gap-1.5 text-[#3525cd] text-xs font-bold uppercase tracking-wider">
             <Sparkles className="w-4 h-4" />
@@ -338,7 +339,7 @@ export const ResumeAnalyzerPage: React.FC = () => {
           <h1 className="font-heading text-2xl sm:text-3xl font-bold text-[#0b1c30] tracking-tight">
             Resume &amp; Job Match Intelligence
           </h1>
-          <p className="text-sm text-[#565e74]">
+          <p className="text-sm text-[#464555]">
             Upload any PDF, DOCX, or TXT resume and compare it directly against your target job description to compute your live ATS Score and competency gaps.
           </p>
         </div>
@@ -347,7 +348,7 @@ export const ResumeAnalyzerPage: React.FC = () => {
           <button
             type="button"
             onClick={() => void handleDownloadReport('pdf')}
-            className="flex items-center gap-1.5 bg-white hover:bg-[#eff4ff] text-[#0b1c30] border border-[#e2e8f0] px-3.5 py-2.5 rounded-lg text-xs font-semibold shadow-xs transition-colors"
+            className="flex items-center gap-1.5 glass-subcard hover:bg-white text-[#0b1c30] px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all whitespace-nowrap"
           >
             <Download className="w-3.5 h-3.5 text-[#3525cd]" />
             <span>PDF Report</span>
@@ -356,7 +357,7 @@ export const ResumeAnalyzerPage: React.FC = () => {
           <button
             type="button"
             onClick={() => void handleDownloadReport('docx')}
-            className="flex items-center gap-1.5 bg-white hover:bg-[#eff4ff] text-[#0b1c30] border border-[#e2e8f0] px-3.5 py-2.5 rounded-lg text-xs font-semibold shadow-xs transition-colors"
+            className="flex items-center gap-1.5 glass-subcard hover:bg-white text-[#0b1c30] px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all whitespace-nowrap"
           >
             <Download className="w-3.5 h-3.5 text-[#3525cd]" />
             <span>DOCX Report</span>
@@ -366,7 +367,7 @@ export const ResumeAnalyzerPage: React.FC = () => {
             type="button"
             onClick={handleRunAnalysis}
             disabled={isAnalyzing}
-            className="flex items-center gap-2 bg-[#4f46e5] hover:bg-[#3525cd] text-white px-5 py-2.5 rounded-lg text-xs font-semibold shadow-sm transition-all active:scale-95 disabled:opacity-60"
+            className="flex items-center gap-2 glass-btn-primary text-white px-5 py-2.5 rounded-xl text-xs font-semibold disabled:opacity-60 whitespace-nowrap"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${isAnalyzing ? 'animate-spin' : ''}`} />
             <span>{isAnalyzing ? 'Analyzing Alignment...' : 'Re-run Alignment'}</span>
@@ -377,11 +378,11 @@ export const ResumeAnalyzerPage: React.FC = () => {
       {/* PROMINENT RESUME ATS SCORE BAR */}
       <div
         data-testid="resume-ats-score-card"
-        className="bg-white rounded-xl border border-[#e2e8f0] shadow-sm p-6 text-left"
+        className="glass-panel-elevated rounded-2xl p-6 text-left"
       >
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
           <div className="flex items-start gap-3">
-            <div className="w-10 h-10 rounded-xl bg-[#eff4ff] text-[#3525cd] flex items-center justify-center shrink-0 border border-[#c7d2fe]">
+            <div className="w-10 h-10 rounded-xl glass-subcard text-[#3525cd] flex items-center justify-center shrink-0">
               <Gauge className="w-5 h-5" />
             </div>
             <div>
@@ -415,7 +416,7 @@ export const ResumeAnalyzerPage: React.FC = () => {
         </div>
 
         {/* Main ATS Score Bar */}
-        <div className="w-full h-3.5 bg-[#eff4ff] rounded-full overflow-hidden border border-[#e2e8f0]">
+        <div className="w-full h-3.5 bg-[#e5eeff]/75 rounded-full overflow-hidden border border-white/80">
           <motion.div
             data-testid="ats-score-bar-fill"
             className={`h-full rounded-full ${atsBand.barClass}`}
@@ -425,7 +426,7 @@ export const ResumeAnalyzerPage: React.FC = () => {
           />
         </div>
 
-        <div className="flex justify-between text-[10px] font-semibold text-[#777587] mt-1.5 mb-5">
+        <div className="flex justify-between text-[10px] font-semibold text-[#565e74] mt-1.5 mb-5">
           <span>0 — Needs Major Rewrite</span>
           <span>50 — Fair Screening Baseline</span>
           <span>75 — Strong Interview Shortlist</span>
@@ -442,14 +443,14 @@ export const ResumeAnalyzerPage: React.FC = () => {
           ].map((pillar) => (
             <div
               key={pillar.label}
-              className="p-3 rounded-xl bg-[#f8f9ff] border border-[#e2e8f0] flex flex-col gap-1.5"
+              className="p-3.5 rounded-xl glass-subcard glass-interactive flex flex-col gap-1.5"
             >
               <div className="flex items-center justify-between text-xs">
                 <span className="font-semibold text-[#0b1c30] truncate">{pillar.label}</span>
-                <span className="text-[10px] text-[#777587] font-mono shrink-0">{pillar.weight}</span>
+                <span className="text-[10px] text-[#565e74] font-mono shrink-0">{pillar.weight}</span>
               </div>
               <div className="flex items-center justify-between gap-2">
-                <div className="flex-1 h-2 bg-white rounded-full overflow-hidden border border-[#e2e8f0]">
+                <div className="flex-1 h-2 bg-white/80 rounded-full overflow-hidden border border-white">
                   <div
                     className={`h-full rounded-full transition-all duration-500 ${
                       pillar.value >= 75
@@ -511,15 +512,15 @@ export const ResumeAnalyzerPage: React.FC = () => {
       )}
 
       {/* Perspective Navigation Tabs */}
-      <div className="flex items-center justify-between bg-white p-1.5 rounded-xl border border-[#e2e8f0] shadow-sm overflow-x-auto">
+      <div className="flex items-center justify-between glass-pill-bar p-1.5 rounded-2xl overflow-x-auto">
         <div className="flex items-center gap-1 min-w-max">
           <button
             type="button"
             onClick={() => setActiveTab('sections')}
-            className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-semibold transition-all ${
+            className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold transition-all whitespace-nowrap ${
               activeTab === 'sections'
-                ? 'bg-[#4f46e5] text-white shadow-sm'
-                : 'text-[#565e74] hover:text-[#0b1c30] hover:bg-[#eff4ff]'
+                ? 'glass-btn-primary text-white'
+                : 'text-[#464555] hover:text-[#0b1c30] hover:bg-white/60'
             }`}
           >
             <FileText className="w-4 h-4" />
@@ -529,10 +530,10 @@ export const ResumeAnalyzerPage: React.FC = () => {
           <button
             type="button"
             onClick={() => setActiveTab('keywords')}
-            className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-semibold transition-all ${
+            className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold transition-all whitespace-nowrap ${
               activeTab === 'keywords'
-                ? 'bg-[#4f46e5] text-white shadow-sm'
-                : 'text-[#565e74] hover:text-[#0b1c30] hover:bg-[#eff4ff]'
+                ? 'glass-btn-primary text-white'
+                : 'text-[#464555] hover:text-[#0b1c30] hover:bg-white/60'
             }`}
           >
             <Search className="w-4 h-4" />
@@ -542,10 +543,10 @@ export const ResumeAnalyzerPage: React.FC = () => {
           <button
             type="button"
             onClick={() => setActiveTab('fit')}
-            className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-semibold transition-all ${
+            className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold transition-all whitespace-nowrap ${
               activeTab === 'fit'
-                ? 'bg-[#4f46e5] text-white shadow-sm'
-                : 'text-[#565e74] hover:text-[#0b1c30] hover:bg-[#eff4ff]'
+                ? 'glass-btn-primary text-white'
+                : 'text-[#464555] hover:text-[#0b1c30] hover:bg-white/60'
             }`}
           >
             <Briefcase className="w-4 h-4" />
@@ -553,13 +554,12 @@ export const ResumeAnalyzerPage: React.FC = () => {
           </button>
         </div>
 
-        <div className="hidden lg:flex items-center gap-3 px-3 text-xs text-[#565e74]">
+        <div className="hidden lg:flex items-center gap-3 px-3 text-xs text-[#464555]">
           <span className="flex items-center gap-1.5">
-            <span className="w-2 h-2 rounded-full bg-emerald-500" />
-            ATS Index: <strong className="text-[#0b1c30]">{atsScore}/100</strong>
+            ATS Index: <strong className="text-[#0b1c30] tabular-nums">{atsScore}/100</strong>
           </span>
-          <span className="text-[#c7c4d8]">•</span>
-          <span className="text-[#3525cd] font-medium">
+          <span className="text-[#c7c4d8]" aria-hidden="true">·</span>
+          <span className="text-[#3525cd] font-semibold">
             {targetRoleInput} @ {targetCompanyInput}
           </span>
         </div>
@@ -570,8 +570,8 @@ export const ResumeAnalyzerPage: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
           {/* Left Column: Candidate Resume Profile (5 cols) */}
           <div className="lg:col-span-5 flex flex-col gap-6">
-            <div className="bg-white rounded-xl border border-[#e2e8f0] shadow-sm p-6 flex flex-col gap-5 text-left">
-              <div className="flex items-center justify-between pb-3 border-b border-[#e2e8f0]">
+            <div className="glass-panel rounded-2xl p-6 flex flex-col gap-5 text-left">
+              <div className="flex items-center justify-between pb-3 border-b border-slate-200/70">
                 <div className="flex items-center gap-2">
                   <FileText className="w-5 h-5 text-[#3525cd]" />
                   <h2 className="font-heading text-base font-bold text-[#0b1c30]">
@@ -594,12 +594,12 @@ export const ResumeAnalyzerPage: React.FC = () => {
                 onDrop={handleDrop}
                 className={`flex items-center justify-between p-3.5 rounded-xl border transition-all gap-2 ${
                   isDragging
-                    ? 'bg-[#e5eeff] border-[#4f46e5] border-dashed ring-2 ring-[#4f46e5]/30'
-                    : 'bg-[#eff4ff]/70 border-[#c7c4d8]/40'
+                    ? 'bg-[#e5eeff]/90 border-[#4f46e5] border-dashed ring-2 ring-[#4f46e5]/30'
+                    : 'glass-subcard'
                 }`}
               >
                 <div className="flex items-center gap-3 min-w-0">
-                  <div className="w-10 h-10 rounded-lg bg-white flex items-center justify-center text-[#3525cd] shadow-sm shrink-0 border border-[#e2e8f0]">
+                  <div className="w-10 h-10 rounded-xl bg-white/90 flex items-center justify-center text-[#3525cd] shadow-xs shrink-0 border border-white">
                     <UploadCloud className="w-5 h-5" />
                   </div>
                   <div className="flex flex-col min-w-0 text-left">
@@ -624,7 +624,7 @@ export const ResumeAnalyzerPage: React.FC = () => {
                   </div>
                 </div>
 
-                <label className="cursor-pointer bg-white hover:bg-[#eff4ff] text-[#0b1c30] text-xs font-semibold px-3 py-1.5 rounded-lg border border-[#e2e8f0] transition-colors shadow-sm shrink-0">
+                <label className="cursor-pointer bg-white/90 hover:bg-white text-[#0b1c30] text-xs font-semibold px-3 py-1.5 rounded-xl border border-white transition-colors shadow-xs shrink-0 whitespace-nowrap">
                   <span>Upload File</span>
                   <input
                     data-testid="resume-file-input"
@@ -637,7 +637,7 @@ export const ResumeAnalyzerPage: React.FC = () => {
               </div>
 
               {showPasteDrawer && (
-                <div className="p-3.5 rounded-xl bg-[#f8f9ff] border border-[#c7d2fe] space-y-2.5">
+                <div className="p-3.5 rounded-xl glass-subcard space-y-2.5">
                   <label className="block text-xs font-semibold text-[#0b1c30]">
                     Paste or Edit Extracted Resume Text
                   </label>
@@ -646,13 +646,13 @@ export const ResumeAnalyzerPage: React.FC = () => {
                     value={pastedResumeText}
                     onChange={(e) => setPastedResumeText(e.target.value)}
                     placeholder="Paste your complete resume text here (experience, projects, skills, education)..."
-                    className="w-full bg-white border border-[#e2e8f0] rounded-lg p-2.5 text-xs text-[#0b1c30] font-mono leading-relaxed focus:outline-none focus:ring-2 focus:ring-[#4f46e5]"
+                    className="w-full glass-input rounded-xl p-2.5 text-xs text-[#0b1c30] font-mono leading-relaxed outline-none"
                   />
                   <div className="flex items-center justify-end gap-2">
                     <button
                       type="button"
                       onClick={() => setShowPasteDrawer(false)}
-                      className="px-3 py-1.5 rounded-lg text-xs font-semibold text-[#565e74] hover:bg-white border border-[#e2e8f0]"
+                      className="px-3 py-1.5 rounded-lg text-xs font-semibold text-[#565e74] hover:bg-white border border-slate-200/70"
                     >
                       Cancel
                     </button>
@@ -660,7 +660,7 @@ export const ResumeAnalyzerPage: React.FC = () => {
                       type="button"
                       onClick={handleAnalyzePastedText}
                       disabled={isAnalyzing}
-                      className="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-[#4f46e5] hover:bg-[#3525cd] text-white shadow-xs"
+                      className="px-3.5 py-1.5 rounded-lg text-xs font-semibold glass-btn-primary text-white"
                     >
                       Analyze Pasted Resume
                     </button>
@@ -669,11 +669,11 @@ export const ResumeAnalyzerPage: React.FC = () => {
               )}
 
               {/* Candidate Identity */}
-              <div className="flex items-center gap-3 p-3.5 bg-[#f8f9ff] rounded-xl border border-[#e2e8f0]">
+              <div className="flex items-center gap-3 p-3.5 glass-subcard rounded-xl">
                 <img
                   src={user?.avatarUrl || profile.avatarUrl || getDefaultAvatarUrl(candidateDisplayName)}
                   alt={candidateDisplayName}
-                  className="w-12 h-12 rounded-full object-cover shadow-sm ring-2 ring-[#e5eeff]"
+                  className="w-12 h-12 rounded-full object-cover shadow-sm ring-2 ring-white"
                 />
                 <div className="min-w-0">
                   <h3 className="font-heading text-sm font-bold text-[#0b1c30] truncate">
@@ -692,7 +692,7 @@ export const ResumeAnalyzerPage: React.FC = () => {
                   Extracted Experience &amp; Projects ({parsedExperiences.length})
                 </span>
                 {parsedExperiences.length === 0 ? (
-                  <div className="p-3.5 bg-[#f8f9ff] rounded-xl border border-dashed border-[#c7d2fe] text-xs text-[#565e74]">
+                  <div className="p-3.5 glass-subcard rounded-xl border-dashed text-xs text-[#565e74]">
                     Upload or paste your resume above to extract your work history, projects, and measurable achievements.
                   </div>
                 ) : (
@@ -700,17 +700,17 @@ export const ResumeAnalyzerPage: React.FC = () => {
                     {parsedExperiences.map((exp, idx) => (
                       <div
                         key={idx}
-                        className="border border-[#e2e8f0] rounded-xl overflow-hidden bg-[#f8f9ff] transition-all"
+                        className="rounded-xl overflow-hidden glass-subcard transition-all"
                       >
                         <button
                           type="button"
                           onClick={() => setExpandedExperience(expandedExperience === idx ? null : idx)}
-                          className="w-full p-3 flex items-center justify-between text-left hover:bg-[#eff4ff]/60 transition-colors gap-2"
+                          className="w-full p-3 flex items-center justify-between text-left hover:bg-white/60 transition-colors gap-2"
                         >
                           <div className="min-w-0">
                             <div className="text-xs font-bold text-[#0b1c30] truncate">{exp.role}</div>
                             <div className="text-[11px] text-[#565e74] truncate">
-                              {exp.company} • {exp.period}
+                              {exp.company} · {exp.period}
                             </div>
                           </div>
                           {expandedExperience === idx ? (
@@ -721,7 +721,7 @@ export const ResumeAnalyzerPage: React.FC = () => {
                         </button>
 
                         {expandedExperience === idx && (
-                          <div className="p-3 bg-white border-t border-[#e2e8f0] text-xs text-[#464555] space-y-1.5">
+                          <div className="p-3 bg-white/80 border-t border-slate-200/70 text-xs text-[#464555] space-y-1.5">
                             {(exp.bulletPoints || []).map((b, bIdx) => (
                               <div key={bIdx} className="flex items-start gap-1.5">
                                 <span className="text-[#3525cd] font-bold">•</span>
@@ -741,7 +741,7 @@ export const ResumeAnalyzerPage: React.FC = () => {
                 <span className="text-[11px] font-semibold text-[#565e74] uppercase tracking-wider block mb-1.5">
                   Extracted Education
                 </span>
-                <div className="p-3 bg-[#f8f9ff] rounded-xl border border-[#e2e8f0] flex items-start gap-2.5">
+                <div className="p-3 glass-subcard rounded-xl flex items-start gap-2.5">
                   <GraduationCap className="w-5 h-5 text-[#3525cd] shrink-0 mt-0.5" />
                   <div>
                     <div className="text-xs font-bold text-[#0b1c30]">
@@ -763,14 +763,14 @@ export const ResumeAnalyzerPage: React.FC = () => {
                   <span className="text-[11px] font-semibold text-[#565e74] uppercase tracking-wider">
                     Extracted Skills &amp; Competencies ({skillsList.length})
                   </span>
-                  <span className="text-[10px] text-[#777587]">Synced to ATS &amp; Interview</span>
+                  <span className="text-[10px] text-[#565e74]">Synced to ATS &amp; Interview</span>
                 </div>
 
-                <div className="flex flex-wrap gap-1.5 mb-3 max-h-48 overflow-y-auto p-1">
+                <div className="flex flex-wrap gap-1.5 mb-3 max-h-48 overflow-y-auto custom-scrollbar p-1">
                   {skillsList.map((skill, index) => (
                     <span
                       key={index}
-                      className="group inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-[#eff4ff] text-[#3525cd] text-xs font-medium border border-[#c7c4d8]/40 hover:bg-[#e0ecff] transition-colors"
+                      className="group inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white/80 text-[#3525cd] text-xs font-medium border border-white hover:bg-white transition-colors shadow-xs"
                     >
                       <span>{skill}</span>
                       <button
@@ -792,12 +792,12 @@ export const ResumeAnalyzerPage: React.FC = () => {
                     onChange={(e) => setCustomSkill(e.target.value)}
                     onKeyDown={(e) => e.key === 'Enter' && handleAddSkill()}
                     placeholder="Add skill (e.g. SQL, DSA, OOPs, Docker)..."
-                    className="flex-1 bg-[#f8f9ff] border border-[#e2e8f0] rounded-lg px-3 py-1.5 text-xs text-[#0b1c30] placeholder:text-[#777587] focus:outline-none focus:ring-1 focus:ring-[#4f46e5]"
+                    className="flex-1 glass-input rounded-xl px-3 py-1.5 text-xs text-[#0b1c30] placeholder:text-[#777587] outline-none"
                   />
                   <button
                     type="button"
                     onClick={handleAddSkill}
-                    className="px-3 py-1.5 bg-[#eff4ff] hover:bg-[#e5eeff] text-[#3525cd] rounded-lg text-xs font-semibold flex items-center gap-1 transition-colors border border-[#c7c4d8]/40 active:scale-95"
+                    className="px-3.5 py-1.5 glass-subcard hover:bg-white text-[#3525cd] rounded-xl text-xs font-semibold flex items-center gap-1 transition-all active:scale-95 whitespace-nowrap"
                   >
                     <Plus className="w-3.5 h-3.5" />
                     <span>Add</span>
@@ -810,8 +810,8 @@ export const ResumeAnalyzerPage: React.FC = () => {
           {/* Right Column: Target Job Description & Gap Intelligence (7 cols) */}
           <div className="lg:col-span-7 flex flex-col gap-6">
             {/* Target Job Description Editor & Role Calibration */}
-            <div className="bg-white rounded-xl border border-[#e2e8f0] shadow-sm p-6 text-left">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-[#e2e8f0] mb-4 gap-3">
+            <div className="glass-panel rounded-2xl p-6 text-left">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-slate-200/70 mb-4 gap-3">
                 <div className="flex items-center gap-2">
                   <Briefcase className="w-5 h-5 text-[#3525cd]" />
                   <h3 className="font-heading text-base font-bold text-[#0b1c30]">
@@ -831,7 +831,7 @@ export const ResumeAnalyzerPage: React.FC = () => {
                         setTargetRoleInput(val);
                       }
                     }}
-                    className="w-44 bg-[#f8f9ff] border border-[#e2e8f0] rounded-lg px-2.5 py-1 text-xs font-semibold text-[#0b1c30] focus:outline-none focus:ring-1 focus:ring-[#4f46e5]"
+                    className="w-44 glass-input rounded-lg px-2.5 py-1.5 text-xs font-semibold text-[#0b1c30] outline-none"
                   >
                     {INTERVIEW_ROLE_OPTIONS.map((role) => (
                       <option key={role} value={role}>
@@ -847,7 +847,7 @@ export const ResumeAnalyzerPage: React.FC = () => {
                       value={targetRoleInput}
                       onChange={(e) => setTargetRoleInput(e.target.value)}
                       placeholder="Custom Role"
-                      className="w-36 bg-[#f8f9ff] border border-[#c7d2fe] rounded-lg px-2.5 py-1 text-xs font-semibold text-[#0b1c30] focus:outline-none focus:ring-1 focus:ring-[#4f46e5]"
+                      className="w-36 glass-input rounded-lg px-2.5 py-1.5 text-xs font-semibold text-[#0b1c30] outline-none"
                     />
                   )}
                   <span className="text-xs text-[#777587]">@</span>
@@ -857,7 +857,7 @@ export const ResumeAnalyzerPage: React.FC = () => {
                     value={targetCompanyInput}
                     onChange={(e) => setTargetCompanyInput(e.target.value)}
                     placeholder="Company"
-                    className="w-28 bg-[#f8f9ff] border border-[#e2e8f0] rounded-lg px-2.5 py-1 text-xs font-semibold text-[#0b1c30] focus:outline-none focus:ring-1 focus:ring-[#4f46e5]"
+                    className="w-28 glass-input rounded-lg px-2.5 py-1.5 text-xs font-semibold text-[#0b1c30] outline-none"
                   />
                 </div>
               </div>
@@ -868,13 +868,13 @@ export const ResumeAnalyzerPage: React.FC = () => {
                   rows={6}
                   value={jdInput}
                   onChange={(e) => setJdInput(e.target.value)}
-                  className="w-full bg-[#f8f9ff] border border-[#e2e8f0] rounded-xl p-3.5 text-xs text-[#0b1c30] font-mono leading-relaxed focus:outline-none focus:ring-2 focus:ring-[#4f46e5] resize-y"
+                  className="w-full glass-input rounded-xl p-3.5 text-xs text-[#0b1c30] font-mono leading-relaxed outline-none resize-y"
                   placeholder="Paste the full target job description here (e.g., SQL, DSA, OOPs, System Design requirements)..."
                 />
               </div>
 
               <div className="flex items-center justify-between mt-3">
-                <span className="text-[11px] text-[#777587]">
+                <span className="text-[11px] text-[#565e74]">
                   Parses required technical stack, seniority bar, and interview topic sections.
                 </span>
                 <button
@@ -890,20 +890,20 @@ export const ResumeAnalyzerPage: React.FC = () => {
             </div>
 
             {/* Alignment Scorecard & Gaps Breakdown */}
-            <div className="bg-white rounded-xl border border-[#e2e8f0] shadow-sm p-6 text-left">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[#e2e8f0]">
+            <div className="glass-panel rounded-2xl p-6 text-left">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200/70">
                 <div>
                   <h3 className="font-heading text-base font-bold text-[#0b1c30]">
                     Role Alignment &amp; Competency Gaps
                   </h3>
-                  <p className="text-xs text-[#565e74]">
+                  <p className="text-xs text-[#464555]">
                     Benchmarked across {resumeAnalysis.matchAnalysis.matchedSkills.length + resumeAnalysis.matchAnalysis.missingSkills.length} detected JD competencies
                   </p>
                 </div>
 
-                <div className="flex items-center gap-3 bg-[#eff4ff] px-4 py-2 rounded-xl border border-[#c7c4d8]/40">
+                <div className="flex items-center gap-3 glass-subcard px-4 py-2 rounded-xl">
                   <div className="text-right">
-                    <div className="font-heading text-2xl font-bold text-[#3525cd]">
+                    <div className="font-heading text-2xl font-bold text-[#3525cd] tabular-nums">
                       <AnimatedCounter value={resumeAnalysis.matchAnalysis.overallMatchPercentage} suffix="%" />
                     </div>
                     <div className="text-[10px] text-[#565e74] uppercase font-semibold">JD Match</div>
@@ -986,7 +986,7 @@ export const ResumeAnalyzerPage: React.FC = () => {
               {(resumeAnalysis.matchAnalysis.inferredStrengths.length > 0 ||
                 resumeAnalysis.matchAnalysis.suggestedFocusAreas.length > 0) && (
                 <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-                  <div className="p-3.5 rounded-xl bg-[#f8f9ff] border border-[#e2e8f0]">
+                  <div className="p-3.5 rounded-xl glass-subcard">
                     <div className="text-[11px] font-bold text-[#0b1c30] uppercase tracking-wider mb-2">
                       Verified Strengths
                     </div>
@@ -1000,7 +1000,7 @@ export const ResumeAnalyzerPage: React.FC = () => {
                     </ul>
                   </div>
 
-                  <div className="p-3.5 rounded-xl bg-[#f8f9ff] border border-[#e2e8f0]">
+                  <div className="p-3.5 rounded-xl glass-subcard">
                     <div className="text-[11px] font-bold text-[#3525cd] uppercase tracking-wider mb-2">
                       Recommended Improvements
                     </div>
@@ -1017,12 +1017,12 @@ export const ResumeAnalyzerPage: React.FC = () => {
               )}
 
               {/* Launch CTA */}
-              <div className="mt-8 p-4 bg-[#eff4ff] rounded-xl border border-[#c7c4d8]/40 flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div className="mt-8 p-4 glass-subcard rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4">
                 <div>
                   <h4 className="font-heading text-sm font-bold text-[#0b1c30]">
                     Ready to calibrate your AI Interview from this resume?
                   </h4>
-                  <p className="text-xs text-[#565e74] mt-0.5">
+                  <p className="text-xs text-[#464555] mt-0.5">
                     Proceed to Interview Setup to choose your interview format and launch your live AI mock session.
                   </p>
                 </div>
@@ -1030,7 +1030,7 @@ export const ResumeAnalyzerPage: React.FC = () => {
                 <button
                   type="button"
                   onClick={handleStartInterviewWithRole}
-                  className="w-full sm:w-auto px-5 py-2.5 rounded-lg bg-[#4f46e5] hover:bg-[#3525cd] text-white font-semibold text-xs transition-all shadow-sm flex items-center justify-center gap-2 shrink-0 active:scale-95"
+                  className="w-full sm:w-auto px-5 py-2.5 rounded-xl glass-btn-primary text-white font-semibold text-xs flex items-center justify-center gap-2 shrink-0 whitespace-nowrap"
                 >
                   <span>Proceed to Interview Setup</span>
                   <ArrowRight className="w-4 h-4" />
@@ -1043,23 +1043,23 @@ export const ResumeAnalyzerPage: React.FC = () => {
 
       {/* TAB 2: KEYWORDS & DENSITY */}
       {activeTab === 'keywords' && (
-        <div className="bg-white rounded-xl border border-[#e2e8f0] shadow-sm p-6 text-left space-y-6">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[#e2e8f0]">
+        <div className="glass-panel rounded-2xl p-6 text-left space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200/70">
             <div>
               <h3 className="font-heading text-lg font-bold text-[#0b1c30]">
                 Semantic Keyword Frequency &amp; ATS Density
               </h3>
-              <p className="text-xs text-[#565e74]">
+              <p className="text-xs text-[#464555]">
                 Real token frequency inside {resumeAnalysis.fileName} ({resumeAnalysis.wordCount || 0} words) compared against JD terms.
               </p>
             </div>
 
-            <div className="flex items-center gap-1.5 bg-[#f8f9ff] p-1 rounded-lg border border-[#e2e8f0]">
+            <div className="flex items-center gap-1.5 glass-pill-bar p-1 rounded-xl">
               <button
                 type="button"
                 onClick={() => setKeywordFilter('all')}
-                className={`px-3 py-1 rounded-md text-xs font-semibold transition-colors ${
-                  keywordFilter === 'all' ? 'bg-[#4f46e5] text-white shadow-sm' : 'text-[#565e74]'
+                className={`px-3 py-1 rounded-lg text-xs font-semibold transition-colors whitespace-nowrap ${
+                  keywordFilter === 'all' ? 'glass-btn-primary text-white' : 'text-[#565e74] hover:text-[#0b1c30]'
                 }`}
               >
                 All ({keywordData.length})
@@ -1067,8 +1067,8 @@ export const ResumeAnalyzerPage: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setKeywordFilter('present')}
-                className={`px-3 py-1 rounded-md text-xs font-semibold transition-colors ${
-                  keywordFilter === 'present' ? 'bg-[#4f46e5] text-white shadow-sm' : 'text-[#565e74]'
+                className={`px-3 py-1 rounded-lg text-xs font-semibold transition-colors whitespace-nowrap ${
+                  keywordFilter === 'present' ? 'glass-btn-primary text-white' : 'text-[#565e74] hover:text-[#0b1c30]'
                 }`}
               >
                 Present ({keywordData.filter((k) => k.status === 'present').length})
@@ -1076,8 +1076,8 @@ export const ResumeAnalyzerPage: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setKeywordFilter('missing')}
-                className={`px-3 py-1 rounded-md text-xs font-semibold transition-colors ${
-                  keywordFilter === 'missing' ? 'bg-[#4f46e5] text-white shadow-sm' : 'text-[#565e74]'
+                className={`px-3 py-1 rounded-lg text-xs font-semibold transition-colors whitespace-nowrap ${
+                  keywordFilter === 'missing' ? 'glass-btn-primary text-white' : 'text-[#565e74] hover:text-[#0b1c30]'
                 }`}
               >
                 Gaps ({keywordData.filter((k) => k.status === 'missing').length})
@@ -1085,7 +1085,7 @@ export const ResumeAnalyzerPage: React.FC = () => {
             </div>
           </div>
 
-          <div className="p-5 bg-[#f8f9ff] rounded-xl border border-[#e2e8f0]">
+          <div className="p-5 glass-subcard rounded-2xl">
             <span className="text-[11px] font-bold text-[#565e74] uppercase tracking-wider block mb-3">
               Extracted Keyword Cloud ({resumeAnalysis.fileName})
             </span>
@@ -1093,10 +1093,10 @@ export const ResumeAnalyzerPage: React.FC = () => {
               {keywordData.map((k, idx) => (
                 <span
                   key={idx}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-semibold border transition-transform hover:scale-105 ${
+                  className={`px-3 py-1.5 rounded-xl text-xs font-semibold border transition-transform hover:scale-105 ${
                     k.status === 'present'
-                      ? 'bg-white text-[#0b1c30] border-[#c7d2fe] shadow-sm'
-                      : 'bg-red-50 text-red-700 border-red-200'
+                      ? 'bg-white/85 text-[#0b1c30] border-white shadow-xs'
+                      : 'bg-red-50/85 text-red-700 border-red-200'
                   }`}
                 >
                   {k.term} ({k.count}x)
@@ -1107,7 +1107,7 @@ export const ResumeAnalyzerPage: React.FC = () => {
 
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-[#f8f9ff] border-b border-[#e2e8f0] text-[#565e74] uppercase text-[10px] tracking-wider font-semibold">
+              <thead className="bg-white/50 border-b border-slate-200/70 text-[#565e74] uppercase text-[10px] tracking-wider font-semibold">
                 <tr>
                   <th className="px-4 py-3">Keyword / Competency</th>
                   <th className="px-4 py-3">Category</th>
@@ -1117,13 +1117,13 @@ export const ResumeAnalyzerPage: React.FC = () => {
                   <th className="px-4 py-3 text-right">Action</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#e2e8f0]">
+              <tbody className="divide-y divide-slate-200/60">
                 {filteredKeywords.map((k, idx) => (
-                  <tr key={idx} className="hover:bg-[#eff4ff]/40 transition-colors">
+                  <tr key={idx} className="hover:bg-white/60 transition-colors">
                     <td className="px-4 py-3 font-bold text-[#0b1c30]">{k.term}</td>
                     <td className="px-4 py-3 text-[#565e74]">{k.category}</td>
-                    <td className="px-4 py-3 font-mono font-medium text-[#0b1c30]">{k.count}</td>
-                    <td className="px-4 py-3 font-mono text-[#565e74]">{k.density}</td>
+                    <td className="px-4 py-3 font-mono font-medium text-[#0b1c30] tabular-nums">{k.count}</td>
+                    <td className="px-4 py-3 font-mono text-[#565e74] tabular-nums">{k.density}</td>
                     <td className="px-4 py-3">
                       <span
                         className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold ${
@@ -1169,56 +1169,59 @@ export const ResumeAnalyzerPage: React.FC = () => {
       {/* TAB 3: SENIORITY FIT & INTERVIEW SECTIONS */}
       {activeTab === 'fit' && (
         <div className="space-y-6">
-          <div className="bg-white rounded-xl border border-[#e2e8f0] shadow-sm p-6 text-left space-y-6">
-            <div className="pb-4 border-b border-[#e2e8f0]">
+          <div className="glass-panel rounded-2xl p-6 text-left space-y-6">
+            <div className="pb-4 border-b border-slate-200/70">
               <h3 className="font-heading text-lg font-bold text-[#0b1c30]">
                 Seniority Calibration &amp; {targetCompanyInput} Leveling Fit
               </h3>
-              <p className="text-xs text-[#565e74]">
+              <p className="text-xs text-[#464555]">
                 Computed from {resumeAnalysis.parsedProfile?.yearsOfExperience ?? profile.yearsOfExperience} estimated years of experience and {atsScore}/100 ATS score.
               </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               {levelingFitData.map((lvl, idx) => (
-                <div
-                  key={idx}
-                  className={`p-4 rounded-xl border transition-all ${
-                    lvl.status === 'target'
-                      ? 'bg-[#eff4ff] border-[#4f46e5] ring-2 ring-[#4f46e5]/30'
-                      : lvl.status === 'solid'
-                      ? 'bg-emerald-50/50 border-emerald-200'
-                      : 'bg-[#f8f9ff] border-[#e2e8f0]'
-                  }`}
-                >
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="font-heading text-sm font-bold text-[#0b1c30]">{lvl.level}</span>
-                    {lvl.status === 'target' && (
-                      <span className="px-2 py-0.5 rounded-full bg-[#4f46e5] text-white text-[10px] font-bold">
-                        Best Fit
-                      </span>
-                    )}
+                <GlassTiltCard3D key={idx} intensity={3.5} hoverLift={3}>
+                  <div
+                    className={`p-4 rounded-2xl border h-full flex flex-col justify-between transition-all ${
+                      lvl.status === 'target'
+                        ? 'glass-panel-elevated border-[#4f46e5]/60 ring-2 ring-[#4f46e5]/25'
+                        : lvl.status === 'solid'
+                        ? 'bg-emerald-50/70 backdrop-blur-md border-emerald-200/80'
+                        : 'glass-subcard'
+                    }`}
+                  >
+                    <div>
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="font-heading text-sm font-bold text-[#0b1c30]">{lvl.level}</span>
+                        {lvl.status === 'target' && (
+                          <span className="px-2 py-0.5 rounded-full bg-[#4f46e5] text-white text-[10px] font-bold">
+                            Best Fit
+                          </span>
+                        )}
+                      </div>
+                      <div className="text-xs text-[#565e74] font-medium">{lvl.bar}</div>
+                    </div>
+                    <div className="mt-3 text-xs font-bold text-[#0b1c30] flex items-center justify-between">
+                      <span>Alignment:</span>
+                      <span className={lvl.status === 'gap' ? 'text-[#777587]' : 'text-[#3525cd]'}>{lvl.fit}</span>
+                    </div>
                   </div>
-                  <div className="text-xs text-[#565e74] font-medium">{lvl.bar}</div>
-                  <div className="mt-3 text-xs font-bold text-[#0b1c30] flex items-center justify-between">
-                    <span>Alignment:</span>
-                    <span className={lvl.status === 'gap' ? 'text-[#777587]' : 'text-[#3525cd]'}>{lvl.fit}</span>
-                  </div>
-                </div>
+                </GlassTiltCard3D>
               ))}
             </div>
 
-            <div className="p-5 bg-[#f8f9ff] rounded-xl border border-[#e2e8f0] flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="p-5 glass-subcard rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4">
               <div>
                 <div className="text-xs font-bold text-[#0b1c30] flex items-center gap-1.5">
                   <Award className="w-4 h-4 text-[#3525cd]" />
                   <span>Estimated Market Compensation Range ({targetRoleInput})</span>
                 </div>
-                <p className="text-xs text-[#565e74] mt-0.5">
+                <p className="text-xs text-[#464555] mt-0.5">
                   Calibrated from parsed seniority scope and {targetCompanyInput} target level.
                 </p>
               </div>
-              <div className="text-right shrink-0 bg-white px-4 py-2 rounded-xl border border-[#e2e8f0]">
+              <div className="text-right shrink-0 bg-white/85 px-4 py-2 rounded-xl border border-white shadow-xs">
                 <div className="font-heading text-xl font-bold text-[#0b1c30]">
                   {resumeAnalysis.compensationBand || '$140k - $220k Total Comp'}
                 </div>
@@ -1229,20 +1232,20 @@ export const ResumeAnalyzerPage: React.FC = () => {
 
           {/* Detected Role-Divided Interview Sections & Assessment Criteria */}
           {detectedSections.length > 0 && (
-            <div className="bg-white rounded-xl border border-[#e2e8f0] shadow-sm p-6 text-left space-y-5">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-4 border-b border-[#e2e8f0]">
+            <div className="glass-panel rounded-2xl p-6 text-left space-y-5">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-4 border-b border-slate-200/70">
                 <div className="flex items-center gap-2">
                   <ClipboardList className="w-5 h-5 text-[#3525cd]" />
                   <div>
                     <h3 className="font-heading text-base font-bold text-[#0b1c30]">
                       Planned Interview Sections for {targetRoleInput}
                     </h3>
-                    <p className="text-xs text-[#565e74]">
+                    <p className="text-xs text-[#464555]">
                       Automatically partitioned by role competencies, uploaded resume, and job description.
                     </p>
                   </div>
                 </div>
-                <span className="text-xs font-bold text-[#3525cd] bg-[#eff4ff] px-3 py-1 rounded-full">
+                <span className="text-xs font-bold text-[#3525cd]">
                   {detectedSections.length} Structured Sections
                 </span>
               </div>
@@ -1251,28 +1254,28 @@ export const ResumeAnalyzerPage: React.FC = () => {
                 {detectedSections.map((sec) => (
                   <div
                     key={sec.id}
-                    className="p-4 rounded-xl bg-[#f8f9ff] border border-[#e2e8f0] flex flex-col gap-2"
+                    className="p-4 rounded-2xl glass-subcard glass-interactive flex flex-col gap-2"
                   >
                     <div className="flex items-center justify-between gap-2">
                       <span className="text-xs font-bold text-[#0b1c30]">
                         {sec.order}. {sec.sectionName}
                       </span>
-                      <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#eff4ff] text-[#3525cd] border border-[#c7d2fe]">
+                      <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-white/90 text-[#3525cd] border border-white">
                         {sec.weightPercentage}% weight
                       </span>
                     </div>
-                    <p className="text-xs text-[#565e74] leading-relaxed">{sec.rationale}</p>
+                    <p className="text-xs text-[#464555] leading-relaxed">{sec.rationale}</p>
                     <div className="flex flex-wrap gap-1.5 pt-1">
                       {sec.topicsCovered.map((t, i) => (
                         <span
                           key={i}
-                          className="text-[11px] font-medium px-2 py-0.5 rounded bg-white border border-[#e2e8f0] text-[#0b1c30]"
+                          className="text-[11px] font-medium px-2 py-0.5 rounded-md bg-white/85 border border-white text-[#0b1c30]"
                         >
                           {t}
                         </span>
                       ))}
                     </div>
-                    <div className="pt-2 border-t border-[#e2e8f0] text-[11px] text-[#464555]">
+                    <div className="pt-2 border-t border-slate-200/70 text-[11px] text-[#464555]">
                       <strong className="text-[#0b1c30] flex items-center gap-1 mb-1">
                         <ShieldCheck className="w-3.5 h-3.5 text-[#3525cd]" />
                         Assessment Criteria:
@@ -1291,7 +1294,7 @@ export const ResumeAnalyzerPage: React.FC = () => {
                 <button
                   type="button"
                   onClick={handleStartInterviewWithRole}
-                  className="px-6 py-2.5 rounded-lg bg-[#4f46e5] hover:bg-[#3525cd] text-white font-semibold text-xs shadow-sm transition-all flex items-center gap-2 active:scale-95"
+                  className="px-6 py-2.5 rounded-xl glass-btn-primary text-white font-semibold text-xs flex items-center gap-2 whitespace-nowrap"
                 >
                   <span>Proceed to Sectioned Interview Setup</span>
                   <ArrowRight className="w-4 h-4" />

@@ -26,6 +26,7 @@ import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import { AnimatedCounter } from '../components/common/AnimatedCounter';
 import { Skeleton } from '../components/common/Skeleton';
+import { GlassTiltCard3D } from '../components/common/MotionPrimitives';
 import {
   downloadFullReportPDF,
   downloadFullReportDOCX,
@@ -118,14 +119,14 @@ export const EvaluationReportPage: React.FC = () => {
   if (isLoadingDbData && !activeReport) {
     return (
       <div className="flex flex-col w-full gap-6 pb-12 antialiased">
-        <div className="bg-white rounded-xl p-6 border border-[#e2e8f0] shadow-sm space-y-4">
+        <div className="glass-panel rounded-2xl p-6 space-y-4">
           <Skeleton className="h-6 w-64" />
           <Skeleton className="h-4 w-full" />
           <Skeleton className="h-4 w-3/4" />
         </div>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           {[1, 2, 3, 4].map((i) => (
-            <div key={i} className="bg-white rounded-xl p-5 border border-[#e2e8f0] shadow-sm space-y-3">
+            <div key={i} className="glass-panel rounded-2xl p-5 space-y-3">
               <Skeleton className="h-4 w-24" />
               <Skeleton className="h-10 w-20" />
               <Skeleton className="h-3 w-full" />
@@ -139,8 +140,8 @@ export const EvaluationReportPage: React.FC = () => {
   if (!activeReport) {
     return (
       <div className="flex flex-col items-center justify-center w-full py-16 px-4 text-center antialiased">
-        <div className="max-w-lg w-full bg-white rounded-2xl border border-[#e2e8f0] shadow-sm p-8 space-y-4">
-          <div className="w-14 h-14 rounded-2xl bg-[#eff4ff] text-[#3525cd] flex items-center justify-center mx-auto">
+        <div className="max-w-lg w-full glass-panel-elevated rounded-3xl p-8 space-y-4">
+          <div className="w-14 h-14 rounded-2xl bg-[#eff4ff] text-[#3525cd] flex items-center justify-center mx-auto shadow-xs">
             <BarChart2 className="w-7 h-7" />
           </div>
           <h1 className="font-heading text-2xl font-bold text-[#0b1c30]">No Evaluation Reports Yet</h1>
@@ -150,7 +151,7 @@ export const EvaluationReportPage: React.FC = () => {
           <div className="pt-2 flex items-center justify-center gap-3 flex-wrap">
             <Link
               to="/interview-setup"
-              className="inline-flex items-center gap-2 bg-[#4f46e5] hover:bg-[#3525cd] text-white px-5 py-2.5 rounded-xl text-xs font-semibold shadow-sm transition-all active:scale-95"
+              className="glass-btn-primary inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-semibold whitespace-nowrap"
             >
               <Mic className="w-4 h-4" />
               <span>Start Verbal Mock Interview</span>
@@ -158,7 +159,7 @@ export const EvaluationReportPage: React.FC = () => {
             </Link>
             <Link
               to="/dashboard"
-              className="inline-flex items-center gap-1.5 bg-[#f8f9ff] hover:bg-[#eff4ff] text-[#0b1c30] border border-[#e2e8f0] px-4 py-2.5 rounded-xl text-xs font-semibold transition-colors"
+              className="glass-subcard inline-flex items-center gap-1.5 hover:bg-white/80 text-[#0b1c30] px-4 py-2.5 rounded-xl text-xs font-semibold transition-colors whitespace-nowrap"
             >
               <span>Return to Dashboard</span>
             </Link>
@@ -328,8 +329,8 @@ export const EvaluationReportPage: React.FC = () => {
         {/* Action Toolbar + PDF/DOCX Selector + Saved Report Switcher */}
         <div className="flex items-center flex-wrap gap-2">
           {savedReports.length > 1 && (
-            <div className="inline-flex items-center gap-1.5 bg-white border border-[#e2e8f0] rounded-lg px-2.5 py-1.5 shadow-sm">
-              <Layers className="w-3.5 h-3.5 text-[#3525cd]" />
+            <div className="glass-input inline-flex items-center gap-1.5 rounded-xl px-3 py-1.5">
+              <Layers className="w-3.5 h-3.5 text-[#3525cd] shrink-0" />
               <select
                 aria-label="Select saved evaluation report"
                 value={activeReport.id}
@@ -349,15 +350,15 @@ export const EvaluationReportPage: React.FC = () => {
           <div
             role="group"
             aria-label="Download file format"
-            className="inline-flex items-center bg-white border border-[#e2e8f0] rounded-lg p-0.5 shadow-sm"
+            className="glass-pill-bar inline-flex items-center rounded-xl p-0.5"
           >
             <button
               type="button"
               data-testid="format-pdf-btn"
               onClick={() => setExportFormat('pdf')}
-              className={`px-2.5 py-1 rounded-md text-[11px] font-bold transition-colors ${
+              className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all whitespace-nowrap ${
                 exportFormat === 'pdf'
-                  ? 'bg-[#3525cd] text-white shadow-xs'
+                  ? 'glass-btn-primary'
                   : 'text-[#565e74] hover:text-[#0b1c30]'
               }`}
             >
@@ -367,9 +368,9 @@ export const EvaluationReportPage: React.FC = () => {
               type="button"
               data-testid="format-docx-btn"
               onClick={() => setExportFormat('docx')}
-              className={`px-2.5 py-1 rounded-md text-[11px] font-bold transition-colors ${
+              className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all whitespace-nowrap ${
                 exportFormat === 'docx'
-                  ? 'bg-[#3525cd] text-white shadow-xs'
+                  ? 'glass-btn-primary'
                   : 'text-[#565e74] hover:text-[#0b1c30]'
               }`}
             >
@@ -382,7 +383,7 @@ export const EvaluationReportPage: React.FC = () => {
             data-testid="download-report-btn"
             disabled={isExporting}
             onClick={handleDownloadReport}
-            className="flex items-center gap-1.5 bg-white text-[#0b1c30] px-3.5 py-2 rounded-lg text-xs font-semibold hover:bg-[#eff4ff] transition-colors border border-[#e2e8f0] shadow-sm active:scale-95 disabled:opacity-60"
+            className="glass-subcard flex items-center gap-1.5 text-[#0b1c30] px-3.5 py-2 rounded-xl text-xs font-semibold hover:bg-white/80 transition-colors active:scale-95 disabled:opacity-60 whitespace-nowrap"
           >
             <Download className="w-3.5 h-3.5 text-[#3525cd]" />
             <span>Download Report ({exportFormat.toUpperCase()})</span>
@@ -393,7 +394,7 @@ export const EvaluationReportPage: React.FC = () => {
             data-testid="download-summary-btn"
             disabled={isExporting}
             onClick={handleDownloadSummary}
-            className="flex items-center gap-1.5 bg-white text-[#0b1c30] px-3.5 py-2 rounded-lg text-xs font-semibold hover:bg-[#eff4ff] transition-colors border border-[#e2e8f0] shadow-sm active:scale-95 disabled:opacity-60"
+            className="glass-subcard flex items-center gap-1.5 text-[#0b1c30] px-3.5 py-2 rounded-xl text-xs font-semibold hover:bg-white/80 transition-colors active:scale-95 disabled:opacity-60 whitespace-nowrap"
           >
             <FileText className="w-3.5 h-3.5 text-[#059669]" />
             <span>Download Summary ({exportFormat.toUpperCase()})</span>
@@ -404,7 +405,7 @@ export const EvaluationReportPage: React.FC = () => {
             data-testid="export-transcript-btn"
             disabled={isExporting}
             onClick={handleExportTranscript}
-            className="flex items-center gap-1.5 bg-white text-[#0b1c30] px-3.5 py-2 rounded-lg text-xs font-semibold hover:bg-[#eff4ff] transition-colors border border-[#e2e8f0] shadow-sm active:scale-95 disabled:opacity-60"
+            className="glass-subcard flex items-center gap-1.5 text-[#0b1c30] px-3.5 py-2 rounded-xl text-xs font-semibold hover:bg-white/80 transition-colors active:scale-95 disabled:opacity-60 whitespace-nowrap"
           >
             <FileText className="w-3.5 h-3.5 text-[#565e74]" />
             <span>Download Transcript ({exportFormat.toUpperCase()})</span>
@@ -413,7 +414,7 @@ export const EvaluationReportPage: React.FC = () => {
           <button
             type="button"
             onClick={handleShare}
-            className="flex items-center gap-1.5 bg-white text-[#0b1c30] px-3.5 py-2 rounded-lg text-xs font-semibold hover:bg-[#eff4ff] transition-colors border border-[#e2e8f0] shadow-sm active:scale-95"
+            className="glass-subcard flex items-center gap-1.5 text-[#0b1c30] px-3.5 py-2 rounded-xl text-xs font-semibold hover:bg-white/80 transition-colors active:scale-95 whitespace-nowrap"
           >
             <Share2 className="w-3.5 h-3.5 text-[#565e74]" />
             <span>Share</span>
@@ -421,7 +422,7 @@ export const EvaluationReportPage: React.FC = () => {
 
           <Link
             to="/interview-setup"
-            className="flex items-center gap-1.5 bg-[#4f46e5] text-white px-4 py-2 rounded-lg text-xs font-semibold hover:bg-[#3525cd] transition-all shadow-sm active:scale-95"
+            className="glass-btn-primary flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap"
           >
             <RotateCcw className="w-3.5 h-3.5" />
             <span>Retake Drill</span>
@@ -430,26 +431,25 @@ export const EvaluationReportPage: React.FC = () => {
       </div>
 
       {/* Calibrated Audit Header Card */}
-      <div className="bg-white rounded-xl p-6 border border-[#e2e8f0] shadow-sm flex flex-col gap-4 relative overflow-hidden text-left">
+      <div className="glass-panel-elevated rounded-2xl p-6 flex flex-col gap-4 relative overflow-hidden text-left">
         <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-4 z-10">
           <div className="flex flex-col gap-2 max-w-3xl">
-            <div className="flex items-center gap-2 flex-wrap">
-              <span className="bg-[#dae2fd] text-[#131b2e] text-[11px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider">
+            <div className="flex items-center gap-2 flex-wrap text-xs text-[#464555] font-medium">
+              <span className="text-[#3525cd] font-bold uppercase tracking-wider text-[11px]">
                 Transcript-Grounded Report
               </span>
-              <span className="bg-[#e2dfff] text-[#3323cc] text-[11px] font-bold px-2.5 py-1 rounded-full flex items-center gap-1">
-                <Sparkles className="w-3.5 h-3.5" />
-                Benchmark: {activeReport.calibratedBenchmark || `${activeReport.targetCompany} Bar`}
+              <span className="text-[#94a3b8]">·</span>
+              <span className="inline-flex items-center gap-1 font-semibold text-[#0b1c30]">
+                <Sparkles className="w-3.5 h-3.5 text-[#3525cd]" />
+                {activeReport.calibratedBenchmark || `${activeReport.targetCompany} Bar`}
               </span>
-              <span className="bg-[#f8f9ff] text-[#565e74] text-xs px-2.5 py-1 rounded-full border border-[#e2e8f0]">
-                Completed: {activeReport.completedAt}
-              </span>
-              <span className="bg-[#f8f9ff] text-[#565e74] text-xs px-2.5 py-1 rounded-full border border-[#e2e8f0]">
-                Duration: {activeReport.durationFormatted}
-              </span>
+              <span className="text-[#94a3b8]">·</span>
+              <span>Completed {activeReport.completedAt}</span>
+              <span className="text-[#94a3b8]">·</span>
+              <span className="font-mono tabular-nums">{activeReport.durationFormatted}</span>
             </div>
 
-            <h2 className="font-heading text-xl font-bold text-[#0b1c30] mt-1">
+            <h2 className="font-heading text-xl font-bold text-[#0b1c30] mt-0.5">
               Transcript Rubric Synthesis — {activeReport.targetRole} @ {activeReport.targetCompany}
             </h2>
             <p className="text-sm text-[#464555] leading-relaxed">
@@ -457,9 +457,9 @@ export const EvaluationReportPage: React.FC = () => {
             </p>
           </div>
 
-          <div className="flex flex-col items-start lg:items-end gap-1 bg-[#eff4ff] p-3.5 rounded-xl border border-[#c7c4d8]/40 shrink-0">
+          <div className="glass-subcard flex flex-col items-start lg:items-end gap-1 p-3.5 rounded-2xl shrink-0">
             <div className="flex items-center gap-2">
-              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
+              <span className="w-2 h-2 rounded-full bg-emerald-500" />
               <span className="text-xs font-bold text-[#0b1c30]">
                 {activeReport.interviewerPersona ? `Panel: ${activeReport.interviewerPersona}` : 'Real-Time Transcript Audit'}
               </span>
@@ -476,11 +476,11 @@ export const EvaluationReportPage: React.FC = () => {
       {/* CANDIDATE-ONLY EVALUATION BASIS & SCORING TRANSPARENCY CARD */}
       <div
         data-testid="evaluation-basis-card"
-        className="bg-white rounded-xl p-5 border border-[#c7d2fe] shadow-sm text-left space-y-4"
+        className="glass-panel rounded-2xl p-5 text-left space-y-4"
       >
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-[#e2e8f0]">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-[#eff4ff] text-[#3525cd] flex items-center justify-center shrink-0">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-white/60">
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-xl bg-[#eff4ff] text-[#3525cd] flex items-center justify-center shrink-0">
               <ShieldCheck className="w-4 h-4" />
             </div>
             <div>
@@ -492,31 +492,31 @@ export const EvaluationReportPage: React.FC = () => {
               </p>
             </div>
           </div>
-          <span className="text-[11px] font-semibold text-[#3525cd] bg-[#eff4ff] px-2.5 py-1 rounded-full self-start sm:self-auto shrink-0">
+          <span className="text-[11px] font-semibold text-[#3525cd] bg-indigo-50/70 px-2.5 py-1 rounded-full self-start sm:self-auto shrink-0 border border-indigo-200/50">
             {scoringMethodLabel}
           </span>
         </div>
 
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-          <div className="p-3 rounded-lg bg-[#f8f9ff] border border-[#e2e8f0]">
+          <div className="glass-subcard p-3.5 rounded-xl">
             <div className="text-[11px] font-semibold text-[#565e74]">Candidate Turns Scored</div>
             <div className="font-heading text-xl font-bold text-[#0b1c30] mt-0.5 tabular-nums">
               {candidateTurnsAnalyzed}
             </div>
           </div>
-          <div className="p-3 rounded-lg bg-[#f8f9ff] border border-[#e2e8f0]">
+          <div className="glass-subcard p-3.5 rounded-xl">
             <div className="text-[11px] font-semibold text-[#565e74]">AI Turns Excluded</div>
             <div className="font-heading text-xl font-bold text-[#0b1c30] mt-0.5 tabular-nums">
               {aiTurnsExcluded}
             </div>
           </div>
-          <div className="p-3 rounded-lg bg-[#f8f9ff] border border-[#e2e8f0]">
+          <div className="glass-subcard p-3.5 rounded-xl">
             <div className="text-[11px] font-semibold text-[#565e74]">Topics Answered</div>
             <div className="font-heading text-xl font-bold text-[#0b1c30] mt-0.5 tabular-nums">
               {topicsAnswered} / {totalTopics}
             </div>
           </div>
-          <div className="p-3 rounded-lg bg-[#f8f9ff] border border-[#e2e8f0]">
+          <div className="glass-subcard p-3.5 rounded-xl">
             <div className="text-[11px] font-semibold text-[#565e74]">Candidate Words Analyzed</div>
             <div className="font-heading text-xl font-bold text-[#0b1c30] mt-0.5 tabular-nums">
               {totalCandidateWords}
@@ -524,7 +524,7 @@ export const EvaluationReportPage: React.FC = () => {
           </div>
         </div>
 
-        <div className="text-xs text-[#464555] bg-[#eff4ff]/60 px-3.5 py-2.5 rounded-lg border border-[#c7d2fe]/60 flex flex-wrap items-center justify-between gap-2">
+        <div className="text-xs text-[#464555] bg-indigo-50/45 backdrop-blur-sm px-3.5 py-2.5 rounded-xl border border-indigo-200/45 flex flex-wrap items-center justify-between gap-2">
           <span>
             <strong className="text-[#0b1c30]">Weighted Rubric Formula:</strong>{' '}
             {weights.technicalCorrectness}% Technical Depth + {weights.tradeoffAnalysis}% Tradeoff Analysis +{' '}
@@ -539,126 +539,136 @@ export const EvaluationReportPage: React.FC = () => {
       {/* Top 5-Metric Scorecard Highlights (Overall + All 4 Independent Rubric Pillars) */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 text-left">
         {/* Metric 1: Overall Score */}
-        <div className="bg-white rounded-xl p-5 border border-[#e2e8f0] shadow-sm flex flex-col justify-between">
-          <div className="flex items-start justify-between gap-2 min-h-[34px]">
-            <span className="text-xs font-bold text-[#565e74] uppercase tracking-wider">Overall Score</span>
-            <BarChart2 className="w-5 h-5 text-[#3525cd] shrink-0" />
-          </div>
-          <div className="my-3 flex items-baseline gap-1.5">
-            <span className="font-heading text-4xl font-bold text-[#0b1c30]">
-              <AnimatedCounter value={activeReport.overallScore} />
-            </span>
-            <span className="text-sm text-[#777587]">/ 100</span>
-          </div>
-          <div>
-            <div className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs font-bold mb-1 ${tier.badgeClass}`}>
-              {tier.label}
+        <GlassTiltCard3D intensity={3.5} hoverLift={3}>
+          <div className="glass-panel rounded-2xl p-5 flex flex-col justify-between h-full">
+            <div className="flex items-start justify-between gap-2 min-h-[34px]">
+              <span className="text-xs font-bold text-[#565e74] uppercase tracking-wider">Overall Score</span>
+              <BarChart2 className="w-5 h-5 text-[#3525cd] shrink-0" />
             </div>
-            <p className="text-xs text-[#565e74]">
-              Top <strong className="text-[#0b1c30]">{topPercentile}%</strong> vs {activeReport.targetCompany} bar.
-            </p>
+            <div className="my-3 flex items-baseline gap-1.5">
+              <span className="font-heading text-4xl font-bold text-[#0b1c30] tabular-nums">
+                <AnimatedCounter value={activeReport.overallScore} />
+              </span>
+              <span className="text-sm text-[#777587]">/ 100</span>
+            </div>
+            <div>
+              <div className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs font-bold mb-1 ${tier.badgeClass}`}>
+                {tier.label}
+              </div>
+              <p className="text-xs text-[#565e74]">
+                Top <strong className="text-[#0b1c30]">{topPercentile}%</strong> vs {activeReport.targetCompany} bar.
+              </p>
+            </div>
           </div>
-        </div>
+        </GlassTiltCard3D>
 
         {/* Metric 2: Technical Correctness */}
-        <div className="bg-white rounded-xl p-5 border border-[#e2e8f0] shadow-sm flex flex-col justify-between">
-          <div className="flex items-start justify-between gap-2 min-h-[34px]">
-            <span className="text-xs font-bold text-[#565e74] uppercase tracking-wider">Technical Depth</span>
-            <span className="text-[11px] font-bold text-[#3525cd] bg-[#eff4ff] px-2 py-0.5 rounded-full whitespace-nowrap shrink-0">35%</span>
-          </div>
-          <div className="my-3 flex items-baseline gap-1.5">
-            <span className="font-heading text-4xl font-bold text-[#0b1c30]">
-              <AnimatedCounter value={activeReport.categoryScores.technicalCorrectness} />
-            </span>
-            <span className="text-sm text-[#777587]">/ 100</span>
-          </div>
-          <div>
-            <div className="w-full bg-[#eff4ff] h-1.5 rounded-full overflow-hidden mb-1.5">
-              <div
-                className="bg-[#3525cd] h-full rounded-full transition-all duration-700"
-                style={{ width: `${activeReport.categoryScores.technicalCorrectness}%` }}
-              />
+        <GlassTiltCard3D intensity={3.5} hoverLift={3}>
+          <div className="glass-panel rounded-2xl p-5 flex flex-col justify-between h-full">
+            <div className="flex items-start justify-between gap-2 min-h-[34px]">
+              <span className="text-xs font-bold text-[#565e74] uppercase tracking-wider">Technical Depth</span>
+              <span className="text-[11px] font-bold text-[#3525cd] bg-indigo-50/80 px-2 py-0.5 rounded-full whitespace-nowrap shrink-0">35%</span>
             </div>
-            <p className="text-xs text-[#565e74]">{getMetricNote(activeReport.categoryScores.technicalCorrectness, 'tech')}</p>
+            <div className="my-3 flex items-baseline gap-1.5">
+              <span className="font-heading text-4xl font-bold text-[#0b1c30] tabular-nums">
+                <AnimatedCounter value={activeReport.categoryScores.technicalCorrectness} />
+              </span>
+              <span className="text-sm text-[#777587]">/ 100</span>
+            </div>
+            <div>
+              <div className="w-full bg-white/70 h-1.5 rounded-full overflow-hidden mb-1.5">
+                <div
+                  className="bg-[#3525cd] h-full rounded-full transition-all duration-700"
+                  style={{ width: `${activeReport.categoryScores.technicalCorrectness}%` }}
+                />
+              </div>
+              <p className="text-xs text-[#565e74]">{getMetricNote(activeReport.categoryScores.technicalCorrectness, 'tech')}</p>
+            </div>
           </div>
-        </div>
+        </GlassTiltCard3D>
 
         {/* Metric 3: Tradeoff Analysis */}
-        <div className="bg-white rounded-xl p-5 border border-[#e2e8f0] shadow-sm flex flex-col justify-between">
-          <div className="flex items-start justify-between gap-2 min-h-[34px]">
-            <span className="text-xs font-bold text-[#565e74] uppercase tracking-wider">Tradeoffs</span>
-            <span className="text-[11px] font-bold text-[#3525cd] bg-[#eff4ff] px-2 py-0.5 rounded-full whitespace-nowrap shrink-0">25%</span>
-          </div>
-          <div className="my-3 flex items-baseline gap-1.5">
-            <span className="font-heading text-4xl font-bold text-[#0b1c30]">
-              <AnimatedCounter value={activeReport.categoryScores.tradeoffAnalysis} />
-            </span>
-            <span className="text-sm text-[#777587]">/ 100</span>
-          </div>
-          <div>
-            <div className="w-full bg-[#eff4ff] h-1.5 rounded-full overflow-hidden mb-1.5">
-              <div
-                className="bg-[#4f46e5] h-full rounded-full transition-all duration-700"
-                style={{ width: `${activeReport.categoryScores.tradeoffAnalysis}%` }}
-              />
+        <GlassTiltCard3D intensity={3.5} hoverLift={3}>
+          <div className="glass-panel rounded-2xl p-5 flex flex-col justify-between h-full">
+            <div className="flex items-start justify-between gap-2 min-h-[34px]">
+              <span className="text-xs font-bold text-[#565e74] uppercase tracking-wider">Tradeoffs</span>
+              <span className="text-[11px] font-bold text-[#3525cd] bg-indigo-50/80 px-2 py-0.5 rounded-full whitespace-nowrap shrink-0">25%</span>
             </div>
-            <p className="text-xs text-[#565e74]">{getMetricNote(activeReport.categoryScores.tradeoffAnalysis, 'tradeoff')}</p>
+            <div className="my-3 flex items-baseline gap-1.5">
+              <span className="font-heading text-4xl font-bold text-[#0b1c30] tabular-nums">
+                <AnimatedCounter value={activeReport.categoryScores.tradeoffAnalysis} />
+              </span>
+              <span className="text-sm text-[#777587]">/ 100</span>
+            </div>
+            <div>
+              <div className="w-full bg-white/70 h-1.5 rounded-full overflow-hidden mb-1.5">
+                <div
+                  className="bg-[#4f46e5] h-full rounded-full transition-all duration-700"
+                  style={{ width: `${activeReport.categoryScores.tradeoffAnalysis}%` }}
+                />
+              </div>
+              <p className="text-xs text-[#565e74]">{getMetricNote(activeReport.categoryScores.tradeoffAnalysis, 'tradeoff')}</p>
+            </div>
           </div>
-        </div>
+        </GlassTiltCard3D>
 
         {/* Metric 4: Communication Structure */}
-        <div className="bg-white rounded-xl p-5 border border-[#e2e8f0] shadow-sm flex flex-col justify-between">
-          <div className="flex items-start justify-between gap-2 min-h-[34px]">
-            <span className="text-xs font-bold text-[#565e74] uppercase tracking-wider">Structure &amp; STAR</span>
-            <span className="text-[11px] font-bold text-[#3525cd] bg-[#eff4ff] px-2 py-0.5 rounded-full whitespace-nowrap shrink-0">20%</span>
-          </div>
-          <div className="my-3 flex items-baseline gap-1.5">
-            <span className="font-heading text-4xl font-bold text-[#0b1c30]">
-              <AnimatedCounter value={activeReport.categoryScores.communicationStructure} />
-            </span>
-            <span className="text-sm text-[#777587]">/ 100</span>
-          </div>
-          <div>
-            <div className="w-full bg-[#eff4ff] h-1.5 rounded-full overflow-hidden mb-1.5">
-              <div
-                className="bg-emerald-600 h-full rounded-full transition-all duration-700"
-                style={{ width: `${activeReport.categoryScores.communicationStructure}%` }}
-              />
+        <GlassTiltCard3D intensity={3.5} hoverLift={3}>
+          <div className="glass-panel rounded-2xl p-5 flex flex-col justify-between h-full">
+            <div className="flex items-start justify-between gap-2 min-h-[34px]">
+              <span className="text-xs font-bold text-[#565e74] uppercase tracking-wider">Structure &amp; STAR</span>
+              <span className="text-[11px] font-bold text-[#3525cd] bg-indigo-50/80 px-2 py-0.5 rounded-full whitespace-nowrap shrink-0">20%</span>
             </div>
-            <p className="text-xs text-[#565e74]">{getMetricNote(activeReport.categoryScores.communicationStructure, 'comm')}</p>
+            <div className="my-3 flex items-baseline gap-1.5">
+              <span className="font-heading text-4xl font-bold text-[#0b1c30] tabular-nums">
+                <AnimatedCounter value={activeReport.categoryScores.communicationStructure} />
+              </span>
+              <span className="text-sm text-[#777587]">/ 100</span>
+            </div>
+            <div>
+              <div className="w-full bg-white/70 h-1.5 rounded-full overflow-hidden mb-1.5">
+                <div
+                  className="bg-emerald-600 h-full rounded-full transition-all duration-700"
+                  style={{ width: `${activeReport.categoryScores.communicationStructure}%` }}
+                />
+              </div>
+              <p className="text-xs text-[#565e74]">{getMetricNote(activeReport.categoryScores.communicationStructure, 'comm')}</p>
+            </div>
           </div>
-        </div>
+        </GlassTiltCard3D>
 
         {/* Metric 5: Problem Decomposition */}
-        <div className="bg-white rounded-xl p-5 border border-[#e2e8f0] shadow-sm flex flex-col justify-between">
-          <div className="flex items-start justify-between gap-2 min-h-[34px]">
-            <span className="text-xs font-bold text-[#565e74] uppercase tracking-wider">Decomposition</span>
-            <span className="text-[11px] font-bold text-[#3525cd] bg-[#eff4ff] px-2 py-0.5 rounded-full whitespace-nowrap shrink-0">20%</span>
-          </div>
-          <div className="my-3 flex items-baseline gap-1.5">
-            <span className="font-heading text-4xl font-bold text-[#0b1c30]">
-              <AnimatedCounter value={activeReport.categoryScores.problemDecomposition} />
-            </span>
-            <span className="text-sm text-[#777587]">/ 100</span>
-          </div>
-          <div>
-            <div className="w-full bg-[#eff4ff] h-1.5 rounded-full overflow-hidden mb-1.5">
-              <div
-                className="bg-indigo-500 h-full rounded-full transition-all duration-700"
-                style={{ width: `${activeReport.categoryScores.problemDecomposition}%` }}
-              />
+        <GlassTiltCard3D intensity={3.5} hoverLift={3}>
+          <div className="glass-panel rounded-2xl p-5 flex flex-col justify-between h-full">
+            <div className="flex items-start justify-between gap-2 min-h-[34px]">
+              <span className="text-xs font-bold text-[#565e74] uppercase tracking-wider">Decomposition</span>
+              <span className="text-[11px] font-bold text-[#3525cd] bg-indigo-50/80 px-2 py-0.5 rounded-full whitespace-nowrap shrink-0">20%</span>
             </div>
-            <p className="text-xs text-[#565e74]">{getMetricNote(activeReport.categoryScores.problemDecomposition, 'decomp')}</p>
+            <div className="my-3 flex items-baseline gap-1.5">
+              <span className="font-heading text-4xl font-bold text-[#0b1c30] tabular-nums">
+                <AnimatedCounter value={activeReport.categoryScores.problemDecomposition} />
+              </span>
+              <span className="text-sm text-[#777587]">/ 100</span>
+            </div>
+            <div>
+              <div className="w-full bg-white/70 h-1.5 rounded-full overflow-hidden mb-1.5">
+                <div
+                  className="bg-indigo-500 h-full rounded-full transition-all duration-700"
+                  style={{ width: `${activeReport.categoryScores.problemDecomposition}%` }}
+                />
+              </div>
+              <p className="text-xs text-[#565e74]">{getMetricNote(activeReport.categoryScores.problemDecomposition, 'decomp')}</p>
+            </div>
           </div>
-        </div>
+        </GlassTiltCard3D>
       </div>
 
       {/* ACTIONABLE COACHING & WHAT-TO-IMPROVE PRIORITIES */}
       <div
         data-testid="improvement-plan-card"
-        className="bg-white rounded-xl border border-[#e2e8f0] shadow-sm p-5 text-left space-y-3"
+        className="glass-panel rounded-2xl p-5 text-left space-y-3"
       >
-        <div className="flex items-center justify-between gap-2 pb-2.5 border-b border-[#e2e8f0]">
+        <div className="flex items-center justify-between gap-2 pb-2.5 border-b border-white/60">
           <div className="flex items-center gap-2">
             <Target className="w-4 h-4 text-[#3525cd]" />
             <h3 className="font-heading text-sm sm:text-base font-bold text-[#0b1c30]">
@@ -684,7 +694,7 @@ export const EvaluationReportPage: React.FC = () => {
             .map((item) => (
               <div
                 key={item.id}
-                className="p-3.5 rounded-xl bg-[#f8f9ff] border border-[#e2e8f0] flex items-start gap-2.5"
+                className="glass-subcard p-3.5 rounded-xl flex items-start gap-2.5"
               >
                 <Lightbulb className="w-4 h-4 text-[#3525cd] shrink-0 mt-0.5" />
                 <div className="text-xs text-[#464555] leading-relaxed">
@@ -699,8 +709,8 @@ export const EvaluationReportPage: React.FC = () => {
       </div>
 
       {/* QUESTION BY QUESTION DEEP DIVE WITH ACTUAL SPOKEN TRANSCRIPT EVIDENCE */}
-      <div className="bg-white rounded-xl border border-[#e2e8f0] shadow-sm p-6 text-left">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[#e2e8f0] mb-5">
+      <div className="glass-panel rounded-2xl p-6 text-left">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-white/60 mb-5">
           <div>
             <h3 className="font-heading text-lg font-bold text-[#0b1c30]">Question-by-Question Rubric Analysis</h3>
             <p className="text-xs text-[#565e74]">
@@ -709,12 +719,12 @@ export const EvaluationReportPage: React.FC = () => {
           </div>
 
           {/* Filter options */}
-          <div className="flex items-center gap-1.5 bg-[#f8f9ff] p-1 rounded-lg border border-[#e2e8f0]">
+          <div className="glass-pill-bar flex items-center gap-1 p-1 rounded-xl">
             <button
               type="button"
               onClick={() => setFilterScore('all')}
-              className={`px-3 py-1 rounded-md text-xs font-semibold transition-colors ${
-                filterScore === 'all' ? 'bg-[#4f46e5] text-white shadow-sm' : 'text-[#565e74]'
+              className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all whitespace-nowrap ${
+                filterScore === 'all' ? 'glass-btn-primary' : 'text-[#565e74] hover:text-[#0b1c30]'
               }`}
             >
               All Questions ({feedbacks.length})
@@ -722,8 +732,8 @@ export const EvaluationReportPage: React.FC = () => {
             <button
               type="button"
               onClick={() => setFilterScore('high')}
-              className={`px-3 py-1 rounded-md text-xs font-semibold transition-colors ${
-                filterScore === 'high' ? 'bg-[#4f46e5] text-white shadow-sm' : 'text-[#565e74]'
+              className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all whitespace-nowrap ${
+                filterScore === 'high' ? 'glass-btn-primary' : 'text-[#565e74] hover:text-[#0b1c30]'
               }`}
             >
               High Scoring (85+)
@@ -731,8 +741,8 @@ export const EvaluationReportPage: React.FC = () => {
             <button
               type="button"
               onClick={() => setFilterScore('needs-work')}
-              className={`px-3 py-1 rounded-md text-xs font-semibold transition-colors ${
-                filterScore === 'needs-work' ? 'bg-[#4f46e5] text-white shadow-sm' : 'text-[#565e74]'
+              className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all whitespace-nowrap ${
+                filterScore === 'needs-work' ? 'glass-btn-primary' : 'text-[#565e74] hover:text-[#0b1c30]'
               }`}
             >
               Needs Work (&lt;85)
@@ -742,7 +752,7 @@ export const EvaluationReportPage: React.FC = () => {
 
         <div className="space-y-4">
           {filteredFeedbacks.length === 0 ? (
-            <div className="p-8 text-center text-xs text-[#565e74] bg-[#f8f9ff] rounded-xl border border-[#e2e8f0]">
+            <div className="glass-subcard p-8 text-center text-xs text-[#565e74] rounded-2xl">
               No questions matched this score filter.{' '}
               <button
                 type="button"
@@ -762,15 +772,15 @@ export const EvaluationReportPage: React.FC = () => {
               return (
                 <div
                   key={fb.questionId || idx}
-                  className="border border-[#e2e8f0] rounded-xl overflow-hidden transition-all bg-[#f8f9ff]"
+                  className="glass-subcard rounded-2xl overflow-hidden transition-all"
                 >
                   {/* Accordion Trigger */}
                   <div
                     onClick={() => setExpandedQuestion(isExpanded ? '' : fb.questionId)}
-                    className="p-4 sm:p-5 flex items-center justify-between gap-4 cursor-pointer hover:bg-[#eff4ff]/60 transition-colors"
+                    className="p-4 sm:p-5 flex items-center justify-between gap-4 cursor-pointer hover:bg-white/55 transition-colors"
                   >
                     <div className="flex items-start gap-3 min-w-0">
-                      <span className="w-7 h-7 rounded-lg bg-[#3525cd] text-white flex items-center justify-center font-bold text-xs shrink-0">
+                      <span className="w-7 h-7 rounded-lg bg-[#3525cd] text-white flex items-center justify-center font-bold text-xs shrink-0 shadow-xs">
                         {idx + 1}
                       </span>
                       <div className="min-w-0">
@@ -784,7 +794,7 @@ export const EvaluationReportPage: React.FC = () => {
                     </div>
 
                     <div className="flex items-center gap-3 shrink-0">
-                      <div className="text-right">
+                      <div className="text-right tabular-nums">
                         <span className="font-heading text-lg font-bold text-[#0b1c30]">{fb.score}</span>
                         <span className="text-xs text-[#777587]">/100</span>
                       </div>
@@ -799,13 +809,13 @@ export const EvaluationReportPage: React.FC = () => {
                         initial={{ opacity: 0, height: 0 }}
                         animate={{ opacity: 1, height: 'auto' }}
                         exit={{ opacity: 0, height: 0 }}
-                        className="p-5 border-t border-[#e2e8f0] bg-white space-y-5 overflow-hidden"
+                        className="p-5 border-t border-white/60 bg-white/55 backdrop-blur-md space-y-5 overflow-hidden"
                       >
                         {/* Actual Candidate Spoken Response & Follow-Up Evidence */}
                         {(fb.candidateResponse || fb.followUpQuestion || fb.followUpResponse) && (
                           <div className="space-y-2.5">
                             {fb.candidateResponse && (
-                              <div className="p-3.5 rounded-xl bg-[#f8f9ff] border border-[#e2e8f0]">
+                              <div className="glass-subcard p-3.5 rounded-xl">
                                 <div className="flex items-center gap-1.5 text-[11px] font-bold text-[#0b1c30] uppercase tracking-wider mb-1">
                                   <Mic className="w-3.5 h-3.5 text-[#3525cd]" />
                                   <span>Your Spoken Answer</span>
@@ -817,7 +827,7 @@ export const EvaluationReportPage: React.FC = () => {
                             )}
 
                             {(fb.followUpQuestion || fb.followUpResponse) && (
-                              <div className="p-3.5 rounded-xl bg-[#eff4ff]/60 border border-[#c7d2fe]/60 space-y-1.5">
+                              <div className="p-3.5 rounded-xl bg-indigo-50/45 border border-indigo-200/50 space-y-1.5">
                                 {fb.followUpQuestion && (
                                   <div className="text-xs text-[#0b1c30]">
                                     <span className="font-bold text-[#3525cd]">AI Follow-Up: </span>
@@ -842,12 +852,12 @@ export const EvaluationReportPage: React.FC = () => {
                           </h5>
                           <div className="space-y-2">
                             {(fb.criterionScores || []).map((c, cIdx) => (
-                              <div key={cIdx} className="p-3 rounded-lg bg-[#f8f9ff] border border-[#e2e8f0] flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                              <div key={cIdx} className="glass-subcard p-3 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                                 <div>
                                   <div className="text-xs font-bold text-[#0b1c30]">{c.criterion}</div>
                                   <p className="text-xs text-[#464555] mt-0.5">{c.feedback}</p>
                                 </div>
-                                <span className="text-xs font-bold text-[#3525cd] bg-[#eff4ff] px-2.5 py-1 rounded-md shrink-0">
+                                <span className="text-xs font-bold text-[#3525cd] bg-indigo-50/80 px-2.5 py-1 rounded-lg shrink-0 tabular-nums">
                                   {c.score}/100
                                 </span>
                               </div>
@@ -858,7 +868,7 @@ export const EvaluationReportPage: React.FC = () => {
                         {/* Strengths & Missing Concepts Grid */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           {/* Strengths */}
-                          <div className="p-4 bg-emerald-50/70 border border-emerald-100 rounded-xl">
+                          <div className="p-4 bg-emerald-50/60 border border-emerald-200/60 rounded-xl">
                             <div className="flex items-center gap-1.5 text-xs font-bold text-emerald-800 uppercase tracking-wider mb-2">
                               <CheckCircle2 className="w-4 h-4 text-emerald-600" />
                               Demonstrated Strengths
@@ -874,7 +884,7 @@ export const EvaluationReportPage: React.FC = () => {
                           </div>
 
                           {/* Missing Concepts */}
-                          <div className="p-4 bg-amber-50/70 border border-amber-100 rounded-xl">
+                          <div className="p-4 bg-amber-50/60 border border-amber-200/60 rounded-xl">
                             <div className="flex items-center gap-1.5 text-xs font-bold text-amber-800 uppercase tracking-wider mb-2">
                               <AlertTriangle className="w-4 h-4 text-amber-600" />
                               Key Missing Concepts or Gaps
@@ -898,7 +908,7 @@ export const EvaluationReportPage: React.FC = () => {
 
                         {/* Suggested Improvements (How to Improve This Topic) */}
                         {(fb.suggestedImprovements || []).length > 0 && (
-                          <div className="p-4 rounded-xl bg-[#f8f9ff] border border-[#c7d2fe]/60">
+                          <div className="glass-subcard p-4 rounded-xl border border-indigo-200/50">
                             <div className="flex items-center gap-1.5 text-xs font-bold text-[#3525cd] uppercase tracking-wider mb-2">
                               <Lightbulb className="w-4 h-4" />
                               How to Improve This Answer
@@ -915,7 +925,7 @@ export const EvaluationReportPage: React.FC = () => {
                         )}
 
                         {/* Model Exemplar Answer */}
-                        <div className="p-4 rounded-xl bg-[#eff4ff] border border-[#c7c4d8]/50">
+                        <div className="p-4 rounded-xl bg-indigo-50/55 border border-indigo-200/50">
                           <div className="flex items-center gap-1.5 text-xs font-bold text-[#3525cd] uppercase tracking-wider mb-1.5">
                             <Sparkles className="w-4 h-4" />
                             High-Bar Exemplar Approach
@@ -936,8 +946,8 @@ export const EvaluationReportPage: React.FC = () => {
 
       {/* SAVED INTERVIEW CONVERSATION TRANSCRIPT (Bounded Scrollable Window) */}
       {conversationTurns.length > 0 && (
-        <div className="bg-white rounded-xl border border-[#e2e8f0] shadow-sm overflow-hidden text-left">
-          <div className="px-6 py-4 border-b border-[#e2e8f0] bg-[#f8f9ff] flex items-center justify-between gap-3">
+        <div className="glass-panel rounded-2xl overflow-hidden text-left">
+          <div className="px-6 py-4 border-b border-white/60 bg-white/50 backdrop-blur-md flex items-center justify-between gap-3">
             <div className="flex items-center gap-2">
               <MessageSquare className="w-4 h-4 text-[#3525cd]" />
               <div>
@@ -949,14 +959,14 @@ export const EvaluationReportPage: React.FC = () => {
                 </p>
               </div>
             </div>
-            <span className="text-[11px] font-semibold text-[#3525cd] bg-[#eff4ff] px-2.5 py-1 rounded-full">
+            <span className="text-[11px] font-semibold text-[#3525cd] bg-indigo-50/75 px-2.5 py-1 rounded-full border border-indigo-200/45 whitespace-nowrap">
               Verified Record
             </span>
           </div>
 
           <div
             data-testid="saved-report-transcript-window"
-            className="h-[320px] overflow-y-auto custom-scrollbar px-6 py-4 space-y-3 bg-[#fcfdff]"
+            className="h-[320px] overflow-y-auto custom-scrollbar px-6 py-4 space-y-3 bg-white/30"
           >
             {conversationTurns.map((turn, tIdx) => {
               const isAi = turn.speaker === 'ai';
@@ -972,10 +982,10 @@ export const EvaluationReportPage: React.FC = () => {
                     <span className="font-mono tabular-nums">{turn.timestamp}</span>
                   </div>
                   <div
-                    className={`max-w-[88%] rounded-xl px-4 py-2.5 text-xs leading-relaxed border ${
+                    className={`max-w-[88%] rounded-2xl px-4 py-2.5 text-xs leading-relaxed border ${
                       isAi
-                        ? 'bg-white border-[#e2e8f0] text-[#0b1c30]'
-                        : 'bg-[#4f46e5] border-[#3525cd] text-white'
+                        ? 'bg-white/80 backdrop-blur-md border-white/75 text-[#0b1c30] shadow-xs'
+                        : 'glass-btn-primary border-transparent text-white'
                     }`}
                   >
                     {turn.topicTitle && isAi && (
@@ -991,16 +1001,16 @@ export const EvaluationReportPage: React.FC = () => {
       )}
 
       {/* CONNECT TO PERSONALIZED LEARNING ROADMAP CTA */}
-      <div className="p-6 rounded-2xl bg-gradient-to-r from-[#0f172a] to-[#213145] text-white flex flex-col sm:flex-row items-center justify-between gap-6 shadow-md text-left">
+      <div className="glass-dark p-6 rounded-2xl text-white flex flex-col sm:flex-row items-center justify-between gap-6 text-left">
         <div className="flex items-start gap-4">
-          <div className="w-12 h-12 rounded-xl bg-[#4f46e5] text-white flex items-center justify-center shrink-0 shadow-sm">
+          <div className="w-12 h-12 rounded-xl bg-white/15 border border-white/20 text-white flex items-center justify-center shrink-0">
             <BookOpen className="w-6 h-6" />
           </div>
           <div>
             <h4 className="font-heading text-lg font-bold text-white">
               Recommended Focus Areas from this Session
             </h4>
-            <p className="text-xs text-[#94a3b8] max-w-xl mt-1 leading-relaxed">
+            <p className="text-xs text-slate-300 max-w-xl mt-1 leading-relaxed">
               {(activeReport.recommendedDrills || []).length > 0
                 ? `Next targeted drills: ${activeReport.recommendedDrills.join(' • ')}.`
                 : `Continue practicing structured verbal answers tailored to ${activeReport.targetRole} at ${activeReport.targetCompany}.`}
@@ -1010,7 +1020,7 @@ export const EvaluationReportPage: React.FC = () => {
 
         <Link
           to="/learning-plan"
-          className="px-6 py-3 rounded-xl bg-[#4f46e5] hover:bg-[#4338ca] text-white font-semibold text-xs transition-all shadow-sm flex items-center gap-2 shrink-0 active:scale-95"
+          className="glass-btn-primary px-6 py-3 rounded-xl font-semibold text-xs flex items-center gap-2 shrink-0 whitespace-nowrap"
         >
           <BookOpen className="w-4 h-4" />
           <span>Open Adaptive Learning Plan</span>

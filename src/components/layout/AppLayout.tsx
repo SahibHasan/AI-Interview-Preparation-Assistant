@@ -12,8 +12,8 @@ export const AppLayout: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-[#f8f9ff] text-[#0b1c30] flex items-center justify-center">
-        <div className="flex flex-col items-center gap-3">
+      <div className="min-h-screen glass-canvas text-[#0b1c30] flex items-center justify-center">
+        <div className="glass-panel-elevated rounded-2xl px-6 py-5 flex flex-col items-center gap-3">
           <div className="w-8 h-8 rounded-full border-2 border-[#4f46e5] border-t-transparent animate-spin" />
           <span className="text-xs font-semibold text-[#565e74]">Restoring workspace...</span>
         </div>
@@ -26,7 +26,7 @@ export const AppLayout: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#f8f9ff] text-[#0b1c30] flex flex-col antialiased">
+    <div className="min-h-screen glass-canvas text-[#0b1c30] flex flex-col antialiased">
       {/* Sidebar Component */}
       <Sidebar
         mobileOpen={mobileMenuOpen}
@@ -39,9 +39,9 @@ export const AppLayout: React.FC = () => {
         <main className="flex-1 w-full max-w-[1440px] mx-auto p-4 sm:p-6 lg:p-8">
           <motion.div
             key={location.pathname}
-            initial={{ opacity: 0, y: 4 }}
+            initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.14, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
           >
             <Outlet />
           </motion.div>

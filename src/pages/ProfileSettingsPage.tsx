@@ -259,7 +259,7 @@ export const ProfileSettingsPage: React.FC = () => {
           <button
             type="button"
             onClick={handleExportDossier}
-            className="flex items-center gap-1.5 bg-white text-[#0b1c30] px-4 py-2.5 rounded-lg text-xs font-semibold shadow-sm hover:bg-[#eff4ff] border border-[#e2e8f0] transition-colors active:scale-95"
+            className="glass-subcard flex items-center gap-1.5 text-[#0b1c30] px-4 py-2.5 rounded-xl text-xs font-semibold hover:bg-white/80 transition-colors active:scale-95 whitespace-nowrap"
           >
             <Download className="w-4 h-4 text-[#565e74]" />
             <span>Export Dossier (JSON)</span>
@@ -269,7 +269,7 @@ export const ProfileSettingsPage: React.FC = () => {
             type="button"
             onClick={handleSave}
             disabled={isSaving}
-            className="flex items-center gap-1.5 bg-[#4f46e5] text-white px-5 py-2.5 rounded-lg text-xs font-semibold shadow-sm hover:bg-[#3525cd] transition-all active:scale-95 disabled:opacity-60"
+            className="glass-btn-primary flex items-center gap-1.5 px-5 py-2.5 rounded-xl text-xs font-semibold disabled:opacity-60 whitespace-nowrap"
           >
             {isSaving ? <RefreshCw className="w-4 h-4 animate-spin" /> : <CheckCircle2 className="w-4 h-4" />}
             <span>{isSaving ? 'Saving...' : 'Save Changes'}</span>
@@ -278,14 +278,14 @@ export const ProfileSettingsPage: React.FC = () => {
       </div>
 
       {/* Sub-Navigation Tabs */}
-      <div className="bg-white rounded-xl border border-[#e2e8f0] shadow-sm p-1.5 overflow-x-auto">
+      <div className="glass-pill-bar rounded-2xl p-1.5 overflow-x-auto">
         <div className="flex items-center gap-1 min-w-max">
           <button
             onClick={() => setActiveTab('general')}
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-semibold transition-all ${
+            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold transition-all whitespace-nowrap ${
               activeTab === 'general'
-                ? 'bg-[#4f46e5] text-white shadow-sm'
-                : 'text-[#565e74] hover:text-[#0b1c30] hover:bg-[#eff4ff]'
+                ? 'glass-btn-primary'
+                : 'text-[#565e74] hover:text-[#0b1c30] hover:bg-white/60'
             }`}
           >
             <UserIcon className="w-4 h-4" />
@@ -294,10 +294,10 @@ export const ProfileSettingsPage: React.FC = () => {
 
           <button
             onClick={() => setActiveTab('track')}
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-semibold transition-all ${
+            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold transition-all whitespace-nowrap ${
               activeTab === 'track'
-                ? 'bg-[#4f46e5] text-white shadow-sm'
-                : 'text-[#565e74] hover:text-[#0b1c30] hover:bg-[#eff4ff]'
+                ? 'glass-btn-primary'
+                : 'text-[#565e74] hover:text-[#0b1c30] hover:bg-white/60'
             }`}
           >
             <Building className="w-4 h-4" />
@@ -306,10 +306,10 @@ export const ProfileSettingsPage: React.FC = () => {
 
           <button
             onClick={() => setActiveTab('ai')}
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-semibold transition-all ${
+            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold transition-all whitespace-nowrap ${
               activeTab === 'ai'
-                ? 'bg-[#4f46e5] text-white shadow-sm'
-                : 'text-[#565e74] hover:text-[#0b1c30] hover:bg-[#eff4ff]'
+                ? 'glass-btn-primary'
+                : 'text-[#565e74] hover:text-[#0b1c30] hover:bg-white/60'
             }`}
           >
             <Bot className="w-4 h-4" />
@@ -318,10 +318,10 @@ export const ProfileSettingsPage: React.FC = () => {
 
           <button
             onClick={() => setActiveTab('devices')}
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-semibold transition-all ${
+            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold transition-all whitespace-nowrap ${
               activeTab === 'devices'
-                ? 'bg-[#4f46e5] text-white shadow-sm'
-                : 'text-[#565e74] hover:text-[#0b1c30] hover:bg-[#eff4ff]'
+                ? 'glass-btn-primary'
+                : 'text-[#565e74] hover:text-[#0b1c30] hover:bg-white/60'
             }`}
           >
             <Mic className="w-4 h-4" />
@@ -330,10 +330,10 @@ export const ProfileSettingsPage: React.FC = () => {
 
           <button
             onClick={() => setActiveTab('security')}
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-semibold transition-all ${
+            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold transition-all whitespace-nowrap ${
               activeTab === 'security'
-                ? 'bg-[#4f46e5] text-white shadow-sm'
-                : 'text-[#565e74] hover:text-[#0b1c30] hover:bg-[#eff4ff]'
+                ? 'glass-btn-primary'
+                : 'text-[#565e74] hover:text-[#0b1c30] hover:bg-white/60'
             }`}
           >
             <Shield className="w-4 h-4" />
@@ -345,25 +345,25 @@ export const ProfileSettingsPage: React.FC = () => {
       {/* Main Tab Panels */}
       <form onSubmit={handleSave} className="space-y-6 text-left">
         {activeTab === 'general' && (
-          <section className="bg-white rounded-xl border border-[#e2e8f0] shadow-sm p-6 space-y-6">
-            <div className="flex items-center justify-between pb-3 border-b border-[#e2e8f0]">
+          <section className="glass-panel rounded-2xl p-6 space-y-6">
+            <div className="flex items-center justify-between pb-3 border-b border-white/60">
               <div>
                 <h3 className="font-heading text-base font-bold text-[#0b1c30]">Executive Information</h3>
                 <p className="text-xs text-[#565e74]">Core identity matched against job descriptions and senior rubric benchmarks.</p>
               </div>
-              <span className="px-2.5 py-1 bg-[#eff4ff] text-[#3525cd] text-xs font-bold rounded-full">
+              <span className="px-2.5 py-1 bg-indigo-50/75 text-[#3525cd] text-xs font-bold rounded-full border border-indigo-200/45 whitespace-nowrap">
                 Primary Dossier
               </span>
             </div>
 
             {/* Avatar Upload & Identity Row */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 bg-[#f8f9ff] rounded-xl border border-[#e2e8f0]">
+            <div className="glass-subcard flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-2xl">
               <div className="flex items-center gap-4">
                 <div className="relative group shrink-0">
                   <img
                     src={user?.avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=256'}
                     alt={fullName}
-                    className="w-20 h-20 rounded-xl object-cover ring-2 ring-[#e5eeff] shadow-sm bg-white"
+                    className="w-20 h-20 rounded-xl object-cover ring-2 ring-white/80 shadow-sm bg-white"
                   />
                   <button
                     type="button"
@@ -383,12 +383,12 @@ export const ProfileSettingsPage: React.FC = () => {
                 <div>
                   <h4 className="font-heading text-base font-bold text-[#0b1c30]">{fullName}</h4>
                   <p className="text-xs text-[#565e74]">{headline}</p>
-                  <div className="flex items-center flex-wrap gap-2 mt-1.5">
-                    <span className="text-[11px] text-[#3525cd] font-semibold">
+                  <div className="flex items-center flex-wrap gap-2 mt-1.5 text-[11px]">
+                    <span className="text-[#3525cd] font-semibold">
                       Verified Candidate Enclave
                     </span>
-                    <span className="text-[#c7c4d8]">•</span>
-                    <span className="px-2 py-0.5 rounded-full bg-[#eff4ff] border border-[#c7c4d8]/50 text-[10px] font-semibold text-[#3525cd]">
+                    <span className="text-[#94a3b8]">·</span>
+                    <span className="font-semibold text-[#565e74]">
                       {formatAuthProviderLabel(user?.authProvider)}
                     </span>
                   </div>
@@ -409,7 +409,7 @@ export const ProfileSettingsPage: React.FC = () => {
                   type="button"
                   onClick={() => avatarInputRef.current?.click()}
                   disabled={isUploadingAvatar}
-                  className="flex items-center gap-1.5 bg-white hover:bg-[#eff4ff] text-[#3525cd] px-3.5 py-2 rounded-lg text-xs font-semibold border border-[#c7d2fe] shadow-sm transition-colors disabled:opacity-60"
+                  className="glass-subcard flex items-center gap-1.5 hover:bg-white/85 text-[#3525cd] px-3.5 py-2 rounded-xl text-xs font-semibold transition-colors disabled:opacity-60 whitespace-nowrap"
                 >
                   {isUploadingAvatar ? (
                     <RefreshCw className="w-3.5 h-3.5 animate-spin" />
@@ -422,7 +422,7 @@ export const ProfileSettingsPage: React.FC = () => {
                   type="button"
                   onClick={handleResetAvatar}
                   disabled={isUploadingAvatar}
-                  className="px-3 py-2 rounded-lg text-xs font-semibold text-[#565e74] hover:text-red-600 hover:bg-red-50 border border-transparent hover:border-red-200 transition-colors disabled:opacity-60"
+                  className="px-3 py-2 rounded-xl text-xs font-semibold text-[#565e74] hover:text-red-600 hover:bg-red-50/75 border border-transparent hover:border-red-200 transition-colors disabled:opacity-60 whitespace-nowrap"
                 >
                   Reset
                 </button>
@@ -438,7 +438,7 @@ export const ProfileSettingsPage: React.FC = () => {
                   type="text"
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
-                  className="bg-[#f8f9ff] border border-[#e2e8f0] rounded-lg p-2.5 text-xs text-[#0b1c30] font-medium focus:ring-2 focus:ring-[#4f46e5] outline-none"
+                  className="glass-input rounded-xl p-2.5 text-xs text-[#0b1c30] font-medium outline-none"
                 />
               </div>
 
@@ -449,7 +449,7 @@ export const ProfileSettingsPage: React.FC = () => {
                   type="email"
                   value={user?.email || 'alex.morgan@example.com'}
                   disabled
-                  className="bg-[#eff4ff] border border-[#e2e8f0] rounded-lg p-2.5 text-xs text-[#565e74] cursor-not-allowed"
+                  className="glass-subcard rounded-xl p-2.5 text-xs text-[#565e74] cursor-not-allowed opacity-80"
                 />
               </div>
 
@@ -460,7 +460,7 @@ export const ProfileSettingsPage: React.FC = () => {
                   type="text"
                   value={headline}
                   onChange={(e) => setHeadline(e.target.value)}
-                  className="bg-[#f8f9ff] border border-[#e2e8f0] rounded-lg p-2.5 text-xs text-[#0b1c30] font-medium focus:ring-2 focus:ring-[#4f46e5] outline-none"
+                  className="glass-input rounded-xl p-2.5 text-xs text-[#0b1c30] font-medium outline-none"
                 />
               </div>
 
@@ -471,7 +471,7 @@ export const ProfileSettingsPage: React.FC = () => {
                   type="text"
                   value={location}
                   onChange={(e) => setLocation(e.target.value)}
-                  className="bg-[#f8f9ff] border border-[#e2e8f0] rounded-lg p-2.5 text-xs text-[#0b1c30] font-medium focus:ring-2 focus:ring-[#4f46e5] outline-none"
+                  className="glass-input rounded-xl p-2.5 text-xs text-[#0b1c30] font-medium outline-none"
                 />
               </div>
             </div>
@@ -479,8 +479,8 @@ export const ProfileSettingsPage: React.FC = () => {
         )}
 
         {activeTab === 'track' && (
-          <section className="bg-white rounded-xl border border-[#e2e8f0] shadow-sm p-6 space-y-6">
-            <div className="pb-3 border-b border-[#e2e8f0]">
+          <section className="glass-panel rounded-2xl p-6 space-y-6">
+            <div className="pb-3 border-b border-white/60">
               <h3 className="font-heading text-base font-bold text-[#0b1c30]">Company Calibration &amp; Target Track</h3>
               <p className="text-xs text-[#565e74]">Aligns rubric weights, question pools, and bar-raiser expectations.</p>
             </div>
@@ -491,7 +491,7 @@ export const ProfileSettingsPage: React.FC = () => {
                 <select
                   value={targetCompany}
                   onChange={(e) => setTargetCompany(e.target.value)}
-                  className="bg-[#f8f9ff] border border-[#e2e8f0] rounded-lg p-2.5 text-xs text-[#0b1c30] font-semibold focus:ring-2 focus:ring-[#4f46e5] outline-none"
+                  className="glass-input rounded-xl p-2.5 text-xs text-[#0b1c30] font-semibold outline-none"
                 >
                   <option value="Stripe">Stripe (Systems &amp; Reliability Core)</option>
                   <option value="Google">Google (L5/L6 Distributed Scale)</option>
@@ -507,7 +507,7 @@ export const ProfileSettingsPage: React.FC = () => {
                 <select
                   value={targetRole}
                   onChange={(e) => setTargetRole(e.target.value)}
-                  className="bg-[#f8f9ff] border border-[#e2e8f0] rounded-lg p-2.5 text-xs text-[#0b1c30] font-semibold focus:ring-2 focus:ring-[#4f46e5] outline-none"
+                  className="glass-input rounded-xl p-2.5 text-xs text-[#0b1c30] font-semibold outline-none"
                 >
                   <option value="Senior Frontend Engineer">Senior Frontend Engineer (Staff Track)</option>
                   <option value="Staff Systems Architect">Staff Systems Architect</option>
@@ -518,9 +518,9 @@ export const ProfileSettingsPage: React.FC = () => {
               </div>
             </div>
 
-            <div className="p-4 bg-[#eff4ff] rounded-xl border border-[#c7d2fe] flex items-center justify-between">
+            <div className="glass-subcard p-4 bg-indigo-50/45 rounded-2xl border border-indigo-200/50 flex flex-wrap items-center justify-between gap-3">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-[#3525cd] text-white flex items-center justify-center font-bold text-sm">
+                <div className="w-10 h-10 rounded-xl bg-[#3525cd] text-white flex items-center justify-center font-bold text-sm shadow-xs">
                   {targetCompany.charAt(0)}
                 </div>
                 <div>
@@ -532,7 +532,7 @@ export const ProfileSettingsPage: React.FC = () => {
                   </p>
                 </div>
               </div>
-              <span className="px-2.5 py-1 bg-white text-[#3525cd] text-[11px] font-bold rounded-lg border border-[#c7d2fe]">
+              <span className="glass-subcard px-2.5 py-1 text-[#3525cd] text-[11px] font-bold rounded-lg whitespace-nowrap">
                 L6 Staff Bar Active
               </span>
             </div>
@@ -540,8 +540,8 @@ export const ProfileSettingsPage: React.FC = () => {
         )}
 
         {activeTab === 'ai' && (
-          <section className="bg-white rounded-xl border border-[#e2e8f0] shadow-sm p-6 space-y-6">
-            <div className="pb-3 border-b border-[#e2e8f0]">
+          <section className="glass-panel rounded-2xl p-6 space-y-6">
+            <div className="pb-3 border-b border-white/60">
               <h3 className="font-heading text-base font-bold text-[#0b1c30]">AI Interviewer Persona &amp; Style</h3>
               <p className="text-xs text-[#565e74]">Customize adaptive follow-up behavior, questioning tone, and critique rigor.</p>
             </div>
@@ -552,34 +552,30 @@ export const ProfileSettingsPage: React.FC = () => {
                   id: 'Sarah',
                   title: 'Sarah (Staff Bar-Raiser)',
                   desc: 'Incisive, data-driven, and relentlessly probes edge conditions, rollback plans, and trade-offs.',
-                  accent: 'border-[#4f46e5] bg-[#eff4ff]/60',
                 },
                 {
                   id: 'Dr. Elena Vance',
                   title: 'Dr. Elena Vance (Systems Architect)',
                   desc: 'Focuses on architectural boundaries, formal correctness, and consensus algorithms under high partition.',
-                  accent: 'border-[#e2e8f0] bg-white',
                 },
                 {
                   id: 'Marcus Reed',
                   title: 'Marcus Reed (VP Engineering)',
                   desc: 'Evaluates business leverage, communication brevity, cross-team influence, and mentorship velocity.',
-                  accent: 'border-[#e2e8f0] bg-white',
                 },
                 {
                   id: 'David Chen',
                   title: 'David Chen (Principal Tech Lead)',
                   desc: 'Balanced, collaborative deep-diver emphasizing clean code structure, testability, and latency budgets.',
-                  accent: 'border-[#e2e8f0] bg-white',
                 },
               ].map((p) => (
                 <div
                   key={p.id}
                   onClick={() => setAiPersona(p.id as any)}
-                  className={`p-4 rounded-xl border cursor-pointer transition-all ${
+                  className={`glass-subcard glass-interactive p-4 rounded-2xl cursor-pointer transition-all ${
                     aiPersona === p.id
-                      ? 'border-[#4f46e5] ring-2 ring-[#4f46e5]/20 bg-[#eff4ff]'
-                      : 'border-[#e2e8f0] bg-[#f8f9ff] hover:bg-white'
+                      ? 'border-[#4f46e5] ring-2 ring-[#4f46e5]/25 bg-indigo-50/55'
+                      : 'hover:bg-white/75'
                   }`}
                 >
                   <div className="flex items-center justify-between mb-1">
@@ -593,7 +589,7 @@ export const ProfileSettingsPage: React.FC = () => {
 
             <div className="pt-2">
               <label className="text-xs font-semibold text-[#0b1c30] block mb-2">Interviewer Pressure Level</label>
-              <div className="grid grid-cols-3 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 {[
                   { id: 'supportive', label: 'Supportive & Guiding' },
                   { id: 'bar-raiser', label: 'Bar-Raiser (Standard)' },
@@ -603,10 +599,10 @@ export const ProfileSettingsPage: React.FC = () => {
                     key={s.id}
                     type="button"
                     onClick={() => setInterviewerStyle(s.id as any)}
-                    className={`p-2.5 text-xs font-semibold rounded-lg border transition-all text-center ${
+                    className={`p-2.5 text-xs font-semibold rounded-xl transition-all text-center whitespace-nowrap ${
                       interviewerStyle === s.id
-                        ? 'bg-[#4f46e5] text-white border-[#4f46e5] shadow-sm'
-                        : 'bg-[#f8f9ff] text-[#565e74] border-[#e2e8f0] hover:bg-white'
+                        ? 'glass-btn-primary'
+                        : 'glass-subcard text-[#565e74] hover:bg-white/75'
                     }`}
                   >
                     {s.label}
@@ -618,14 +614,14 @@ export const ProfileSettingsPage: React.FC = () => {
         )}
 
         {activeTab === 'devices' && (
-          <section className="bg-white rounded-xl border border-[#e2e8f0] shadow-sm p-6 space-y-6">
-            <div className="pb-3 border-b border-[#e2e8f0]">
+          <section className="glass-panel rounded-2xl p-6 space-y-6">
+            <div className="pb-3 border-b border-white/60">
               <h3 className="font-heading text-base font-bold text-[#0b1c30]">Audio, Mic &amp; Speech Synthesis Telemetry</h3>
               <p className="text-xs text-[#565e74]">Configure real-time voice streaming, transcript recording, and camera presence.</p>
             </div>
 
             <div className="space-y-4">
-              <div className="flex items-center justify-between p-4 bg-[#f8f9ff] rounded-xl border border-[#e2e8f0]">
+              <div className="glass-subcard flex items-center justify-between p-4 rounded-2xl">
                 <div className="flex items-center gap-3">
                   <Mic className="w-5 h-5 text-[#3525cd]" />
                   <div>
@@ -641,19 +637,19 @@ export const ProfileSettingsPage: React.FC = () => {
                 />
               </div>
 
-              <div className="flex items-center justify-between p-4 bg-[#f8f9ff] rounded-xl border border-[#e2e8f0]">
+              <div className="glass-subcard flex items-center justify-between p-4 rounded-2xl">
                 <div className="flex items-center gap-3">
                   <Volume2 className="w-5 h-5 text-[#3525cd]" />
                   <div>
                     <div className="text-xs font-bold text-[#0b1c30]">Interviewer Audio Voice Synthesis</div>
-                    <div className="text-[11px] text-[#565e74]">Plays adaptive follow-ups using text-to-speech engine.</div>
+                    <div className="text-[11px] text-[#565e74]">Plays adaptive follow-ups using human neural voice engine.</div>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
                   <button
                     type="button"
                     onClick={handleTestAudio}
-                    className="px-3 py-1 bg-white border border-[#e2e8f0] hover:bg-[#eff4ff] text-[#3525cd] text-xs font-semibold rounded-lg transition-colors"
+                    className="glass-subcard px-3 py-1.5 hover:bg-white/85 text-[#3525cd] text-xs font-semibold rounded-lg transition-colors whitespace-nowrap"
                   >
                     Test Audio
                   </button>
@@ -666,7 +662,7 @@ export const ProfileSettingsPage: React.FC = () => {
                 </div>
               </div>
 
-              <div className="flex items-center justify-between p-4 bg-[#f8f9ff] rounded-xl border border-[#e2e8f0]">
+              <div className="glass-subcard flex items-center justify-between p-4 rounded-2xl">
                 <div className="flex items-center gap-3">
                   <Camera className="w-5 h-5 text-[#3525cd]" />
                   <div>
@@ -687,17 +683,17 @@ export const ProfileSettingsPage: React.FC = () => {
 
         {/* SECURITY & DATA ISOLATION ENCLAVE */}
         {activeTab === 'security' && (
-          <section className="bg-white rounded-xl border border-[#e2e8f0] shadow-sm p-6 space-y-6">
-            <div className="pb-3 border-b border-[#e2e8f0]">
+          <section className="glass-panel rounded-2xl p-6 space-y-6">
+            <div className="pb-3 border-b border-white/60">
               <h3 className="font-heading text-base font-bold text-[#0b1c30]">Security, Privacy &amp; Data Enclave</h3>
               <p className="text-xs text-[#565e74]">Candidate profiles, mock sessions, and evaluations are securely isolated and protected.</p>
             </div>
 
             {/* Official Server-Side Database Architecture Card */}
-            <div className="p-5 bg-[#f8f9ff] rounded-xl border border-[#e2e8f0] space-y-4">
+            <div className="glass-subcard p-5 rounded-2xl space-y-4">
               <div className="flex items-start justify-between gap-3">
                 <div className="flex items-center gap-2.5">
-                  <div className="w-9 h-9 rounded-lg bg-[#eff4ff] text-[#3525cd] flex items-center justify-center">
+                  <div className="w-9 h-9 rounded-xl bg-indigo-50/80 text-[#3525cd] flex items-center justify-center">
                     <Database className="w-5 h-5" />
                   </div>
                   <div>
@@ -710,14 +706,14 @@ export const ProfileSettingsPage: React.FC = () => {
                   </div>
                 </div>
 
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-800 border border-emerald-200 shrink-0">
-                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-50/85 text-emerald-800 border border-emerald-200/70 shrink-0 whitespace-nowrap">
+                  <span className="w-2 h-2 rounded-full bg-emerald-500" />
                   <span>Enclave Active</span>
                 </span>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
-                <div className="p-3 bg-white rounded-lg border border-[#e2e8f0]">
+                <div className="glass-subcard p-3.5 rounded-xl">
                   <div className="flex items-center gap-1.5 text-xs font-bold text-[#0b1c30] mb-1">
                     <Server className="w-4 h-4 text-[#3525cd]" />
                     <span>Server-Side Enclave</span>
@@ -727,7 +723,7 @@ export const ProfileSettingsPage: React.FC = () => {
                   </p>
                 </div>
 
-                <div className="p-3 bg-white rounded-lg border border-[#e2e8f0]">
+                <div className="glass-subcard p-3.5 rounded-xl">
                   <div className="flex items-center gap-1.5 text-xs font-bold text-[#0b1c30] mb-1">
                     <Shield className="w-4 h-4 text-emerald-600" />
                     <span>Row Level Security</span>
@@ -737,7 +733,7 @@ export const ProfileSettingsPage: React.FC = () => {
                   </p>
                 </div>
 
-                <div className="p-3 bg-white rounded-lg border border-[#e2e8f0]">
+                <div className="glass-subcard p-3.5 rounded-xl">
                   <div className="flex items-center gap-1.5 text-xs font-bold text-[#0b1c30] mb-1">
                     <Lock className="w-4 h-4 text-[#3525cd]" />
                     <span>End-to-End Encryption</span>
@@ -750,7 +746,7 @@ export const ProfileSettingsPage: React.FC = () => {
             </div>
 
             {/* Zero Public Retention Guarantee */}
-            <div className="p-4 bg-emerald-50/80 rounded-xl border border-emerald-200 text-xs text-emerald-900 leading-relaxed">
+            <div className="p-4 bg-emerald-50/65 backdrop-blur-sm rounded-2xl border border-emerald-200/70 text-xs text-emerald-900 leading-relaxed">
               <div className="flex items-center gap-2 font-bold mb-1">
                 <Lock className="w-4 h-4 text-emerald-700" />
                 <span>Zero Third-Party Data Retention Guarantee</span>
@@ -761,7 +757,7 @@ export const ProfileSettingsPage: React.FC = () => {
             </div>
 
             {/* Danger Zone: Flush Cache */}
-            <div className="p-4 bg-red-50/60 rounded-xl border border-red-200/80 flex items-center justify-between">
+            <div className="p-4 bg-red-50/60 backdrop-blur-sm rounded-2xl border border-red-200/70 flex items-center justify-between gap-3">
               <div>
                 <div className="text-xs font-bold text-red-900 flex items-center gap-1.5">
                   <Trash2 className="w-4 h-4 text-red-700" />
@@ -774,7 +770,7 @@ export const ProfileSettingsPage: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setResetModalOpen(true)}
-                className="px-3.5 py-1.5 rounded-lg bg-white hover:bg-red-50 text-red-700 text-xs font-semibold border border-red-200 shadow-sm transition-colors"
+                className="glass-subcard px-3.5 py-1.5 rounded-xl hover:bg-red-50 text-red-700 text-xs font-semibold border border-red-200 transition-colors whitespace-nowrap"
               >
                 Flush Cache
               </button>
@@ -786,7 +782,7 @@ export const ProfileSettingsPage: React.FC = () => {
           <button
             type="submit"
             disabled={isSaving}
-            className="px-6 py-2.5 rounded-lg bg-[#4f46e5] hover:bg-[#3525cd] text-white font-semibold text-xs shadow-sm transition-all active:scale-95 disabled:opacity-60 flex items-center gap-1.5"
+            className="glass-btn-primary px-6 py-2.5 rounded-xl font-semibold text-xs disabled:opacity-60 flex items-center gap-1.5 whitespace-nowrap"
           >
             {isSaving && <RefreshCw className="w-3.5 h-3.5 animate-spin" />}
             <span>Save All Changes</span>
@@ -797,12 +793,12 @@ export const ProfileSettingsPage: React.FC = () => {
       {/* Reset Confirmation Modal */}
       <AnimatePresence>
         {resetModalOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0b1c30]/45 backdrop-blur-md">
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="bg-white rounded-xl p-6 max-w-md w-full border border-[#e2e8f0] shadow-xl text-left"
+              className="glass-panel-elevated rounded-2xl p-6 max-w-md w-full text-left"
             >
               <div className="flex items-center gap-3 text-red-600 mb-3">
                 <Trash2 className="w-5 h-5" />
@@ -815,14 +811,14 @@ export const ProfileSettingsPage: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setResetModalOpen(false)}
-                  className="px-4 py-2 rounded-lg text-xs font-semibold text-[#565e74] hover:bg-[#f1f5f9]"
+                  className="glass-subcard px-4 py-2 rounded-xl text-xs font-semibold text-[#565e74] hover:bg-white/80 whitespace-nowrap"
                 >
                   Cancel
                 </button>
                 <button
                   type="button"
                   onClick={handleConfirmReset}
-                  className="px-4 py-2 rounded-lg text-xs font-semibold bg-red-600 hover:bg-red-700 text-white"
+                  className="px-4 py-2 rounded-xl text-xs font-semibold bg-red-600 hover:bg-red-700 text-white shadow-sm whitespace-nowrap"
                 >
                   Confirm Flush
                 </button>

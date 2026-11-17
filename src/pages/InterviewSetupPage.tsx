@@ -261,7 +261,7 @@ export const InterviewSetupPage: React.FC = () => {
         <div>
           <div className="flex items-center gap-1.5 text-xs text-[#565e74] uppercase tracking-wider font-semibold mb-1">
             <span>Platform</span>
-            <span>•</span>
+            <span aria-hidden="true">·</span>
             <span className="text-[#3525cd]">Interview Setup &amp; Calibration</span>
           </div>
           <h1 className="font-heading text-2xl sm:text-3xl font-bold text-[#0b1c30] tracking-tight">
@@ -272,7 +272,7 @@ export const InterviewSetupPage: React.FC = () => {
           </p>
         </div>
 
-        <div className="text-xs font-semibold text-[#3525cd] bg-[#eff4ff] px-3.5 py-2 rounded-lg border border-[#c7d2fe] self-start md:self-auto">
+        <div className="text-xs font-semibold text-[#3525cd] glass-pill-bar px-3.5 py-2 rounded-xl self-start md:self-auto whitespace-nowrap">
           Active: {effectiveRoleLabel} · {INTERVIEW_TYPE_LABELS[interviewType]}
         </div>
       </div>
@@ -282,16 +282,16 @@ export const InterviewSetupPage: React.FC = () => {
         {/* Left Column: Clean 4-Step Configuration */}
         <div className="lg:col-span-8 flex flex-col gap-6 text-left">
           {/* STEP 1: Target Role Dropdown & Company */}
-          <section className="bg-white rounded-xl p-6 border border-[#e2e8f0] shadow-sm space-y-4">
+          <section className="glass-panel rounded-2xl p-6 space-y-4">
             <div className="flex items-center gap-3">
-              <div className="w-7 h-7 rounded-lg bg-[#4f46e5] text-white flex items-center justify-center font-bold text-xs shrink-0">
+              <div className="w-7 h-7 rounded-lg glass-btn-primary text-white flex items-center justify-center font-bold text-xs shrink-0">
                 1
               </div>
               <div>
                 <h2 className="font-heading text-base font-bold text-[#0b1c30]">
                   Target Job Role &amp; Organization
                 </h2>
-                <p className="text-xs text-[#565e74]">
+                <p className="text-xs text-[#464555]">
                   Select your exact role so the AI interviewer tailors your live interview order and evaluation bar.
                 </p>
               </div>
@@ -307,7 +307,7 @@ export const InterviewSetupPage: React.FC = () => {
                   data-testid="setup-role-select"
                   value={useCustomRoleInput ? CUSTOM_ROLE_VALUE : isPresetRole(targetRole) ? targetRole : CUSTOM_ROLE_VALUE}
                   onChange={(e) => handleSelectRoleOption(e.target.value)}
-                  className="w-full bg-[#f8f9ff] border border-[#e2e8f0] rounded-lg px-3.5 py-2.5 text-sm text-[#0b1c30] font-medium focus:outline-none focus:ring-2 focus:ring-[#4f46e5]"
+                  className="w-full glass-input rounded-xl px-3.5 py-2.5 text-sm text-[#0b1c30] font-medium outline-none"
                 >
                   {INTERVIEW_ROLE_OPTIONS.map((role) => (
                     <option key={role} value={role}>
@@ -328,7 +328,7 @@ export const InterviewSetupPage: React.FC = () => {
                       setTargetRole(e.target.value);
                       updateInterviewSetup({ targetRole: e.target.value });
                     }}
-                    className="mt-2 w-full bg-[#f8f9ff] border border-[#c7d2fe] rounded-lg px-3.5 py-2 text-sm text-[#0b1c30] font-medium focus:outline-none focus:ring-2 focus:ring-[#4f46e5]"
+                    className="mt-2 w-full glass-input rounded-xl px-3.5 py-2 text-sm text-[#0b1c30] font-medium outline-none"
                     placeholder="Enter custom role title (e.g. Solutions Architect)"
                   />
                 )}
@@ -348,7 +348,7 @@ export const InterviewSetupPage: React.FC = () => {
                     setTargetCompany(e.target.value);
                     updateInterviewSetup({ targetCompany: e.target.value });
                   }}
-                  className="w-full bg-[#f8f9ff] border border-[#e2e8f0] rounded-lg px-3.5 py-2.5 text-sm text-[#0b1c30] font-medium focus:outline-none focus:ring-2 focus:ring-[#4f46e5]"
+                  className="w-full glass-input rounded-xl px-3.5 py-2.5 text-sm text-[#0b1c30] font-medium outline-none"
                   placeholder="e.g. Stripe, Google, Microsoft"
                 />
               </div>
@@ -365,10 +365,10 @@ export const InterviewSetupPage: React.FC = () => {
                     setTargetCompany(preset);
                     updateInterviewSetup({ targetCompany: preset });
                   }}
-                  className={`text-[11px] px-2.5 py-1 rounded-lg border transition-colors ${
+                  className={`text-[11px] px-2.5 py-1 rounded-lg border transition-all ${
                     targetCompany === preset
-                      ? 'bg-[#3525cd] text-white border-[#3525cd] font-semibold'
-                      : 'bg-[#f8f9ff] text-[#565e74] border-[#e2e8f0] hover:bg-[#eff4ff]'
+                      ? 'glass-btn-primary text-white border-transparent font-semibold'
+                      : 'glass-subcard text-[#464555] hover:bg-white'
                   }`}
                 >
                   {preset}
@@ -378,16 +378,16 @@ export const InterviewSetupPage: React.FC = () => {
           </section>
 
           {/* STEP 2: Interview Type & Focus Area */}
-          <section className="bg-white rounded-xl p-6 border border-[#e2e8f0] shadow-sm">
+          <section className="glass-panel rounded-2xl p-6">
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-7 h-7 rounded-lg bg-[#eff4ff] text-[#3525cd] flex items-center justify-center font-bold text-xs">
+              <div className="w-7 h-7 rounded-lg glass-subcard text-[#3525cd] flex items-center justify-center font-bold text-xs">
                 2
               </div>
               <div>
                 <h2 className="font-heading text-base font-bold text-[#0b1c30]">
                   Interview Type &amp; Focus Domain
                 </h2>
-                <p className="text-xs text-[#565e74]">
+                <p className="text-xs text-[#464555]">
                   Select the exact interview format you want {aiPersona} to conduct.
                 </p>
               </div>
@@ -401,14 +401,14 @@ export const InterviewSetupPage: React.FC = () => {
                   setInterviewType('technical');
                   updateInterviewSetup({ interviewType: 'technical' });
                 }}
-                className={`p-4 rounded-xl border text-left transition-all ${
+                className={`p-4 rounded-2xl border text-left glass-interactive ${
                   interviewType === 'technical'
-                    ? 'bg-[#eff4ff] border-[#4f46e5] ring-2 ring-[#4f46e5]/40 shadow-sm'
-                    : 'bg-[#f8f9ff] border-[#e2e8f0] hover:bg-[#eff4ff]/40'
+                    ? 'bg-[#eff4ff]/85 backdrop-blur-md border-[#4f46e5] ring-2 ring-[#4f46e5]/30 shadow-md'
+                    : 'glass-subcard hover:bg-white/80'
                 }`}
               >
                 <div className="flex items-start justify-between mb-2">
-                  <div className="p-2 rounded-lg bg-[#3525cd] text-white">
+                  <div className="p-2 rounded-xl bg-[#3525cd] text-white shadow-xs">
                     <Code className="w-5 h-5" />
                   </div>
                   {interviewType === 'technical' && <CheckCircle className="w-5 h-5 text-[#3525cd]" />}
@@ -430,14 +430,14 @@ export const InterviewSetupPage: React.FC = () => {
                   setInterviewType('behavioral');
                   updateInterviewSetup({ interviewType: 'behavioral' });
                 }}
-                className={`p-4 rounded-xl border text-left transition-all ${
+                className={`p-4 rounded-2xl border text-left glass-interactive ${
                   interviewType === 'behavioral'
-                    ? 'bg-[#eff4ff] border-[#4f46e5] ring-2 ring-[#4f46e5]/40 shadow-sm'
-                    : 'bg-[#f8f9ff] border-[#e2e8f0] hover:bg-[#eff4ff]/40'
+                    ? 'bg-[#eff4ff]/85 backdrop-blur-md border-[#4f46e5] ring-2 ring-[#4f46e5]/30 shadow-md'
+                    : 'glass-subcard hover:bg-white/80'
                 }`}
               >
                 <div className="flex items-start justify-between mb-2">
-                  <div className="p-2 rounded-lg bg-[#004c76] text-white">
+                  <div className="p-2 rounded-xl bg-[#004c76] text-white shadow-xs">
                     <Users className="w-5 h-5" />
                   </div>
                   {interviewType === 'behavioral' && <CheckCircle className="w-5 h-5 text-[#3525cd]" />}
@@ -456,14 +456,14 @@ export const InterviewSetupPage: React.FC = () => {
                   setInterviewType('system-design');
                   updateInterviewSetup({ interviewType: 'system-design' });
                 }}
-                className={`p-4 rounded-xl border text-left transition-all ${
+                className={`p-4 rounded-2xl border text-left glass-interactive ${
                   interviewType === 'system-design'
-                    ? 'bg-[#eff4ff] border-[#4f46e5] ring-2 ring-[#4f46e5]/40 shadow-sm'
-                    : 'bg-[#f8f9ff] border-[#e2e8f0] hover:bg-[#eff4ff]/40'
+                    ? 'bg-[#eff4ff]/85 backdrop-blur-md border-[#4f46e5] ring-2 ring-[#4f46e5]/30 shadow-md'
+                    : 'glass-subcard hover:bg-white/80'
                 }`}
               >
                 <div className="flex items-start justify-between mb-2">
-                  <div className="p-2 rounded-lg bg-[#565e74] text-white">
+                  <div className="p-2 rounded-xl bg-[#565e74] text-white shadow-xs">
                     <Terminal className="w-5 h-5" />
                   </div>
                   {interviewType === 'system-design' && <CheckCircle className="w-5 h-5 text-[#3525cd]" />}
@@ -482,14 +482,14 @@ export const InterviewSetupPage: React.FC = () => {
                   setInterviewType('hr-cultural');
                   updateInterviewSetup({ interviewType: 'hr-cultural' });
                 }}
-                className={`p-4 rounded-xl border text-left transition-all ${
+                className={`p-4 rounded-2xl border text-left glass-interactive ${
                   interviewType === 'hr-cultural'
-                    ? 'bg-[#eff4ff] border-[#4f46e5] ring-2 ring-[#4f46e5]/40 shadow-sm'
-                    : 'bg-[#f8f9ff] border-[#e2e8f0] hover:bg-[#eff4ff]/40'
+                    ? 'bg-[#eff4ff]/85 backdrop-blur-md border-[#4f46e5] ring-2 ring-[#4f46e5]/30 shadow-md'
+                    : 'glass-subcard hover:bg-white/80'
                 }`}
               >
                 <div className="flex items-start justify-between mb-2">
-                  <div className="p-2 rounded-lg bg-[#00659a] text-white">
+                  <div className="p-2 rounded-xl bg-[#00659a] text-white shadow-xs">
                     <Building className="w-5 h-5" />
                   </div>
                   {interviewType === 'hr-cultural' && <CheckCircle className="w-5 h-5 text-[#3525cd]" />}
@@ -504,16 +504,16 @@ export const InterviewSetupPage: React.FC = () => {
           </section>
 
           {/* STEP 3: Experience Level, Session Length, Voice & Persona */}
-          <section className="bg-white rounded-xl p-6 border border-[#e2e8f0] shadow-sm space-y-5">
+          <section className="glass-panel rounded-2xl p-6 space-y-5">
             <div className="flex items-center gap-3">
-              <div className="w-7 h-7 rounded-lg bg-[#eff4ff] text-[#3525cd] flex items-center justify-center font-bold text-xs">
+              <div className="w-7 h-7 rounded-lg glass-subcard text-[#3525cd] flex items-center justify-center font-bold text-xs">
                 3
               </div>
               <div>
                 <h2 className="font-heading text-base font-bold text-[#0b1c30]">
                   Seniority Bar, Session Depth &amp; AI Voice Agent
                 </h2>
-                <p className="text-xs text-[#565e74]">
+                <p className="text-xs text-[#464555]">
                   Tune the interview bar, question count, interviewer persona, and natural voice tone.
                 </p>
               </div>
@@ -533,10 +533,10 @@ export const InterviewSetupPage: React.FC = () => {
                     setDifficulty(lvl.id as any);
                     updateInterviewSetup({ difficulty: lvl.id as any });
                   }}
-                  className={`p-3.5 rounded-xl border text-center transition-all ${
+                  className={`p-3.5 rounded-xl border text-center glass-interactive ${
                     difficulty === lvl.id
-                      ? 'bg-[#eff4ff] border-[#4f46e5] ring-2 ring-[#4f46e5]/40 shadow-sm'
-                      : 'bg-[#f8f9ff] border-[#e2e8f0] hover:bg-[#eff4ff]/40'
+                      ? 'bg-[#eff4ff]/85 backdrop-blur-md border-[#4f46e5] ring-2 ring-[#4f46e5]/30 shadow-sm'
+                      : 'glass-subcard hover:bg-white/80'
                   }`}
                 >
                   <div className="text-[10px] font-bold text-[#3525cd] uppercase tracking-wider mb-1">
@@ -549,11 +549,11 @@ export const InterviewSetupPage: React.FC = () => {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="p-4 bg-[#f8f9ff] rounded-xl border border-[#e2e8f0]">
+              <div className="p-4 glass-subcard rounded-xl">
                 <label className="text-xs font-semibold text-[#0b1c30] block mb-2">
                   Verbal Interview &amp; Neural Voice Agent
                 </label>
-                <div className="flex items-center gap-2.5 p-2.5 rounded-lg bg-[#eff4ff] border border-[#4f46e5]/30 text-xs font-semibold text-[#3525cd]">
+                <div className="flex items-center gap-2.5 p-2.5 rounded-lg bg-white/75 border border-[#4f46e5]/30 text-xs font-semibold text-[#3525cd]">
                   <Mic className="w-4 h-4 shrink-0" />
                   <span>Live Verbal Only (Speech-to-Speech + Live Transcript)</span>
                 </div>
@@ -569,7 +569,7 @@ export const InterviewSetupPage: React.FC = () => {
                       setVoiceName(v);
                       updateInterviewSetup({ voiceName: v });
                     }}
-                    className="w-full bg-white border border-[#e2e8f0] rounded-lg px-2.5 py-1.5 text-xs font-medium text-[#0b1c30] focus:outline-none focus:ring-2 focus:ring-[#4f46e5]"
+                    className="w-full glass-input rounded-lg px-2.5 py-1.5 text-xs font-medium text-[#0b1c30] outline-none"
                   >
                     <option value="Kore">Kore — Warm Executive (Female)</option>
                     <option value="Zephyr">Zephyr — Crisp Analytical (Female)</option>
@@ -580,7 +580,7 @@ export const InterviewSetupPage: React.FC = () => {
                 </div>
               </div>
 
-              <div className="p-4 bg-[#f8f9ff] rounded-xl border border-[#e2e8f0] flex flex-col justify-between">
+              <div className="p-4 glass-subcard rounded-xl flex flex-col justify-between">
                 <div>
                   <label className="text-xs font-semibold text-[#0b1c30] block mb-2">
                     Session Length &amp; Topic Count
@@ -601,17 +601,17 @@ export const InterviewSetupPage: React.FC = () => {
                         }}
                         className={`py-2 px-2 rounded-lg text-center border transition-all ${
                           questionCount === opt.qs
-                            ? 'bg-[#3525cd] text-white border-[#3525cd] font-semibold'
-                            : 'bg-white text-[#0b1c30] border-[#e2e8f0]'
+                            ? 'glass-btn-primary text-white border-transparent font-semibold'
+                            : 'bg-white/80 text-[#0b1c30] border-white hover:bg-white'
                         }`}
                       >
-                        <div className="text-xs font-bold">{opt.mins} min</div>
-                        <div className="text-[10px] opacity-80">{opt.qs} Topics</div>
+                        <div className="text-xs font-bold tabular-nums">{opt.mins} min</div>
+                        <div className="text-[10px] opacity-85 tabular-nums">{opt.qs} Topics</div>
                       </button>
                     ))}
                   </div>
                 </div>
-                <span className="text-[11px] text-[#777587] mt-2 block">
+                <span className="text-[11px] text-[#565e74] mt-2 block">
                   Includes adaptive AI follow-ups triggered from your live responses.
                 </span>
               </div>
@@ -654,20 +654,20 @@ export const InterviewSetupPage: React.FC = () => {
                       setAiPersona(p.name as any);
                       updateInterviewSetup({ aiPersona: p.name as any });
                     }}
-                    className={`p-3.5 rounded-xl border text-left transition-all ${
+                    className={`p-3.5 rounded-xl border text-left glass-interactive ${
                       aiPersona === p.name
-                        ? 'bg-[#eff4ff] border-[#4f46e5] ring-2 ring-[#4f46e5]/40 shadow-sm'
-                        : 'bg-[#f8f9ff] border-[#e2e8f0] hover:bg-[#eff4ff]/40'
+                        ? 'bg-[#eff4ff]/85 backdrop-blur-md border-[#4f46e5] ring-2 ring-[#4f46e5]/30 shadow-sm'
+                        : 'glass-subcard hover:bg-white/80'
                     }`}
                   >
                     <div className="flex items-center justify-between mb-1">
                       <span className="font-heading text-sm font-bold text-[#0b1c30]">{p.name}</span>
-                      <span className="text-[10px] font-semibold text-[#3525cd] bg-[#dae2fd] px-2 py-0.5 rounded-md">
+                      <span className="text-[10px] font-semibold text-[#3525cd]">
                         {p.style}
                       </span>
                     </div>
                     <div className="text-xs text-[#565e74] font-medium">{p.role}</div>
-                    <p className="text-[11px] text-[#777587] mt-1 leading-relaxed">{p.desc}</p>
+                    <p className="text-[11px] text-[#565e74] mt-1 leading-relaxed">{p.desc}</p>
                   </button>
                 ))}
               </div>
@@ -677,11 +677,11 @@ export const InterviewSetupPage: React.FC = () => {
           {/* STEP 4: Candidate Resume & Target JD Context */}
           <section
             data-testid="setup-resume-upload-section"
-            className="bg-white rounded-xl p-6 border border-[#e2e8f0] shadow-sm space-y-4"
+            className="glass-panel rounded-2xl p-6 space-y-4"
           >
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div className="flex items-center gap-3">
-                <div className="w-7 h-7 rounded-lg bg-[#eff4ff] text-[#3525cd] flex items-center justify-center font-bold text-xs shrink-0">
+                <div className="w-7 h-7 rounded-lg glass-subcard text-[#3525cd] flex items-center justify-center font-bold text-xs shrink-0">
                   4
                 </div>
                 <div>
@@ -703,9 +703,9 @@ export const InterviewSetupPage: React.FC = () => {
               </button>
             </div>
 
-            <div className="p-4 rounded-xl bg-[#eff4ff]/70 border border-[#c7c4d8]/60 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="p-4 rounded-xl glass-subcard flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div className="flex items-center gap-3 min-w-0">
-                <div className="w-11 h-11 rounded-xl bg-white border border-[#e2e8f0] text-[#3525cd] flex items-center justify-center shrink-0 shadow-xs">
+                <div className="w-11 h-11 rounded-xl bg-white/90 border border-white text-[#3525cd] flex items-center justify-center shrink-0 shadow-xs">
                   {isUploadingResume ? <RefreshCw className="w-5 h-5 animate-spin" /> : <UploadCloud className="w-5 h-5" />}
                 </div>
                 <div className="min-w-0">
@@ -721,13 +721,13 @@ export const InterviewSetupPage: React.FC = () => {
                     </span>
                   </div>
                   <div className="text-[11px] text-[#565e74] mt-0.5 tabular-nums">
-                    {resumeAnalysis.fileSizeKb} KB • {resumeAnalysis.wordCount || 0} words • {activeSkills.length} detected skills •{' '}
+                    {resumeAnalysis.fileSizeKb} KB · {resumeAnalysis.wordCount || 0} words · {activeSkills.length} detected skills ·{' '}
                     {resumeAnalysis.matchAnalysis.overallMatchPercentage}% JD match
                   </div>
                 </div>
               </div>
 
-              <label className="cursor-pointer inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-[#4f46e5] hover:bg-[#3525cd] text-white text-xs font-semibold shadow-sm transition-all shrink-0 active:scale-95">
+              <label className="cursor-pointer inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl glass-btn-primary text-white text-xs font-semibold shrink-0 whitespace-nowrap">
                 <FileText className="w-3.5 h-3.5" />
                 <span>{isUploadingResume ? 'Analyzing Resume...' : 'Upload / Replace Resume'}</span>
                 <input
@@ -742,7 +742,7 @@ export const InterviewSetupPage: React.FC = () => {
             </div>
 
             {/* Compact ATS Readiness Bar */}
-            <div className="p-3.5 rounded-xl bg-[#f8f9ff] border border-[#e2e8f0] space-y-2">
+            <div className="p-3.5 rounded-xl glass-subcard space-y-2">
               <div className="flex items-center justify-between text-xs">
                 <span className="font-semibold text-[#0b1c30] flex items-center gap-1.5">
                   <Gauge className="w-4 h-4 text-[#3525cd]" />
@@ -752,7 +752,7 @@ export const InterviewSetupPage: React.FC = () => {
                   {atsScore}/100 — {atsBand.label}
                 </span>
               </div>
-              <div className="w-full h-2.5 bg-white rounded-full overflow-hidden border border-[#e2e8f0]">
+              <div className="w-full h-2.5 bg-white/80 rounded-full overflow-hidden border border-white">
                 <div
                   className={`h-full rounded-full transition-all duration-300 ${atsBand.barClass}`}
                   style={{ width: `${Math.max(4, atsScore)}%` }}
@@ -763,7 +763,7 @@ export const InterviewSetupPage: React.FC = () => {
                   {activeSkills.slice(0, 8).map((sk) => (
                     <span
                       key={sk}
-                      className="text-[11px] px-2 py-0.5 rounded bg-white border border-[#e2e8f0] text-[#464555] font-medium"
+                      className="text-[11px] px-2 py-0.5 rounded bg-white/85 border border-white text-[#464555] font-medium"
                     >
                       {sk}
                     </span>
@@ -778,7 +778,7 @@ export const InterviewSetupPage: React.FC = () => {
             </div>
 
             {showPasteResume && (
-              <div className="p-4 rounded-xl bg-[#f8f9ff] border border-[#c7d2fe] space-y-2.5">
+              <div className="p-4 rounded-xl glass-subcard space-y-2.5">
                 <label className="block text-xs font-semibold text-[#0b1c30]">
                   Paste Resume Content (Optional Alternative to File Upload)
                 </label>
@@ -787,13 +787,13 @@ export const InterviewSetupPage: React.FC = () => {
                   value={pastedResumeDraft}
                   onChange={(e) => setPastedResumeDraft(e.target.value)}
                   placeholder="Paste your experience, projects, SQL/DSA/OOPs skills, education..."
-                  className="w-full bg-white border border-[#e2e8f0] rounded-lg p-2.5 text-xs font-mono text-[#0b1c30] focus:outline-none focus:ring-2 focus:ring-[#4f46e5]"
+                  className="w-full glass-input rounded-xl p-2.5 text-xs font-mono text-[#0b1c30] outline-none"
                 />
                 <div className="flex justify-end gap-2">
                   <button
                     type="button"
                     onClick={() => setShowPasteResume(false)}
-                    className="px-3 py-1.5 rounded-lg text-xs font-semibold text-[#565e74] bg-white border border-[#e2e8f0]"
+                    className="px-3 py-1.5 rounded-lg text-xs font-semibold text-[#565e74] bg-white/80 border border-white"
                   >
                     Close
                   </button>
@@ -801,7 +801,7 @@ export const InterviewSetupPage: React.FC = () => {
                     type="button"
                     onClick={() => void handleAnalyzePastedSetupResume()}
                     disabled={isUploadingResume}
-                    className="px-4 py-1.5 rounded-lg text-xs font-semibold bg-[#4f46e5] text-white hover:bg-[#3525cd]"
+                    className="px-4 py-1.5 rounded-lg text-xs font-semibold glass-btn-primary text-white"
                   >
                     Save Resume Text
                   </button>
@@ -817,7 +817,7 @@ export const InterviewSetupPage: React.FC = () => {
               >
                 {showJdEditor ? 'Hide Target Job Description' : 'Customize Target Job Description'}
               </button>
-              <span className="text-[11px] text-[#777587]">PDF, DOCX, DOC, TXT supported</span>
+              <span className="text-[11px] text-[#565e74]">PDF, DOCX, DOC, TXT supported</span>
             </div>
 
             {showJdEditor && (
@@ -830,7 +830,7 @@ export const InterviewSetupPage: React.FC = () => {
                     setJobDescriptionText(e.target.value);
                   }}
                   placeholder="Paste target Job Description..."
-                  className="w-full bg-[#f8f9ff] border border-[#e2e8f0] rounded-lg p-3 text-xs font-mono text-[#0b1c30] focus:outline-none focus:ring-2 focus:ring-[#4f46e5]"
+                  className="w-full glass-input rounded-xl p-3 text-xs font-mono text-[#0b1c30] outline-none"
                 />
               </div>
             )}
@@ -839,8 +839,8 @@ export const InterviewSetupPage: React.FC = () => {
 
         {/* Right Column: Launch Enclave Summary */}
         <div className="lg:col-span-4 flex flex-col gap-6 sticky top-20 text-left">
-          <div className="bg-white rounded-xl border border-[#e2e8f0] shadow-sm p-6 flex flex-col gap-5">
-            <div className="pb-3 border-b border-[#e2e8f0]">
+          <div className="glass-panel-elevated rounded-2xl p-6 flex flex-col gap-5">
+            <div className="pb-3 border-b border-slate-200/70">
               <span className="text-[11px] font-bold uppercase tracking-wider text-[#3525cd]">
                 Session Specifications
               </span>
@@ -850,45 +850,45 @@ export const InterviewSetupPage: React.FC = () => {
             </div>
 
             <div className="space-y-3 text-xs">
-              <div className="flex justify-between py-1 border-b border-[#f1f5f9] gap-2">
+              <div className="flex justify-between py-1 border-b border-slate-200/60 gap-2">
                 <span className="text-[#565e74]">Target Role</span>
                 <span data-testid="summary-target-role" className="font-semibold text-[#0b1c30] text-right">
                   {effectiveRoleLabel}
                 </span>
               </div>
 
-              <div className="flex justify-between py-1 border-b border-[#f1f5f9] gap-2">
+              <div className="flex justify-between py-1 border-b border-slate-200/60 gap-2">
                 <span className="text-[#565e74]">Target Company</span>
                 <span data-testid="summary-target-company" className="font-semibold text-[#0b1c30]">
                   {effectiveCompanyLabel}
                 </span>
               </div>
 
-              <div className="flex justify-between py-1 border-b border-[#f1f5f9] gap-2">
+              <div className="flex justify-between py-1 border-b border-slate-200/60 gap-2">
                 <span className="text-[#565e74]">Interview Type</span>
                 <span data-testid="summary-interview-type" className="font-semibold text-[#3525cd] text-right">
                   {INTERVIEW_TYPE_LABELS[interviewType]}
                 </span>
               </div>
 
-              <div className="flex justify-between py-1 border-b border-[#f1f5f9]">
+              <div className="flex justify-between py-1 border-b border-slate-200/60">
                 <span className="text-[#565e74]">Seniority Bar</span>
                 <span className="font-semibold text-[#0b1c30] capitalize">{difficulty.replace('-', ' ')}</span>
               </div>
 
-              <div className="flex justify-between py-1 border-b border-[#f1f5f9]">
+              <div className="flex justify-between py-1 border-b border-slate-200/60">
                 <span className="text-[#565e74]">Session Format</span>
                 <span className="font-semibold text-[#0b1c30] tabular-nums">
-                  {durationMinutes} mins • {questionCount} Topics
+                  {durationMinutes} mins · {questionCount} Topics
                 </span>
               </div>
 
-              <div className="flex justify-between py-1 border-b border-[#f1f5f9] gap-2">
+              <div className="flex justify-between py-1 border-b border-slate-200/60 gap-2">
                 <span className="text-[#565e74]">Uploaded Resume</span>
                 <span className="font-semibold text-[#0b1c30] truncate max-w-[170px]">{resumeAnalysis.fileName}</span>
               </div>
 
-              <div className="flex justify-between py-1 border-b border-[#f1f5f9]">
+              <div className="flex justify-between py-1 border-b border-slate-200/60">
                 <span className="text-[#565e74]">Resume ATS Score</span>
                 <span className={`font-bold tabular-nums ${atsBand.textClass}`}>{atsScore}/100</span>
               </div>
@@ -901,7 +901,7 @@ export const InterviewSetupPage: React.FC = () => {
               </div>
             </div>
 
-            <div className="p-3 bg-[#eff4ff] rounded-lg border border-[#c7c4d8]/40 text-xs text-[#565e74] flex items-start gap-2">
+            <div className="p-3 glass-subcard rounded-xl text-xs text-[#464555] flex items-start gap-2">
               <ShieldCheck className="w-4 h-4 text-[#3525cd] shrink-0 mt-0.5" />
               <span>
                 When you start the live room, {aiPersona} reviews your <strong>{effectiveRoleLabel}</strong> track,{' '}
@@ -914,7 +914,7 @@ export const InterviewSetupPage: React.FC = () => {
                 type="button"
                 data-testid="launch-interview-btn"
                 onClick={handleLaunchSession}
-                className="w-full py-3.5 rounded-xl bg-[#4f46e5] hover:bg-[#3525cd] text-white font-semibold text-sm transition-all shadow-md flex items-center justify-center gap-2 active:scale-95"
+                className="w-full py-3.5 rounded-xl glass-btn-primary text-white font-semibold text-sm flex items-center justify-center gap-2 whitespace-nowrap"
               >
                 <Play className="w-4 h-4 fill-current" />
                 <span>Launch Live Mock Room</span>
@@ -923,7 +923,7 @@ export const InterviewSetupPage: React.FC = () => {
               <button
                 type="button"
                 onClick={handleResetDefaults}
-                className="w-full py-2 rounded-lg bg-white hover:bg-[#f8f9ff] text-[#565e74] text-xs font-semibold transition-colors flex items-center justify-center gap-1.5 border border-[#e2e8f0]"
+                className="w-full py-2 rounded-xl glass-subcard hover:bg-white text-[#464555] text-xs font-semibold transition-all flex items-center justify-center gap-1.5 whitespace-nowrap"
               >
                 <RotateCcw className="w-3.5 h-3.5" />
                 <span>Reset Setup Defaults</span>

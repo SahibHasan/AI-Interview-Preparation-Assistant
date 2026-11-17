@@ -27,7 +27,7 @@ import { ProfileSettingsPage } from './pages/ProfileSettingsPage';
 
 export default function App() {
   return (
-    <MotionConfig reducedMotion="user">
+    <MotionConfig reducedMotion="never">
       <AuthProvider>
         <AppProvider>
           <ToastProvider>

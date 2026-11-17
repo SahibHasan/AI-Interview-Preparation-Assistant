@@ -121,8 +121,8 @@ export const OAuthAccountModal: React.FC<OAuthAccountModalProps> = ({
       aria-modal="true"
       aria-labelledby="oauth-modal-title"
     >
-      <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl border border-[#e2e8f0] text-left">
-        <div className="flex items-center justify-between pb-3 border-b border-[#e2e8f0] mb-4">
+      <div className="glass-panel-elevated rounded-2xl max-w-md w-full p-6 text-left">
+        <div className="flex items-center justify-between pb-3 border-b border-slate-200/70 mb-4">
           <div className="flex items-center gap-2.5">
             {isGoogle ? (
               <svg className="w-5 h-5" viewBox="0 0 24 24">
@@ -158,7 +158,7 @@ export const OAuthAccountModal: React.FC<OAuthAccountModalProps> = ({
         </p>
 
         {formError && (
-          <div className="mb-3 p-2.5 rounded-lg bg-red-50 border border-red-200 text-red-700 text-xs">
+          <div className="mb-3 p-2.5 rounded-lg bg-red-50/90 border border-red-200 text-red-700 text-xs">
             {formError}
           </div>
         )}
@@ -171,10 +171,10 @@ export const OAuthAccountModal: React.FC<OAuthAccountModalProps> = ({
                 type="button"
                 disabled={loading}
                 onClick={() => void onConfirm({ email: acct.email, name: acct.name })}
-                className="w-full p-3 rounded-xl bg-[#f8f9ff] hover:bg-[#eff4ff] border border-[#e2e8f0] hover:border-[#4f46e5]/40 flex items-center justify-between gap-3 text-left transition-colors"
+                className="w-full p-3 rounded-xl glass-subcard hover:border-[#4f46e5]/50 flex items-center justify-between gap-3 text-left transition-all"
               >
                 <div className="flex items-center gap-3 min-w-0">
-                  <div className="w-9 h-9 rounded-full bg-[#4f46e5] text-white font-bold text-xs flex items-center justify-center shrink-0">
+                  <div className="w-9 h-9 rounded-full glass-btn-primary text-white font-bold text-xs flex items-center justify-center shrink-0">
                     {(acct.name || acct.email).slice(0, 2).toUpperCase()}
                   </div>
                   <div className="min-w-0">
@@ -189,7 +189,7 @@ export const OAuthAccountModal: React.FC<OAuthAccountModalProps> = ({
             <button
               type="button"
               onClick={() => setShowCustomForm(true)}
-              className="w-full p-2.5 rounded-xl border border-dashed border-[#c7d2fe] hover:bg-[#eff4ff] text-xs font-semibold text-[#3525cd] flex items-center justify-center gap-1.5 transition-colors mt-2"
+              className="w-full p-2.5 rounded-xl border border-dashed border-[#c7d2fe] hover:bg-white/70 text-xs font-semibold text-[#3525cd] flex items-center justify-center gap-1.5 transition-colors mt-2"
             >
               <Plus className="w-3.5 h-3.5" />
               <span>Use another {providerTitle} account</span>
@@ -211,7 +211,7 @@ export const OAuthAccountModal: React.FC<OAuthAccountModalProps> = ({
                   value={emailInput}
                   onChange={(e) => setEmailInput(e.target.value)}
                   placeholder={isGoogle ? 'you@gmail.com' : 'you@example.com or github-handle'}
-                  className="w-full bg-[#eff4ff] text-[#0b1c30] placeholder:text-[#777587] text-sm pl-9 pr-3 py-2.5 rounded-lg border border-[#c7c4d8]/50 focus:outline-none focus:bg-white focus:ring-2 focus:ring-[#4f46e5]"
+                  className="w-full glass-input text-[#0b1c30] placeholder:text-[#777587] text-sm pl-9 pr-3 py-2.5 rounded-xl focus:outline-none"
                 />
               </div>
             </div>
@@ -229,7 +229,7 @@ export const OAuthAccountModal: React.FC<OAuthAccountModalProps> = ({
                   value={nameInput}
                   onChange={(e) => setNameInput(e.target.value)}
                   placeholder="Your full name"
-                  className="w-full bg-[#eff4ff] text-[#0b1c30] placeholder:text-[#777587] text-sm pl-9 pr-3 py-2.5 rounded-lg border border-[#c7c4d8]/50 focus:outline-none focus:bg-white focus:ring-2 focus:ring-[#4f46e5]"
+                  className="w-full glass-input text-[#0b1c30] placeholder:text-[#777587] text-sm pl-9 pr-3 py-2.5 rounded-xl focus:outline-none"
                 />
               </div>
             </div>

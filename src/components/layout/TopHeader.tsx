@@ -135,12 +135,12 @@ export const TopHeader: React.FC<TopHeaderProps> = ({ onToggleMobileMenu }) => {
   };
 
   return (
-    <header className="sticky top-0 z-30 h-16 bg-[#f8f9ff]/95 backdrop-blur-sm border-b border-[#e2e8f0] flex items-center justify-between px-4 sm:px-6 shadow-[0_1px_4px_rgba(15,23,42,0.03)] select-none">
+    <header className="sticky top-0 z-30 h-16 glass-nav flex items-center justify-between px-4 sm:px-6 select-none">
       {/* Left: Mobile Toggle + Breadcrumb */}
       <div className="flex items-center gap-3">
         <button
           onClick={onToggleMobileMenu}
-          className="lg:hidden p-1.5 rounded-lg text-[#565e74] hover:bg-[#e5eeff] transition-colors focus-visible:ring-2 focus-visible:ring-[#4f46e5] focus-visible:outline-none"
+          className="lg:hidden p-1.5 rounded-lg text-[#565e74] hover:bg-white/70 transition-colors focus-visible:ring-2 focus-visible:ring-[#4f46e5] focus-visible:outline-none"
           aria-label="Open navigation menu"
         >
           <Menu className="w-5 h-5" />
@@ -160,18 +160,18 @@ export const TopHeader: React.FC<TopHeaderProps> = ({ onToggleMobileMenu }) => {
         </div>
       </div>
 
-      {/* Right: Quick Action, Target Badge, Notifications, User */}
+      {/* Right: Quick Action, Target Indicator, Notifications, User */}
       <div className="flex items-center gap-2 sm:gap-3 shrink-0">
         {/* Target role indicator (hidden on small screens) */}
         <Link
           to="/interview-setup"
           data-testid="header-target-role-badge"
-          className="hidden xl:flex items-center gap-1.5 px-3 py-1 rounded-lg bg-[#e5eeff] text-[#3525cd] text-xs font-semibold hover:bg-[#dce9ff] transition-colors"
+          className="hidden xl:flex items-center gap-1.5 px-3 py-1.5 rounded-xl glass-pill-bar text-[#3525cd] text-xs font-semibold hover:bg-white/90 transition-all whitespace-nowrap"
           title="Click to adjust target role & interview setup"
         >
-          <Sparkles className="w-3.5 h-3.5" />
+          <Sparkles className="w-3.5 h-3.5 shrink-0" />
           <span>
-            {interviewSetup.targetCompany || user?.targetCompany || 'Stripe'} •{' '}
+            {interviewSetup.targetCompany || user?.targetCompany || 'Stripe'} ·{' '}
             {interviewSetup.targetRole || user?.targetRole || 'Software Developer'}
           </span>
         </Link>
@@ -179,7 +179,7 @@ export const TopHeader: React.FC<TopHeaderProps> = ({ onToggleMobileMenu }) => {
         {/* Start Mock Interview Button */}
         <Link
           to="/interview-setup"
-          className="flex items-center gap-1.5 bg-[#4f46e5] hover:bg-[#3525cd] text-white px-3 sm:px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all shadow-sm active:scale-95 whitespace-nowrap shrink-0 focus-visible:ring-2 focus-visible:ring-[#4f46e5] focus-visible:outline-none"
+          className="flex items-center gap-1.5 glass-btn-primary text-white px-3.5 sm:px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap shrink-0 focus-visible:ring-2 focus-visible:ring-[#4f46e5] focus-visible:outline-none"
         >
           <Play className="w-3.5 h-3.5 fill-current shrink-0" />
           <span className="hidden sm:inline">Start Mock Interview</span>
@@ -195,12 +195,12 @@ export const TopHeader: React.FC<TopHeaderProps> = ({ onToggleMobileMenu }) => {
               setNotificationsOpen((prev) => !prev);
               setProfileMenuOpen(false);
             }}
-            className="relative p-1.5 text-[#565e74] hover:text-[#0b1c30] hover:bg-[#e5eeff] rounded-full transition-colors focus-visible:ring-2 focus-visible:ring-[#4f46e5] focus-visible:outline-none"
+            className="relative p-2 text-[#565e74] hover:text-[#0b1c30] hover:bg-white/75 rounded-full transition-colors focus-visible:ring-2 focus-visible:ring-[#4f46e5] focus-visible:outline-none"
             aria-label={`View notifications (${unreadCount} unread)`}
           >
             <Bell className="w-4 h-4" />
             {unreadCount > 0 && (
-              <span className="absolute top-1 right-1 w-2 h-2 bg-[#3525cd] rounded-full ring-2 ring-white" />
+              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-[#3525cd] rounded-full ring-2 ring-white" />
             )}
           </button>
 
@@ -208,11 +208,11 @@ export const TopHeader: React.FC<TopHeaderProps> = ({ onToggleMobileMenu }) => {
           <AnimatePresence>
             {notificationsOpen && (
               <motion.div
-                initial={{ opacity: 0, y: 6, scale: 0.97 }}
+                initial={{ opacity: 0, y: 8, scale: 0.97 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: 4, scale: 0.97 }}
-                transition={{ duration: 0.14 }}
-                className="absolute right-0 mt-2 w-80 sm:w-96 bg-white rounded-xl shadow-xl border border-[#e2e8f0] p-4 text-left z-50"
+                transition={{ duration: 0.16, ease: [0.16, 1, 0.3, 1] }}
+                className="absolute right-0 mt-2 w-80 sm:w-96 glass-panel-elevated rounded-2xl p-4 text-left z-50"
               >
                 <div className="flex items-center justify-between pb-3 border-b border-[#e2e8f0]">
                   <div className="flex items-center gap-2">
@@ -302,11 +302,11 @@ export const TopHeader: React.FC<TopHeaderProps> = ({ onToggleMobileMenu }) => {
           <AnimatePresence>
             {profileMenuOpen && (
               <motion.div
-                initial={{ opacity: 0, y: 6, scale: 0.97 }}
+                initial={{ opacity: 0, y: 8, scale: 0.97 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: 4, scale: 0.97 }}
-                transition={{ duration: 0.14 }}
-                className="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-xl border border-[#e2e8f0] p-2 text-left z-50"
+                transition={{ duration: 0.16, ease: [0.16, 1, 0.3, 1] }}
+                className="absolute right-0 mt-2 w-56 glass-panel-elevated rounded-2xl p-2 text-left z-50"
               >
                 <div className="px-3 py-2 border-b border-[#f1f5f9]">
                   <div className="text-xs font-bold text-[#0b1c30] truncate">{user?.name || 'Candidate'}</div>

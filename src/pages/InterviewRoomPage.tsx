@@ -605,9 +605,11 @@ export const InterviewRoomPage: React.FC = () => {
   return (
     <div className="flex flex-col w-full gap-5 pb-12 antialiased">
       {/* Top Session Header */}
-      <div className="bg-white border border-[#e2e8f0] shadow-sm rounded-xl px-5 py-4 flex flex-col xl:flex-row xl:items-center justify-between gap-4">
+      <div className="glass-panel-elevated rounded-2xl px-5 py-4 flex flex-col xl:flex-row xl:items-center justify-between gap-4">
         <div className="flex items-center gap-3.5 min-w-0 flex-1">
-          <div className="w-2.5 h-2.5 rounded-full bg-[#4f46e5] shrink-0" />
+          <div className="w-9 h-9 rounded-xl glass-subcard flex items-center justify-center text-[#3525cd] shrink-0">
+            <AudioLines className="w-4 h-4" />
+          </div>
           <div className="min-w-0 text-left">
             <div className="flex items-center gap-2 text-xs text-[#565e74] flex-wrap">
               <span className="font-bold text-[#3525cd] uppercase tracking-wider">
@@ -639,9 +641,9 @@ export const InterviewRoomPage: React.FC = () => {
             </span>
             <span className="text-[#777587]">({Math.min(100, progressPercent)}%)</span>
           </div>
-          <div className="w-40 bg-[#e5eeff] h-2 rounded-full overflow-hidden">
+          <div className="w-40 bg-[#e5eeff]/80 h-2 rounded-full overflow-hidden border border-white/70">
             <motion.div
-              className="bg-[#4f46e5] h-full rounded-full"
+              className="bg-gradient-to-r from-[#4f46e5] to-[#0ea5e9] h-full rounded-full"
               initial={{ width: '0%' }}
               animate={{ width: `${Math.max(8, Math.min(100, progressPercent))}%` }}
               transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
@@ -665,7 +667,7 @@ export const InterviewRoomPage: React.FC = () => {
           <button
             type="button"
             onClick={() => setEndModalOpen(true)}
-            className="bg-[#ffdad6] text-[#93000a] hover:bg-[#ba1a1a] hover:text-white px-3.5 py-2 rounded-lg text-xs font-semibold transition-colors flex items-center gap-1.5 shadow-sm active:scale-95"
+            className="bg-[#ffdad6]/90 backdrop-blur-sm text-[#93000a] hover:bg-[#ba1a1a] hover:text-white px-3.5 py-2 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 shadow-xs active:scale-95 whitespace-nowrap"
           >
             <LogOut className="w-3.5 h-3.5" />
             <span>End Interview</span>
@@ -678,13 +680,21 @@ export const InterviewRoomPage: React.FC = () => {
         {/* LEFT PANEL (5 cols): AI Voice Stage, Planned Topic Order & Rubric */}
         <div className="lg:col-span-5 flex flex-col gap-5">
           {/* AI Voice Stage Card */}
-          <div className="bg-white rounded-xl p-5 border border-[#e2e8f0] shadow-sm relative overflow-hidden text-left">
+          <div className="glass-panel-elevated rounded-2xl p-5 relative overflow-hidden text-left">
             <div className="flex items-start justify-between gap-3 mb-4">
-              <div className="flex items-center gap-3 min-w-0">
+              <div className="flex items-center gap-3.5 min-w-0">
                 <div className="relative shrink-0">
+                  {isSpeaking && (
+                    <motion.span
+                      aria-hidden="true"
+                      animate={{ scale: [1, 1.24, 1], opacity: [0.45, 0.12, 0.45] }}
+                      transition={{ duration: 1.6, repeat: Infinity, ease: 'easeInOut' }}
+                      className="absolute -inset-1.5 rounded-full bg-indigo-400/40 blur-[2px]"
+                    />
+                  )}
                   <div
-                    className={`w-14 h-14 rounded-full bg-gradient-to-br from-[#4f46e5] to-[#3525cd] text-white flex items-center justify-center font-heading text-lg font-bold shadow-sm transition-transform duration-300 ${
-                      isSpeaking ? 'scale-105 ring-4 ring-[#4f46e5]/25' : 'ring-2 ring-[#e5eeff]'
+                    className={`relative w-14 h-14 rounded-full glass-btn-primary text-white flex items-center justify-center font-heading text-lg font-bold shadow-md transition-transform duration-300 ${
+                      isSpeaking ? 'scale-105 ring-4 ring-white/80' : 'ring-2 ring-white/90'
                     }`}
                   >
                     {interviewSetup.aiPersona
@@ -695,7 +705,7 @@ export const InterviewRoomPage: React.FC = () => {
                   </div>
                   <span
                     className={`absolute bottom-0 right-0 w-3.5 h-3.5 rounded-full ring-2 ring-white ${
-                      isSpeaking ? 'bg-emerald-500 animate-pulse' : 'bg-[#4f46e5]'
+                      isSpeaking ? 'bg-emerald-500' : 'bg-[#4f46e5]'
                     }`}
                   />
                 </div>
@@ -706,7 +716,7 @@ export const InterviewRoomPage: React.FC = () => {
                   <p className="text-xs text-[#565e74] truncate">
                     {getVoiceToneLabel(interviewSetup.aiPersona, selectedVoice)}
                   </p>
-                  <p className="text-[11px] text-[#3525cd] font-medium truncate mt-0.5">
+                  <p className="text-[11px] text-[#3525cd] font-semibold truncate mt-0.5">
                     {voiceProvider === 'kokoro-neural-tts'
                       ? 'Human Neural Voice Agent · Kokoro-82M Studio'
                       : voiceProvider === 'edge-neural-tts'
@@ -722,10 +732,10 @@ export const InterviewRoomPage: React.FC = () => {
                 type="button"
                 onClick={handleToggleMuteVoice}
                 aria-label={voiceMuted ? 'Unmute AI interviewer voice' : 'Mute AI interviewer voice'}
-                className={`p-2 rounded-lg border text-xs font-semibold transition-colors shrink-0 ${
+                className={`p-2 rounded-xl border text-xs font-semibold transition-all shrink-0 ${
                   voiceMuted
-                    ? 'bg-red-50 text-red-700 border-red-200'
-                    : 'bg-[#f8f9ff] text-[#3525cd] border-[#e2e8f0] hover:bg-[#eff4ff]'
+                    ? 'bg-red-50/90 text-red-700 border-red-200'
+                    : 'glass-subcard text-[#3525cd] hover:bg-white'
                 }`}
                 title={voiceMuted ? 'Unmute AI Voice' : 'Mute AI Voice'}
               >
@@ -734,7 +744,7 @@ export const InterviewRoomPage: React.FC = () => {
             </div>
 
             {/* Acoustic Voice Monitor & Waveform */}
-            <div className="bg-[#f8f9ff] rounded-xl p-3.5 border border-[#e2e8f0] flex flex-col gap-2">
+            <div className="glass-subcard rounded-xl p-3.5 flex flex-col gap-2">
               <div className="flex items-center justify-between text-xs text-[#565e74]">
                 <span className="flex items-center gap-1.5 font-medium text-[#0b1c30]">
                   <AudioLines
@@ -793,7 +803,7 @@ export const InterviewRoomPage: React.FC = () => {
                   id="room-voice-picker"
                   value={selectedVoice}
                   onChange={(e) => handleVoiceChange(e.target.value as any)}
-                  className="bg-[#f8f9ff] border border-[#e2e8f0] rounded-lg px-2 py-1 text-[11px] font-semibold text-[#0b1c30] focus:outline-none focus:ring-2 focus:ring-[#4f46e5]"
+                  className="glass-input rounded-lg px-2 py-1 text-[11px] font-semibold text-[#0b1c30] outline-none"
                 >
                   {INTERVIEWER_VOICE_OPTIONS.map((v) => (
                     <option key={v.id} value={v.id}>
@@ -808,7 +818,7 @@ export const InterviewRoomPage: React.FC = () => {
                   <button
                     type="button"
                     onClick={replayLastSpeech}
-                    className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-[#4f46e5] text-white hover:bg-[#3525cd] transition-colors shadow-sm"
+                    className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl text-xs font-semibold glass-btn-primary text-white whitespace-nowrap"
                   >
                     <Play className="w-3 h-3 fill-current" />
                     <span>Play AI Voice</span>
@@ -818,7 +828,7 @@ export const InterviewRoomPage: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => (isSpeaking ? stopSpeaking() : replayLastSpeech())}
-                    className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-semibold text-[#4f46e5] hover:bg-[#eff4ff] border border-[#c7d2fe] transition-colors"
+                    className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl text-xs font-semibold text-[#4f46e5] glass-subcard hover:bg-white transition-all whitespace-nowrap"
                   >
                     {isSpeaking ? <VolumeX className="w-3.5 h-3.5 text-red-600" /> : <Volume2 className="w-3.5 h-3.5" />}
                     <span>{isSpeaking ? 'Pause Voice' : 'Replay Prompt'}</span>
@@ -831,7 +841,7 @@ export const InterviewRoomPage: React.FC = () => {
           {/* PINNED CLICK-TO-SPEAK CONTROLS — Placed directly below AI Voice Box for instant Android/Mobile tap */}
           <div
             data-testid="pinned-speak-controls"
-            className="bg-white rounded-xl p-4 sm:p-5 border border-[#c7d2fe] shadow-sm text-left space-y-3"
+            className="glass-panel-elevated rounded-2xl p-4 sm:p-5 border border-[#4f46e5]/35 text-left space-y-3"
           >
             {micError && (
               <div className="p-3 rounded-lg bg-amber-50 border border-amber-200 text-amber-900 text-xs flex items-center justify-between gap-2">
@@ -865,10 +875,10 @@ export const InterviewRoomPage: React.FC = () => {
                     type="button"
                     onClick={handleToggleMicrophone}
                     disabled={isProcessingTurn}
-                    className={`inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all border ${
+                    className={`inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all border whitespace-nowrap ${
                       isListening
-                        ? 'bg-red-600 text-white border-red-700 shadow-sm'
-                        : 'bg-[#eff4ff] text-[#3525cd] border-[#c7d2fe] hover:bg-[#e5eeff]'
+                        ? 'bg-red-600 text-white border-red-700 shadow-md'
+                        : 'glass-subcard text-[#3525cd] hover:bg-white'
                     }`}
                   >
                     {isListening ? <MicOff className="w-4 h-4 animate-pulse" /> : <Mic className="w-4 h-4" />}
@@ -879,7 +889,7 @@ export const InterviewRoomPage: React.FC = () => {
                     type="button"
                     onClick={() => beginInterviewWithFirstQuestion("Yes, I'm ready to begin.")}
                     disabled={isProcessingTurn}
-                    className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold bg-[#4f46e5] hover:bg-[#3525cd] text-white shadow-sm transition-all active:scale-95"
+                    className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold glass-btn-primary text-white whitespace-nowrap"
                   >
                     <Sparkles className="w-4 h-4" />
                     <span>I&apos;m Ready — Start Interview</span>
@@ -894,7 +904,7 @@ export const InterviewRoomPage: React.FC = () => {
                   <span className="text-xs font-bold text-[#0b1c30]">
                     Your Verbal Response
                   </span>
-                  <span className="text-[11px] font-medium text-[#565e74]">
+                  <span className="text-[11px] font-medium text-[#565e74] tabular-nums">
                     Topic {Math.min(activeQuestionIndex + 1, totalTopics)} of {totalTopics}
                   </span>
                 </div>
@@ -903,10 +913,10 @@ export const InterviewRoomPage: React.FC = () => {
                   type="button"
                   onClick={handleToggleMicrophone}
                   disabled={isProcessingTurn || isTranscribingAudio}
-                  className={`w-full inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl text-xs sm:text-sm font-semibold transition-all shadow-sm active:scale-95 disabled:opacity-60 ${
+                  className={`w-full inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl text-xs sm:text-sm font-semibold transition-all shadow-md active:scale-95 disabled:opacity-60 ${
                     isListening
                       ? 'bg-red-600 hover:bg-red-700 text-white'
-                      : 'bg-[#4f46e5] hover:bg-[#3525cd] text-white'
+                      : 'glass-btn-primary text-white'
                   }`}
                 >
                   {isProcessingTurn || isTranscribingAudio ? (
@@ -969,26 +979,26 @@ export const InterviewRoomPage: React.FC = () => {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -4 }}
                 transition={{ duration: 0.14 }}
-                className="bg-white rounded-xl p-5 border border-[#e2e8f0] shadow-sm text-left space-y-3"
+                className="glass-panel rounded-2xl p-5 text-left space-y-3"
               >
                 <div className="flex items-center justify-between text-xs">
                   <span className="font-bold text-[#3525cd]">
                     {currentTopic?.title || currentQuestion.category} · {currentQuestion.difficulty}
                   </span>
-                  <span className="text-[#777587] font-mono tabular-nums">
+                  <span className="text-[#565e74] font-mono tabular-nums">
                     Q{activeQuestionIndex + 1}
                   </span>
                 </div>
 
                 {currentQuestion.contextOrConstraint && (
-                  <p className="text-xs text-[#464555] bg-[#f8f9ff] p-3 rounded-lg border border-[#e2e8f0] leading-relaxed">
+                  <p className="text-xs text-[#464555] glass-subcard p-3 rounded-xl leading-relaxed">
                     <strong className="text-[#0b1c30]">Scenario Scope: </strong>
                     {currentQuestion.contextOrConstraint}
                   </p>
                 )}
 
                 {currentQuestion.assessmentRule && (
-                  <p className="text-[11px] text-[#3525cd] bg-[#eff4ff] p-2.5 rounded-lg border border-[#c7d2fe] leading-relaxed">
+                  <p className="text-[11px] text-[#3525cd] bg-white/75 p-2.5 rounded-xl border border-[#c7d2fe] leading-relaxed">
                     <strong className="text-[#0b1c30]">Assessment Rule: </strong>
                     {currentQuestion.assessmentRule}
                   </p>
@@ -1001,7 +1011,7 @@ export const InterviewRoomPage: React.FC = () => {
                   {currentQuestion.evaluationRubric.map((r, i) => (
                     <div
                       key={i}
-                      className="flex items-center justify-between text-xs py-1 px-2.5 rounded bg-[#f8f9ff]"
+                      className="flex items-center justify-between text-xs py-1.5 px-2.5 rounded-lg glass-subcard"
                     >
                       <span className="text-[#0b1c30] font-medium">{r.criterion}</span>
                       <span className="text-[#3525cd] font-bold tabular-nums">{r.weight}%</span>
@@ -1015,9 +1025,9 @@ export const InterviewRoomPage: React.FC = () => {
 
         {/* RIGHT PANEL (7 cols): Fixed-Height Scrollable Transcript Window + Planned Topic Order */}
         <div className="lg:col-span-7 flex flex-col gap-5">
-          <div className="bg-white rounded-xl border border-[#e2e8f0] shadow-sm flex flex-col overflow-hidden text-left">
+          <div className="glass-panel-elevated rounded-2xl flex flex-col overflow-hidden text-left">
             {/* Transcript Window Header Bar with Top / Bottom Scroll Controls */}
-            <div className="px-5 py-3.5 border-b border-[#e2e8f0] bg-[#f8f9ff] flex flex-wrap items-center justify-between gap-3">
+            <div className="px-5 py-3.5 border-b border-white/75 bg-white/50 backdrop-blur-md flex flex-wrap items-center justify-between gap-3">
               <div className="flex items-center gap-2">
                 <MessageSquare className="w-4 h-4 text-[#3525cd]" />
                 <div>
@@ -1035,7 +1045,7 @@ export const InterviewRoomPage: React.FC = () => {
                   type="button"
                   onClick={scrollTranscriptToTop}
                   aria-label="Scroll transcript to top"
-                  className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-white hover:bg-[#eff4ff] text-[#0b1c30] text-[11px] font-semibold border border-[#e2e8f0] transition-colors shadow-xs"
+                  className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg glass-subcard hover:bg-white text-[#0b1c30] text-[11px] font-semibold transition-all whitespace-nowrap"
                 >
                   <ArrowUp className="w-3 h-3 text-[#3525cd]" />
                   <span>Top</span>
@@ -1044,7 +1054,7 @@ export const InterviewRoomPage: React.FC = () => {
                   type="button"
                   onClick={scrollTranscriptToBottom}
                   aria-label="Scroll transcript to bottom"
-                  className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-white hover:bg-[#eff4ff] text-[#0b1c30] text-[11px] font-semibold border border-[#e2e8f0] transition-colors shadow-xs"
+                  className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg glass-subcard hover:bg-white text-[#0b1c30] text-[11px] font-semibold transition-all whitespace-nowrap"
                 >
                   <ArrowDown className="w-3 h-3 text-[#3525cd]" />
                   <span>Bottom</span>
@@ -1056,7 +1066,7 @@ export const InterviewRoomPage: React.FC = () => {
             <div
               ref={transcriptViewportRef}
               data-testid="interview-transcript-window"
-              className="h-[360px] sm:h-[400px] overflow-y-auto custom-scrollbar px-5 py-4 space-y-3.5 bg-[#fcfdff]"
+              className="h-[360px] sm:h-[400px] overflow-y-auto custom-scrollbar px-5 py-4 space-y-3.5 bg-white/30"
             >
               {phase === 'planning' && transcript.length === 0 ? (
                 <div className="h-full flex flex-col items-center justify-center text-center gap-3 text-[#565e74]">
@@ -1098,10 +1108,10 @@ export const InterviewRoomPage: React.FC = () => {
                         </div>
 
                         <div
-                          className={`max-w-[90%] rounded-xl px-4 py-3 text-xs sm:text-[13px] leading-relaxed shadow-xs border ${
+                          className={`max-w-[90%] rounded-2xl px-4 py-3 text-xs sm:text-[13px] leading-relaxed shadow-xs border ${
                             isAi
-                              ? 'bg-white border-[#e2e8f0] text-[#0b1c30]'
-                              : 'bg-[#4f46e5] border-[#3525cd] text-white'
+                              ? 'bg-white/80 backdrop-blur-md border-white/90 text-[#0b1c30]'
+                              : 'glass-btn-primary border-[#3525cd]/40 text-white'
                           }`}
                         >
                           {item.topicTitle && isAi && (
@@ -1122,7 +1132,7 @@ export const InterviewRoomPage: React.FC = () => {
                         <Radio className="w-3 h-3 animate-pulse" />
                         <span>Capturing live voice...</span>
                       </div>
-                      <div className="max-w-[90%] rounded-xl px-4 py-3 text-xs sm:text-[13px] leading-relaxed bg-[#eff4ff] border border-[#4f46e5]/40 text-[#0b1c30]">
+                      <div className="max-w-[90%] rounded-2xl px-4 py-3 text-xs sm:text-[13px] leading-relaxed glass-subcard border-[#4f46e5]/40 text-[#0b1c30]">
                         {liveSpeechDraft || 'Speak naturally into your microphone...'}
                       </div>
                     </div>
@@ -1132,11 +1142,11 @@ export const InterviewRoomPage: React.FC = () => {
             </div>
 
             {/* Transcript Footer Status Strip */}
-            <div className="px-5 py-3 border-t border-[#e2e8f0] bg-[#f8f9ff] flex flex-wrap items-center justify-between gap-2 text-[11px] text-[#565e74]">
+            <div className="px-5 py-3 border-t border-white/75 bg-white/45 flex flex-wrap items-center justify-between gap-2 text-[11px] text-[#464555]">
               <span>
                 Use the <strong className="text-[#0b1c30]">Speak</strong> button right under the AI interviewer voice card to reply.
               </span>
-              <span className="font-mono text-[#3525cd] font-semibold">
+              <span className="font-mono text-[#3525cd] font-semibold tabular-nums">
                 {transcript.filter((t) => t.speaker === 'candidate' && t.kind === 'response').length} spoken replies recorded
               </span>
             </div>
@@ -1145,9 +1155,9 @@ export const InterviewRoomPage: React.FC = () => {
           {/* Planned Interview Topic Order Card (Built live on session start from Job Role + JD + Resume) */}
           <div
             data-testid="planned-topic-order-card"
-            className="bg-white rounded-xl p-5 border border-[#e2e8f0] shadow-sm text-left"
+            className="glass-panel rounded-2xl p-5 text-left"
           >
-            <div className="flex items-center justify-between pb-3 border-b border-[#e2e8f0] mb-3">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-200/70 mb-3">
               <div className="flex items-center gap-2">
                 <ListOrdered className="w-4 h-4 text-[#3525cd]" />
                 <div>
@@ -1159,7 +1169,7 @@ export const InterviewRoomPage: React.FC = () => {
                   </p>
                 </div>
               </div>
-              <span className="text-[11px] font-semibold text-[#3525cd] whitespace-nowrap shrink-0">
+              <span className="text-[11px] font-semibold text-[#3525cd] whitespace-nowrap shrink-0 tabular-nums">
                 {plannedTopics.length} Topics
               </span>
             </div>
@@ -1167,7 +1177,7 @@ export const InterviewRoomPage: React.FC = () => {
             {phase === 'planning' ? (
               <div className="space-y-2.5 py-2">
                 {[1, 2, 3].map((i) => (
-                  <div key={i} className="h-12 rounded-lg bg-[#eff4ff] animate-pulse" />
+                  <div key={i} className="h-12 rounded-xl bg-white/60 animate-pulse" />
                 ))}
               </div>
             ) : (
@@ -1188,12 +1198,12 @@ export const InterviewRoomPage: React.FC = () => {
                   return (
                     <div
                       key={topic.id}
-                      className={`p-3 rounded-lg border transition-all duration-200 ${
+                      className={`p-3 rounded-xl border transition-all duration-200 ${
                         isActive
-                          ? 'bg-[#eff4ff] border-[#4f46e5] shadow-xs'
+                          ? 'bg-[#eff4ff]/90 border-[#4f46e5] shadow-sm'
                           : isDone
-                          ? 'bg-[#f8f9ff] border-[#e2e8f0] opacity-80'
-                          : 'bg-white border-[#e2e8f0]'
+                          ? 'glass-subcard opacity-80'
+                          : 'glass-subcard'
                       }`}
                     >
                       <div className="flex items-start justify-between gap-2">
@@ -1203,22 +1213,22 @@ export const InterviewRoomPage: React.FC = () => {
                               isDone
                                 ? 'bg-emerald-600 text-white'
                                 : isActive
-                                ? 'bg-[#4f46e5] text-white'
-                                : 'bg-[#e5eeff] text-[#3525cd]'
+                                ? 'glass-btn-primary text-white'
+                                : 'bg-white/90 text-[#3525cd]'
                             }`}
                           >
                             {isDone ? <CheckCircle2 className="w-3.5 h-3.5" /> : topic.order}
                           </span>
                           <div className="min-w-0">
                             {showDistinctSectionBadge && (
-                              <span className="inline-block text-[10px] font-bold uppercase tracking-wider text-[#3525cd] bg-[#eff4ff] px-1.5 py-0.5 rounded mb-1">
+                              <span className="inline-block text-[10px] font-bold uppercase tracking-wider text-[#3525cd] mb-1">
                                 {topic.sectionName}
                               </span>
                             )}
                             <div className="text-xs font-bold text-[#0b1c30] leading-snug">
                               {topic.title}
                             </div>
-                            <div className="text-[11px] text-[#565e74] mt-0.5 leading-relaxed">
+                            <div className="text-[11px] text-[#464555] mt-0.5 leading-relaxed">
                               {topic.rationale}
                             </div>
                           </div>
@@ -1246,13 +1256,13 @@ export const InterviewRoomPage: React.FC = () => {
       {/* End Interview Confirmation Modal */}
       <AnimatePresence>
         {endModalOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0b1324]/55 backdrop-blur-md">
             <motion.div
               initial={{ opacity: 0, scale: 0.96 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.96 }}
               transition={{ duration: 0.18 }}
-              className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-[#e2e8f0] relative text-left"
+              className="glass-panel-elevated rounded-2xl max-w-md w-full p-6 relative text-left"
             >
               <div className="flex items-center justify-between pb-3 border-b border-[#e2e8f0] mb-4">
                 <div className="flex items-center gap-2 text-[#93000a]">

@@ -8,11 +8,11 @@ export const PublicNavbar: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <header className="fixed top-0 w-full z-50 bg-[#f8f9ff]/90 backdrop-blur-xl border-b border-[#e2e8f0]/80 shadow-[0_1px_8px_rgba(0,0,0,0.03)]">
+    <header className="fixed top-0 w-full z-50 glass-nav">
       <div className="h-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-6">
         {/* Logo */}
-        <Link to="/" className="flex items-center gap-2.5 group">
-          <div className="w-9 h-9 rounded-lg bg-[#4f46e5] flex items-center justify-center text-white shadow-sm group-hover:bg-[#3525cd] transition-colors">
+        <Link to="/" className="flex items-center gap-2.5 group shrink-0">
+          <div className="w-9 h-9 rounded-xl glass-btn-primary flex items-center justify-center text-white">
             <Plane className="w-5 h-5" />
           </div>
           <div className="flex flex-col">
@@ -42,11 +42,11 @@ export const PublicNavbar: React.FC = () => {
         </nav>
 
         {/* CTA Controls */}
-        <div className="hidden sm:flex items-center gap-3">
+        <div className="hidden sm:flex items-center gap-3 shrink-0">
           {isAuthenticated ? (
             <Link
               to="/dashboard"
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-[#4f46e5] hover:bg-[#3525cd] text-white font-semibold text-sm transition-all shadow-sm"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl glass-btn-primary text-white font-semibold text-sm whitespace-nowrap"
             >
               <span>Go to Console</span>
               <ArrowRight className="w-4 h-4" />
@@ -55,13 +55,13 @@ export const PublicNavbar: React.FC = () => {
             <>
               <Link
                 to="/login"
-                className="inline-flex items-center font-semibold text-sm text-[#464555] hover:text-[#0b1c30] transition-colors px-4 py-2"
+                className="inline-flex items-center font-semibold text-sm text-[#464555] hover:text-[#0b1c30] transition-colors px-4 py-2 rounded-xl hover:bg-white/60 whitespace-nowrap"
               >
                 Sign In
               </Link>
               <Link
                 to="/register"
-                className="inline-flex items-center justify-center px-5 py-2.5 rounded-lg bg-[#4f46e5] hover:bg-[#3525cd] text-white font-semibold text-sm transition-all shadow-sm"
+                className="inline-flex items-center justify-center px-5 py-2.5 rounded-xl glass-btn-primary text-white font-semibold text-sm whitespace-nowrap"
               >
                 Start Free Trial
               </Link>
@@ -70,7 +70,7 @@ export const PublicNavbar: React.FC = () => {
 
           <Link
             to={isAuthenticated ? "/profile-settings" : "/login"}
-            className="w-8 h-8 rounded-full bg-[#3525cd] text-white flex items-center justify-center hover:opacity-90 transition-opacity"
+            className="w-8 h-8 rounded-full bg-white/80 backdrop-blur-md border border-white/90 text-[#3525cd] shadow-sm flex items-center justify-center hover:bg-white transition-all"
             title={user ? user.name : "Sign In"}
           >
             <UserIcon className="w-4 h-4" />
@@ -81,13 +81,13 @@ export const PublicNavbar: React.FC = () => {
         <div className="flex sm:hidden items-center gap-2">
           <Link
             to={isAuthenticated ? "/dashboard" : "/login"}
-            className="px-3.5 py-1.5 rounded-lg bg-[#4f46e5] text-white text-xs font-semibold"
+            className="px-3.5 py-1.5 rounded-lg glass-btn-primary text-white text-xs font-semibold whitespace-nowrap"
           >
             {isAuthenticated ? "Console" : "Sign In"}
           </Link>
           <button
             onClick={() => setMobileMenuOpen((prev) => !prev)}
-            className="p-2 rounded-lg text-[#0b1c30] hover:bg-[#e5eeff]"
+            className="p-2 rounded-lg text-[#0b1c30] hover:bg-white/70 transition-colors"
             aria-label="Toggle menu"
           >
             {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -97,7 +97,7 @@ export const PublicNavbar: React.FC = () => {
 
       {/* Mobile Menu Dropdown */}
       {mobileMenuOpen && (
-        <div className="sm:hidden border-t border-[#e2e8f0] bg-[#f8f9ff] px-4 py-4 flex flex-col gap-3 shadow-lg">
+        <div className="sm:hidden border-t border-white/70 glass-panel-elevated px-4 py-4 flex flex-col gap-3">
           <a
             href="#features"
             onClick={() => setMobileMenuOpen(false)}
